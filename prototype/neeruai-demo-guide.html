@@ -1,0 +1,686 @@
+<title>NeeruAI Presenter's Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --paper:#EFF2EF; --surface:#FFFFFF; --surface-2:#F7F9F7; --surface-sunk:#E8ECE8;
+  --ink:#16241F; --ink-2:#4E5F58; --ink-3:#7E8D86;
+  --rule:#D6DDD7; --rule-strong:#BCC7BE;
+  --neeru:#0E5C6B; --neeru-soft:#DEECEE; --neeru-line:#9CC3C8;
+  --ochre:#A8681C; --ochre-soft:#F5E7D4;
+  --pass:#24704E; --pass-bg:#DCEEE3;
+  --warn:#A8770C; --warn-bg:#F6EBCF;
+  --fail:#A83A2D; --fail-bg:#F7E0DC;
+  --shadow:0 1px 0 rgba(22,36,31,.04), 0 2px 12px rgba(22,36,31,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1613; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0B1210;
+    --ink:#E6EDE8; --ink-2:#A2B2AB; --ink-3:#7D8D86;
+    --rule:#2A3833; --rule-strong:#3C4C46;
+    --neeru:#5FB6C0; --neeru-soft:#15302F; --neeru-line:#2F595D;
+    --ochre:#D69A4E; --ochre-soft:#2C2114;
+    --pass:#63C295; --pass-bg:#173026; --warn:#E0B24E; --warn-bg:#2F2711; --fail:#E88070; --fail-bg:#331815;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 14px rgba(0,0,0,.32);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1613; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0B1210;
+  --ink:#E6EDE8; --ink-2:#A2B2AB; --ink-3:#7D8D86;
+  --rule:#2A3833; --rule-strong:#3C4C46;
+  --neeru:#5FB6C0; --neeru-soft:#15302F; --neeru-line:#2F595D;
+  --ochre:#D69A4E; --ochre-soft:#2C2114;
+  --pass:#63C295; --pass-bg:#173026; --warn:#E0B24E; --warn-bg:#2F2711; --fail:#E88070; --fail-bg:#331815;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 14px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:14px;line-height:1.68}
+h1,h2,h3,h4{font-family:"Source Serif 4",Georgia,serif;margin:0;text-wrap:balance}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--neeru)}
+:focus-visible{outline:2px solid var(--neeru);outline-offset:2px}
+
+.rail{height:3px;background:linear-gradient(90deg,var(--ochre) 0 20%,var(--neeru) 20% 100%)}
+header.top{background:var(--surface);border-bottom:1px solid var(--rule);padding:26px 32px 22px}
+header.top .kn{font-family:"Noto Sans Kannada",sans-serif;color:var(--neeru);font-size:15px}
+header.top h1{font-size:30px;font-weight:600;letter-spacing:-.018em;margin-top:2px}
+header.top p{margin:8px 0 0;color:var(--ink-2);max-width:74ch;font-size:14.5px}
+header.top .links{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-block;border:1px solid var(--rule-strong);border-radius:3px;padding:5px 12px;
+  font-size:12px;text-decoration:none;color:var(--neeru);background:var(--surface)}
+.pill:hover{border-color:var(--neeru)}
+
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:0;align-items:start}
+aside{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:22px 16px 40px;border-right:1px solid var(--rule);background:var(--surface)}
+aside .grp{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:16px 0 6px}
+aside .grp:first-child{margin-top:0}
+aside a{display:block;padding:3.5px 8px;border-radius:3px;font-size:12.5px;text-decoration:none;color:var(--ink-2);border-left:2px solid transparent}
+aside a:hover{color:var(--neeru);background:var(--surface-2);border-left-color:var(--neeru-line)}
+
+main{padding:28px 40px 70px;max-width:960px}
+section{margin-bottom:38px;scroll-margin-top:16px}
+section > h2{font-size:23px;font-weight:600;letter-spacing:-.014em;padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:16px}
+h3{font-size:17px;font-weight:700;margin:26px 0 7px}
+h4{font-size:14.5px;font-weight:700;margin:18px 0 5px;font-family:"IBM Plex Sans",sans-serif}
+p{margin:0 0 12px;max-width:76ch}
+ul,ol{margin:0 0 12px;padding-left:20px;max-width:76ch}
+li{margin-bottom:6px}
+code{background:var(--surface-sunk);padding:1px 5px;border-radius:2px;font-size:12.5px}
+strong{font-weight:600}
+.lede{font-family:"Source Serif 4",serif;font-size:16px;color:var(--ink-2);line-height:1.6;max-width:70ch}
+
+.say{border-left:3px solid var(--neeru);background:var(--surface);padding:13px 16px;margin:14px 0;border-radius:0 3px 3px 0;box-shadow:var(--shadow)}
+.say .tag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--neeru);display:block;margin-bottom:5px}
+.say p{margin:0;font-family:"Source Serif 4",serif;font-size:15.5px;line-height:1.58}
+.say p + p{margin-top:9px}
+
+.warnbox{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:13px 16px;margin:14px 0;border-radius:0 3px 3px 0}
+.warnbox .tag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:5px}
+.warnbox p{margin:0;font-size:13.5px}
+
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);margin:14px 0}
+.card > .hd{padding:9px 15px;border-bottom:1px solid var(--rule);display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.card > .hd h4{margin:0;font-size:14px}
+.card > .hd .where{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3)}
+.card > .bd{padding:14px 15px}
+.card > .bd > :last-child{margin-bottom:0}
+
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin:12px 0;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td.mono{font-size:11.5px}
+.tblwrap{overflow-x:auto}
+
+.chip{display:inline-flex;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:1.5px 6px;border-radius:2px}
+.chip.pass{background:var(--pass-bg);color:var(--pass)}
+.chip.fail{background:var(--fail-bg);color:var(--fail)}
+.chip.info{background:var(--neeru-soft);color:var(--neeru)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+
+ol.script{counter-reset:s;list-style:none;padding-left:0}
+ol.script > li{counter-increment:s;position:relative;padding-left:44px;margin-bottom:16px}
+ol.script > li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--neeru);font-weight:600;
+  border:1px solid var(--neeru-line);border-radius:3px;padding:1px 6px;background:var(--neeru-soft)}
+ol.script > li b{display:block;font-size:14.5px}
+ol.script > li .t{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);float:right}
+
+.flow{font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.75;background:var(--surface-sunk);
+  border:1px solid var(--rule);border-radius:4px;padding:14px 16px;overflow-x:auto;margin:14px 0;white-space:pre}
+footer{border-top:1px solid var(--rule);padding:18px 40px 34px;color:var(--ink-3);font-size:11.5px;background:var(--surface)}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  aside{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule)}
+  main{padding:22px 20px 50px}
+  header.top{padding:20px}
+}
+</style>
+
+<div class="rail"></div>
+<header class="top">
+  <span class="kn">ನೀರುAI</span>
+  <h1>NeeruAI — Presenter's Handbook</h1>
+  <p>Everything on the prototype, what it means, what to say about it, and the physics behind every number on screen. Written to be read once before the pitch and kept open during it.</p>
+  <div class="links">
+    <a class="pill" href="#pitch">The pitch in 30 seconds</a>
+    <a class="pill" href="#script">5-minute demo script</a>
+    <a class="pill" href="#hardware">The hardware</a>
+    <a class="pill" href="#qa">Judge Q&amp;A</a>
+  </div>
+</header>
+
+<div class="shell">
+<aside>
+  <div class="grp">Foundation</div>
+  <a href="#pitch">The pitch in 30 seconds</a>
+  <a href="#argument">The argument in four moves</a>
+  <a href="#hardware">The hardware, explained</a>
+  <a href="#script">5-minute demo script</a>
+  <div class="grp">The console, panel by panel</div>
+  <a href="#chrome">Persistent chrome &amp; controls</a>
+  <a href="#p0">Overview page</a>
+  <a href="#p1">01 · Data centre &amp; cooling</a>
+  <a href="#p2">02 · Heat recovery</a>
+  <a href="#p3">03 · Membrane distillation</a>
+  <a href="#p4">04 · Verification</a>
+  <a href="#p5">05 · Dispatch &amp; compliance</a>
+  <div class="grp">Under the hood</div>
+  <a href="#physics">Every formula on screen</a>
+  <a href="#mongo">The MongoDB story</a>
+  <a href="#facilities">The four facilities</a>
+  <div class="grp">Delivery</div>
+  <a href="#qa">Judge Q&amp;A</a>
+  <a href="#honesty">What is real, what is simulated</a>
+</aside>
+
+<main>
+
+<!-- ============ PITCH ============ -->
+<section id="pitch">
+  <h2>The pitch in 30 seconds</h2>
+  <div class="say">
+    <span class="tag">If a judge asks "what is NeeruAI?"</span>
+    <p>NeeruAI is an AI-powered closed-loop cooling and water-recovery operating system for data centres. We <strong>reduce</strong> freshwater demand using closed liquid cooling, <strong>recover</strong> water from the concentrated reject stream using the facility's own waste heat, and <strong>verify</strong> every recovered litre before it is reused or released.</p>
+    <p>The tagline: <em>don't just purify the water a data centre throws away — make the data centre need less water in the first place.</em></p>
+  </div>
+  <p>Three layers, and you should be able to name them in order without looking:</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:110px">Layer</th><th>What it does</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td><strong>01 REDUCE</strong></td><td>Cuts the freshwater draw at its source</td><td>Closed-loop liquid cooling — direct-to-chip or immersion — instead of open evaporative towers. The coolant <em>recirculates</em>; it is not consumed.</td></tr>
+      <tr><td><strong>02 RECOVER</strong></td><td>Takes back what is still lost</td><td>Waste heat drives membrane distillation on the blowdown / RO-reject stream: already concentrated, already contaminated, today simply drained.</td></tr>
+      <tr><td><strong>03 VERIFY</strong></td><td>Proves it happened</td><td>Inline probes → AI quality gate → hash-chained public ledger, checked against BIS IS 10500 <em>drinking-water</em> limits, not industrial-effluent limits.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The one sentence that ties it together: <strong>heat availability tracks IT load, IT load is unpredictable, so a forecasting and dispatch layer is what makes any treatment hardware usable at all.</strong> That layer is the product. It is 100% software.</p>
+</section>
+
+<!-- ============ ARGUMENT ============ -->
+<section id="argument">
+  <h2>The argument in four moves</h2>
+  <p class="lede">Deliver these in order. Each one closes off an objection before the judge can raise it.</p>
+
+  <h3>Move 1 — The problem is proven, not hypothetical</h3>
+  <p>Lead with numbers, because judges check whether you know yours.</p>
+  <ul>
+    <li><strong>169%</strong> — Devanahalli's groundwater extraction as a share of its permissible limit. There is no headroom left.</li>
+    <li><strong>1,000 ft</strong> — typical borewell depth in that belt. Natural recharge only reaches about 200 ft. You are mining fossil water.</li>
+    <li><strong>60.47%</strong> — India's national stage of extraction (CGWB 2024); <strong>11.1%</strong> of assessment units are over-exploited. <strong>104.79%</strong> in Gautam Buddha Nagar shows this is a national pattern, not a Bengaluru story.</li>
+    <li><strong>~150 billion litres</strong> a year of water use by Indian data centres, on roughly <strong>0.5%</strong> of national electricity (CEEW 2026).</li>
+    <li>Deep hard-rock aquifers in this geology carry <strong>fluoride above the WHO 1.5 mg/L limit</strong>, and shallow Bengaluru wells carry nitrate far above 45 mg/L. So the water being drawn is not just scarce, it is contaminated.</li>
+  </ul>
+
+  <h3>Move 2 — Kill the false binary before someone else does</h3>
+  <div class="say">
+    <span class="tag">Say this</span>
+    <p>"Seawater cooling in India is proposed, not deployed. Andhra Pradesh's policy floats it for the Tarluvada park, but the environmental clearance names no water source at all — activists monitoring it cannot establish whether it will be desalinated water, surface water or groundwater. So 'sea animals versus groundwater' describes a fight that isn't happening yet."</p>
+    <p>"The real fight today is groundwater versus municipal supply versus treated non-potable water versus recycled blowdown — and almost nobody discloses which they use."</p>
+  </div>
+  <p>Evidence to have ready if pushed: Nxtra by Airtel's 2025 ESG report shows 216,357 KL total, of which 9,876 KL groundwater and 191,152 KL purchased third-party, zero surface water. A Greater Noida operator in a notified over-exploited zone claims it uses neither groundwater nor municipal drinking water, while officials would not confirm whether it even holds extraction permission. Another Greater Noida facility runs entirely on the industrial authority's treated non-potable network.</p>
+  <p>And do not overclaim in the other direction. The defensible line is: <strong>seawater can reduce freshwater demand, but moving the cooling problem from an aquifer to the ocean does not by itself create a closed loop</strong> — there is still thermal discharge, intake entrainment, seabed disturbance, biofouling chemistry and brine.</p>
+
+  <h3>Move 3 — Name the gap that is the product</h3>
+  <p>A groundwater NOC fixes an extraction cap. Nothing requires a facility to publish actual consumption or discharge. <strong>Once a clearance is granted, no agency verifies that the declared water source matches what is happening on the ground.</strong> The EU mandates disclosure; India does not. Karnataka's 2022 Data Centre Policy required no water report at all.</p>
+  <p>Consequence: corporate "water-neutral" claims are unfalsifiable. That is the textbook definition of greenwashing risk — and it is exactly the hole a verification layer fills.</p>
+
+  <h3>Move 4 — Why software, and why not the Oracle patent</h3>
+  <p>Oracle's 2018 patent covers a <em>hardware method</em>: waste heat to low-temperature desalination, on one steady liquid-cooled loop, with a seawater feed and a fixed topology. It claims nothing about monitoring, forecasting, dispatch or verification.</p>
+  <p>India breaks every assumption in it — a mixed air- and liquid-cooled fleet, heat availability that tracks unpredictable IT load, inland and fragmented water sources, multiple regulators, and no disclosure regime. Just as Oracle needed MSET2 to make a fixed topology work, India needs a software layer to make <em>any</em> topology work.</p>
+  <div class="say">
+    <span class="tag">The differentiation line</span>
+    <p>"Our opportunity isn't building better hardware than Oracle. It's being the operating system that makes <em>any</em> water-recovery hardware — an RO skid, an existing ETP, a BWSSB ozonation plant, a future MD unit — coordinated, verified and usable in India's messy, multi-agency water reality."</p>
+  </div>
+</section>
+
+<!-- ============ HARDWARE ============ -->
+<section id="hardware">
+  <h2>The hardware, explained</h2>
+  <p class="lede">You need to be able to walk the water and the heat through the plant without hesitating. This is the whole physical chain in the order the console shows it.</p>
+
+  <div class="flow">SERVERS ──► COLD PLATE ──► CDU / COOLANT LOOP ──► HEAT EXCHANGER ──┬──► COOLING TOWER  (heat rejected)
+                                                                     │
+                                                                     └──► MD FEED HEATER
+                                                                              │
+COOLING TOWER ──► BLOWDOWN TANK ──► MD SKID ◄─────────────────────────────────┘
+                                       │
+                          ┌────────────┴────────────┐
+                          ▼                         ▼
+                  QUALITY GATE                ZLD CRYSTALLISER
+                (BIS IS 10500)                 (concentrate)
+                          │
+              ┌───────────┴───────────┐
+              ▼                       ▼
+      COOLING MAKEUP           WARD DISPATCH
+   (loop closed on site)   (borewell recharge / taps)</div>
+
+  <h3>1. The die and the cold plate</h3>
+  <p>A GPU or CPU die rejects heat through a thermal interface material into a <strong>cold plate</strong> — a metal block with parallel microchannels machined into it. Coolant enters cold at one end, picks up heat as it travels, and leaves hot at the other. The critical point for your pitch: <strong>the same fluid comes back</strong>. It is a sealed recirculating loop, not a consumable.</p>
+  <p>Contrast with air cooling: hot air off the servers goes to a CRAC or an evaporative tower, which produces low-grade diffuse heat and, in the evaporative case, consumes water continuously. Liquid cooling captures heat <em>at the source</em>, at a higher and more concentrated temperature. That single architectural change does two things at once — it collapses freshwater makeup demand, <em>and</em> it upgrades the waste heat into something thermally useful.</p>
+  <div class="warnbox"><span class="tag">Why this matters for the pitch</span>
+    <p>Layer 1 is not an afterthought — it is what makes Layer 2 physically possible. Air-cooled waste heat is too low-grade to drive distillation. Say this if someone asks why you insist on liquid cooling.</p></div>
+
+  <h4>Immersion cooling — mention it, don't dwell</h4>
+  <p>Immersion goes further: servers sit in an engineered dielectric fluid that absorbs heat directly from the electronics, then gives it up in a heat exchanger and returns. Same principle — recirculating, not consumed — with even better heat capture. Worth one sentence as the endpoint of the Layer 1 trajectory.</p>
+
+  <h3>2. The CDU and the coolant loop</h3>
+  <p>The Coolant Distribution Unit pumps the secondary loop through the cold plates and back. Two numbers define it: <strong>flow rate</strong> (litres per minute) and <strong>ΔT</strong> (how much the coolant heats up across the racks). More flow means lower ΔT and cooler silicon, but higher pump energy. Lower flow means a hotter return — which is <em>better</em> for heat recovery. That tension is real, and it is one of the things a dispatch engine gets to optimise.</p>
+
+  <h3>3. The cooling tower — where the water actually goes</h3>
+  <p>This is the part most people get wrong, so be precise. Cooling water splits into <strong>two separate fates</strong>:</p>
+  <ul>
+    <li><strong>Evaporative loss — true consumption.</strong> In an evaporative tower, water absorbs heat and partially evaporates. That fraction is permanently removed from the local watershed. This is why <em>withdrawal</em> and <em>consumption</em> are different numbers, and why a facility can honestly report low "usage" while still draining an aquifer.</li>
+    <li><strong>Blowdown — the wastewater stream.</strong> As water cycles round the loop, dissolved solids concentrate. Past a certain point they would scale and corrode the equipment, so a portion has to be drained off. That drained portion is blowdown, and it is <em>more</em> concentrated than the intake — more fluoride, more nitrate, more TDS — plus biocides and corrosion inhibitors.</li>
+  </ul>
+  <p><strong>Cycles of concentration (CoC)</strong> is the ratio of dissolved solids in the circulating water to the makeup water. Run at 4 cycles and blowdown = evaporation ÷ 3. Run at 6.5 cycles and blowdown = evaporation ÷ 5.5 — less waste, but a more concentrated stream. The console shows CoC live and it changes with the architecture.</p>
+  <p>From there a facility has exactly three options, and this is the sentence that sets up your product:</p>
+  <ol>
+    <li><strong>Discharge it</strong> with treatment and a permit — the wasteful default.</li>
+    <li><strong>Recycle it</strong> back into the cooling loop — a Greater Noida ETP achieved over 95% water savings doing this, and it is becoming a compliance requirement in Greater Noida, Pune and Hyderabad.</li>
+    <li><strong>Zero Liquid Discharge</strong> — eliminate discharge entirely, avoid permits, at high capex and opex.</li>
+  </ol>
+
+  <h3>4. The heat exchanger and the cascade</h3>
+  <p>Instead of dumping all the return heat to the tower, a <strong>counter-flow heat exchanger</strong> taps it and hands it to the MD feed. Counter-flow means the two streams run in opposite directions, so the temperature difference stays roughly constant along the whole length rather than pinching at one end. The figure of merit is <strong>LMTD</strong> (log mean temperature difference) — it sets how hot you can get the feed, and feed temperature is what sets the flux downstream.</p>
+  <p><strong>Heat cascading</strong> is the discipline of matching heat grade to task. Don't spend 90 °C heat on a job that 45 °C could do. Highest grade goes to distillation, the degraded remainder to preheating or absorption cooling, and only what is left after that goes to the tower.</p>
+
+  <h3>5. The membrane distillation skid — the core</h3>
+  <p>This is the piece to explain slowly.</p>
+  <p>A <strong>hydrophobic membrane</strong> (typically PTFE, ~0.2 µm pores) separates two channels. Hot concentrated blowdown flows on one side; cool permeate flows on the other. Because the membrane is hydrophobic, <strong>liquid water cannot pass through the pores</strong> — surface tension holds it out. But water <em>vapour</em> can.</p>
+  <p>The temperature difference creates a vapour-pressure difference across the membrane. Water evaporates at the hot surface, the vapour crosses the pore, and it condenses on the cold side. That is the entire mechanism.</p>
+  <div class="say">
+    <span class="tag">Say this at the membrane</span>
+    <p>"Only water vapour crosses. Fluoride, nitrate and dissolved salts are non-volatile — they don't evaporate, so they physically cannot follow. Rejection here isn't a filtration efficiency we're claiming, it's a phase-change property."</p>
+  </div>
+
+  <h4>Why MD and not RO — the question you will definitely get</h4>
+  <p>Reverse osmosis is <strong>pressure-driven</strong> and runs on electricity. It cannot consume waste heat at all. If you used RO, the "we repurpose the facility's own rejected heat" premise collapses — you would just be buying more grid power. MD is <strong>thermally driven</strong>, so it is the only mainstream separation technology that actually eats the byproduct you claim to be repurposing.</p>
+
+  <h4>Temperature polarisation — the detail that proves you're serious</h4>
+  <p>The membrane surface is never as hot as the bulk feed. A thermal boundary layer forms on each side, so some of your measured ΔT is eaten before it reaches the membrane. The <strong>polarisation coefficient τ</strong> is the ratio of the ΔT the membrane actually sees to the ΔT you measure. Ignoring it is how paper designs overpromise flux by ~30%. The console draws this profile live.</p>
+
+  <h4>The concentrate — never skip this</h4>
+  <p>MD leaves behind a smaller, <em>more</em> concentrated brine than the blowdown it started with. Name the disposal pathway: a ZLD crystalliser, or licensed industrial reuse. A recovery pitch that hides its own residual stream is doing exactly the greenwashing it is attacking.</p>
+
+  <h3>6. The quality gate and the ledger</h3>
+  <p>Inline probes — conductivity/TDS, fluoride ion-selective electrode, nitrate, pH, turbidity — log automatically rather than being self-reported. Results are checked against <strong>BIS IS 10500</strong>, the Indian drinking-water specification, which is deliberately stricter than the industrial-effluent limits a facility would otherwise be judged against. Fail any parameter and the batch is quarantined and re-treated; it is never released, and the failure stays on the record.</p>
+  <p>Each passing or failing batch becomes a document that stores the <strong>hash of the previous batch's document</strong>. Change any historical record and every subsequent hash breaks. That gives you tamper-evidence without standing up blockchain infrastructure.</p>
+
+  <h3>7. The coastal variant</h3>
+  <p>For Chennai, Mumbai, Vizag or Jamnagar: seawater never touches the servers. A <strong>closed secondary loop meets seawater only across a heat exchanger</strong>, and intake temperature, discharge temperature, ΔT and flow are all instrumented into the same ledger. The goal is a measured, bounded thermal footprint — not the pretence that there isn't one.</p>
+</section>
+
+<!-- ============ SCRIPT ============ -->
+<section id="script">
+  <h2>5-minute demo script</h2>
+  <p class="lede">Click-by-click. The three fault-injection buttons are the beats — everything else is context around them.</p>
+  <ol class="script">
+    <li><span class="t">0:00 – 0:45</span><b>Open on the Overview page.</b>
+      Read the headline, then the definition box. Point at the live loop diagram in the corner and note that the simulation is already running — batch count and litres recovered are ticking. Then move along the five figures: 169%, 1,000 ft, 60.47%, 150 bn L, and the last one — <strong>zero</strong> facilities required to publish what they actually use. Land on that zero. It is the whole business case.</li>
+
+    <li><span class="t">0:45 – 1:45</span><b>Stage 01 — Data centre &amp; cooling.</b>
+      "Here is where the heat is made and where the water is lost." Point at the rack elevation — nodes shaded by real junction temperature, hotter at the top of rack. Then the cold plate: the coloured particles are coolant, their colour is the actual fluid temperature at that point in the channel, their speed is the actual flow rate. Say the key line: <em>the coolant is not consumed.</em>
+      <br><strong>Now do the demo:</strong> switch <span class="chip info">Cooling architecture</span> to <strong>Open evaporative tower</strong>. Watch the water-balance bars jump. Switch back to <strong>Closed liquid loop</strong> and read the green line — roughly <strong>87% less water leaves the site</strong>, before a single drop has been recovered. That is Layer 1, demonstrated, not asserted.</li>
+
+    <li><span class="t">1:45 – 2:30</span><b>Stage 02 — Heat recovery.</b>
+      Show the plant schematic once, tracing the flow left to right: servers, CDU, heat exchanger, tower; then down to blowdown, MD skid, quality gate, dispatch; then the long return line that closes the loop. Note that dash speed is proportional to real flow.
+      Then the heat cascade — the highlighted band is where the coolant return currently sits, and it is what decides whether the skid can run at all.
+      <br><strong>Now do the demo:</strong> press <span class="chip warn">Inject AI training burst</span>. IT load jumps 30 points. On the chart, the dashed forecast segment moves <em>before</em> the solid line does. Say: <em>"that's the dispatch engine ramping the skid before the heat arrives, instead of chasing it."</em></li>
+
+    <li><span class="t">2:30 – 3:45</span><b>Stage 03 — Membrane distillation. This is the centrepiece; slow down.</b>
+      Walk the module top to bottom: waste-heat feed heater, feed channel with the hot concentrated blowdown, the hydrophobic membrane with its pores, the permeate channel, the condenser plate. Point at a dashed vertical transit and say <em>"that's a water molecule crossing as vapour."</em> Point at an orange or purple particle bouncing off the membrane: <em>"that's a fluoride ion being rejected. Non-volatile — it can't evaporate, so it can't follow."</em>
+      Then the flux curve: flux rises <strong>exponentially</strong> with feed temperature, which is exactly why grade-matched waste heat is the right input and why RO could never use this energy.
+      <br><strong>Now do the demo:</strong> press <span class="chip fail">Inject membrane wetting fault</span>. Three pores turn red. Ions start convecting through. Rejection falls from ~99.4% to ~85%. Permeate fluoride crosses 1.0 mg/L and turns red in the quality panel.</li>
+
+    <li><span class="t">3:45 – 4:30</span><b>Stage 04 — Verification. Follow that bad batch.</b>
+      The quality gate reads <span class="chip fail">FAIL</span>. In the ledger, the failed batch is highlighted and its destination is <em>Quarantine — re-treat</em>, not a village. Open the water passport and show the exact fluoride number that failed.
+      Then press <span class="chip info">Re-verify hash chain</span> in the toolbar — it recomputes every block's hash and every prev_hash link and reports the chain intact. Say: <em>"a regulator can run this themselves. That is the difference between a claim and a record."</em>
+      Then hit the MongoDB tabs and show the actual documents being written.</li>
+
+    <li><span class="t">4:30 – 5:00</span><b>Stage 05 — Dispatch &amp; compliance. Close on the regulator.</b>
+      Destinations are ranked by CGWB stress, with cooling makeup served first — the loop closes before anything leaves the fence. Then the water balance table: withdrawn, evaporated, recovered, reused, delivered, discharged. Point at <strong>Discharged untreated: 0</strong> and the reuse-fraction chip against the Liquid Waste Management Rules 2024 targets.
+      <br>Closing line: <em>"This is the report Karnataka's 2022 Data Centre Policy never required, generated from signed batches rather than operator declarations. A regulator could plug this in tomorrow."</em></li>
+  </ol>
+  <div class="warnbox"><span class="tag">If you only get 90 seconds</span>
+    <p>Overview headline → Stage 01 architecture toggle (87%) → Stage 03 wetting fault → Stage 04 quarantined batch. That is the whole thesis: reduce, recover, verify.</p></div>
+</section>
+
+<!-- ============ CHROME ============ -->
+<section id="chrome">
+  <h2>Persistent chrome &amp; controls</h2>
+  <p>These sit above every stage page. They are hidden on the Overview so the hero stays clean.</p>
+
+  <div class="card"><div class="hd"><h4>Masthead</h4><span class="where">top bar</span></div><div class="bd">
+    <ul>
+      <li><strong>ನೀರುAI</strong> — <em>neeru</em> is Kannada for water. Worth naming out loud; it signals the product is built for this geography, not ported into it.</li>
+      <li><strong>Facility selector</strong> — switches the entire simulation, ledger and compliance scope to a different site. Four are loaded (see <a href="#facilities">The four facilities</a>).</li>
+      <li><strong>Sim clock</strong> — simulated IST time. One tick = 2 simulated minutes.</li>
+      <li><strong>Ledger</strong> — number of chained batches currently held.</li>
+      <li><strong>Chain</strong> — <span class="chip pass">Verified</span> or <span class="chip fail">Tampered</span>, refreshed by the audit button.</li>
+    </ul>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Control strip</h4><span class="where">below the stage nav</span></div><div class="bd">
+    <div class="tblwrap"><table>
+      <thead><tr><th style="width:190px">Control</th><th>What it changes</th><th>Use it to say</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cooling architecture</strong><br>tower / closed loop</td><td>Evaporation factor (1.0 → 0.14), cycles of concentration (4.2 → 6.5), coolant supply temperature (27 → 32 °C)</td><td>"Layer 1 in one click — this is the difference between attacking the cause and treating the symptom."</td></tr>
+        <tr><td><strong>IT load</strong><br>diurnal / manual + slider</td><td>Drives heat, and therefore everything downstream. Diurnal follows a realistic 24-hour compute curve; manual pins it.</td><td>"Drag it to 100% and watch the junction temperature throttle — this is the constraint a facility-average number hides."</td></tr>
+        <tr><td><strong>Speed</strong><br>hold / 1× / 4×</td><td>Simulation rate. Hold freezes it for a still explanation.</td><td>Use <strong>Hold</strong> when you need the audience looking at you rather than at a moving screen.</td></tr>
+        <tr><td><strong>Inject membrane wetting fault</strong></td><td>Breaches 3 pores for 90 simulated minutes; rejection drops 99.4% → 84.8%</td><td>The single most persuasive click in the demo. Show it on Stage 03.</td></tr>
+        <tr><td><strong>Inject AI training burst</strong></td><td>+30 load points for 60 simulated minutes</td><td>Proves why forecasting matters — heat availability is not steady.</td></tr>
+        <tr><td><strong>Re-verify hash chain</strong></td><td>Recomputes every hash and every prev_hash link independently</td><td>"A regulator runs this themselves. We don't ask anyone to trust us."</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>KPI strip — six live figures</h4><span class="where">under the controls</span></div><div class="bd">
+    <div class="tblwrap"><table>
+      <thead><tr><th style="width:200px">Figure</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Net freshwater draw</strong> KL/day</td><td>Makeup demand <em>minus</em> what recovery already returned, extrapolated to a full day. Turns red if it exceeds the facility's NOC cap. This is the number a regulator cares about most.</td></tr>
+        <tr><td><strong>Recovered today</strong> KL</td><td>Cumulative verified permeate.</td></tr>
+        <tr><td><strong>Recovery ratio</strong> %</td><td>Permeate ÷ reject feed. Water recovery per unit of stream treated.</td></tr>
+        <tr><td><strong>Waste heat utilised</strong> kW</td><td>Thermal power the MD skid is currently consuming — <em>recovered, not purchased</em>. Say that phrase.</td></tr>
+        <tr><td><strong>Batches released</strong></td><td>Count that passed the BIS gate. Quarantined batches are counted separately and never appear here.</td></tr>
+        <tr><td><strong>Litres to community</strong></td><td>Surplus that left the fence to a named destination — the only number that represents water reaching people.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</section>
+
+<!-- ============ P0 ============ -->
+<section id="p0">
+  <h2>Overview page</h2>
+  <p>The landing page. No controls, no telemetry clutter — its only job is to establish the thesis before anyone sees a dashboard.</p>
+  <ul>
+    <li><strong>Headline</strong> — "India's data centres draw water nobody measures, and reject heat nobody uses. We close both loops, and prove it." Two problems, one sentence, and the claim is verification, not just treatment.</li>
+    <li><strong>Definition box</strong> — the 30-second answer, written out so you can read it verbatim if nerves hit.</li>
+    <li><strong>Live loop diagram</strong> — Data centre → waste heat → MD → verified water → public ledger, with a return arrow closing the loop back to the data centre. The numbers in it are live from the running simulation, and the status line above shows batch count, litres recovered and current heat.</li>
+    <li><strong>Three layer cards</strong> — REDUCE / RECOVER / VERIFY, each with a one-line mechanism in monospace at the bottom.</li>
+    <li><strong>Five figures</strong> — each with its source underneath. The last one, the <strong>0</strong>, is not a statistic about water; it is the statistic about regulation, and it is the one to pause on.</li>
+    <li><strong>Three argument cards</strong> — the false binary, the verification gap, why software. These are your pre-emptive answers to the three most likely challenges, in writing, on screen.</li>
+  </ul>
+</section>
+
+<!-- ============ P1 ============ -->
+<section id="p1">
+  <h2>01 · Data centre &amp; cooling <span class="chip pass">REDUCE</span></h2>
+
+  <div class="card"><div class="hd"><h4>Rack thermal state</h4><span class="where">left column</span></div><div class="bd">
+    <p>Four racks, eleven nodes each, shaded by <strong>actual junction temperature</strong> — not a decorative gradient. Load is deliberately not uniform down a rack: top-of-rack runs hotter. The small dark bar inside each node is its utilisation.</p>
+    <p><strong>Say:</strong> "A single facility-average temperature hides the constraint that actually matters. The hottest node sets your cooling requirement, not the mean." If you push load to 100%, the note switches to a throttling warning.</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Loop instrumentation</h4><span class="where">left column</span></div><div class="bd">
+    <p>Ten live readouts with proportion bars: IT load, heat rejected, junction temperature (against the 85 °C limit — bar turns red past it), coolant supply, coolant return, loop ΔT, coolant flow, evaporative loss, blowdown generated, cycles of concentration.</p>
+    <p><strong>Say:</strong> "These are the fields the ingestion layer actually reads from a CDU. Every downstream number is derived from them — nothing here is decorative."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Cold plate — die to coolant, cross-section</h4><span class="where">main panel</span></div><div class="bd">
+    <p>A cutaway: the GPU/CPU die at the bottom with a heat glow proportional to junction temperature, the thermal interface layer above it, then the cold plate body with five parallel microchannels.</p>
+    <p>The moving dots are coolant. <strong>Their colour is the real fluid temperature at that point along the channel</strong> (blue at the inlet, warming to orange at the outlet, interpolated between the live supply and return temperatures), and <strong>their speed is the real flow rate</strong>. Inlet and outlet temperatures and ΔT are called out at either end.</p>
+    <p><strong>Say:</strong> "Heat leaves the die through the interface into the microchannels. The coolant is not consumed — the same fluid returns to the CDU and comes back. That single architectural choice decouples compute growth from water withdrawal."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Water balance of the cooling architecture</h4><span class="where">main panel, bottom</span></div><div class="bd">
+    <p>Two horizontal bars at the <em>current</em> heat load, each split into evaporation (orange) and blowdown (brown): open evaporative tower versus closed liquid loop. The active architecture is bold and marked <strong>▶ ACTIVE</strong>; the other is dimmed. A green line underneath states the percentage difference.</p>
+    <p><strong>This is your Layer 1 proof.</strong> Toggle the architecture live and let the audience watch the bar collapse. Roughly 87% less water leaves the site — before any recovery has happened.</p>
+  </div></div>
+</section>
+
+<!-- ============ P2 ============ -->
+<section id="p2">
+  <h2>02 · Heat recovery <span class="chip info">RECOVER</span></h2>
+
+  <div class="card"><div class="hd"><h4>Plant schematic — live process simulation</h4><span class="where">full width</span></div><div class="bd">
+    <p>The whole plant on one sheet, banded into the three layers so the audience can map the diagram onto the pitch structure. Ten equipment blocks, each carrying two live values.</p>
+    <p>Every pipe is animated with a dashed flow whose <strong>speed is proportional to the actual flow rate</strong>, and whose opacity drops when a stream is near zero — so an idle line visibly goes quiet. The hot coolant pipes shift colour with return temperature. Colour coding: hot coolant return, cold supply/makeup, blowdown, recovered waste heat, MD permeate, concentrate to ZLD.</p>
+    <p><strong>Trace it out loud, once:</strong> servers → CDU → heat exchanger → tower; heat exchanger taps a heat line down to the MD skid; tower blows down into the tank; tank feeds the skid; skid sends permeate to the quality gate and concentrate to ZLD; the gate sends verified water either back to cooling makeup or out to dispatch; the borewell only tops up whatever recovery could not cover.</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Heat cascade</h4><span class="where">left</span></div><div class="bd">
+    <p>Four temperature bands, highest grade first. The band containing the current coolant return is highlighted.</p>
+    <ul>
+      <li><strong>65–95 °C</strong> — membrane distillation feed. Highest-value use.</li>
+      <li><strong>50–65 °C</strong> — absorption pre-cooling / process preheat.</li>
+      <li><strong>38–50 °C</strong> — low-grade MD, marginal driving force.</li>
+      <li><strong>&lt; 38 °C</strong> — rejected to the tower. <em>This is what today's facilities throw away in full.</em></li>
+    </ul>
+    <p><strong>Say:</strong> "Don't spend high-grade heat on an easy job. And note the bottom band — below 38 °C the driving force collapses and the dispatch engine idles the skid rather than burning pump energy for nothing. That decision is the software earning its place."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Heat availability &amp; MD dispatch</h4><span class="where">right</span></div><div class="bd">
+    <p>Six-hour rolling window. The <strong>solid orange line</strong> is heat rejected at the coolant return. The <strong>filled teal band</strong> is heat actually consumed by the MD skid. To the right of the vertical rule, the <strong>dashed segment</strong> is the +30 minute forecast the dispatch engine is acting on.</p>
+    <p><strong>Say:</strong> "The gap between the orange line and the teal band is heat currently going to waste — that is the addressable opportunity, live, at this facility. And the forecast is what lets the skid ramp before the heat arrives instead of chasing it." Then press the training-burst button and let them watch the forecast move first.</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Counter-flow heat exchanger profile</h4><span class="where">full width, bottom</span></div><div class="bd">
+    <p>Temperature against position along the exchanger. The hot stream descends left to right; the cold stream ascends right to left, because they run counter-current. Inlet and outlet temperatures are labelled on both, and <strong>LMTD</strong> is computed live.</p>
+    <p><strong>Say:</strong> "Counter-flow means the coolant gives up heat along the whole length rather than pinching at one end. The LMTD is what sets how hot the MD feed can get — and feed temperature is what sets the flux on the next page. Everything downstream is chained to this number."</p>
+  </div></div>
+</section>
+
+<!-- ============ P3 ============ -->
+<section id="p3">
+  <h2>03 · Membrane distillation <span class="chip info">RECOVER</span></h2>
+  <p class="lede">The centrepiece. This is the page a technical judge will interrogate, and the one that shows you understand your own hardware.</p>
+
+  <div class="card"><div class="hd"><h4>Direct-contact MD module — pore-scale simulation</h4><span class="where">full width</span></div><div class="bd">
+    <p>A cross-section through the module, top to bottom:</p>
+    <ol>
+      <li><strong>Waste-heat exchanger (feed heater)</strong> — the ochre band, showing the kW currently recovered from the coolant return.</li>
+      <li><strong>Feed channel</strong> — hot concentrated blowdown flowing left to right, labelled with live feed temperature and TDS. The particles are colour-coded: blue H₂O, ochre fluoride, purple nitrate, brown dissolved salts.</li>
+      <li><strong>Hydrophobic PTFE membrane</strong> — the grey band with regular 0.2 µm pores drawn as gaps.</li>
+      <li><strong>Permeate channel</strong> — recovered water flowing counter-current, right to left, labelled with permeate TDS. Notice it contains <em>only</em> blue particles.</li>
+      <li><strong>Condenser plate</strong> — the cold side, holding 28 °C.</li>
+    </ol>
+    <h4>What to point at</h4>
+    <ul>
+      <li><strong>A dashed vertical transit through a pore</strong> — that is a water molecule crossing as vapour, condensing on the cold side and joining the permeate channel. The crossing rate is driven by the computed flux, so it visibly slows when the feed cools.</li>
+      <li><strong>A coloured ion bouncing off the membrane</strong> — that is a rejection event. Say: "non-volatile, so it can't evaporate, so it can't follow."</li>
+      <li><strong>The four readouts across the base</strong> — flux (L/m²·h), permeate rate (L/h), ΔT at the membrane, and rejection %.</li>
+      <li><strong>The status line</strong> — green when only water is crossing, amber when the skid has idled because the feed dropped below 38 °C, red during a wetting fault.</li>
+    </ul>
+    <h4>The fault injection</h4>
+    <p>Press <span class="chip fail">Inject membrane wetting fault</span>. Three pores turn red — liquid has intruded them, defeating the hydrophobic barrier. Now ions convect straight through instead of being left behind, drawn as red transits. Rejection collapses to ~85%, and <strong>fluoride is the first parameter to break the limit</strong>.</p>
+    <div class="say"><span class="tag">Say this during the fault</span>
+      <p>"This is the failure mode that matters, and it's why the gate checks against BIS IS 10500 drinking-water limits and not an industrial-effluent standard — an effluent standard would have waved this batch straight through."</p></div>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Flux model</h4><span class="where">lower left</span></div><div class="bd">
+    <p>Flux against feed temperature, with the live operating point marked and crosshaired. The shaded band on the left is the region below 38 °C where the skid is idled.</p>
+    <p>The curve is the real model: <code>J = B·(P<sub>w</sub>(T<sub>fm</sub>)·a<sub>w</sub> − P<sub>w</sub>(T<sub>pm</sub>))</code>, with saturation vapour pressure from the Antoine equation and water activity reduced by the dissolved solids in the feed.</p>
+    <p><strong>Say:</strong> "Flux rises exponentially with feed temperature, not linearly. That's why grade-matched waste heat is the right input, and it's the mathematical reason RO could never use this energy at all."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Temperature polarisation</h4><span class="where">lower centre</span></div><div class="bd">
+    <p>Temperature across the module: bulk feed → feed boundary layer → membrane surface → membrane → permeate surface → permeate boundary layer → bulk permeate. Four points are marked with live values, and the header compares <strong>measured ΔT</strong> against <strong>effective ΔT</strong>.</p>
+    <p><strong>Say:</strong> "The membrane surface is never as hot as the bulk feed. Boundary layers eat part of the driving force. The polarisation coefficient τ is what separates the ΔT you measure from the ΔT the membrane actually sees — ignoring it is how paper designs overpromise flux by about 30%."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Rejection &amp; permeate quality</h4><span class="where">lower right</span></div><div class="bd">
+    <p>Eight readouts with limit-referenced bars: membrane rejection, feed TDS, permeate fluoride (against BIS 1.0), nitrate (45), TDS (500), pH (6.5–8.5), water recovery, and specific thermal energy (150 kWh/m³).</p>
+    <p>Bars turn red when a parameter exceeds its limit. During a wetting fault, fluoride goes red first — the panel note changes to explain why.</p>
+    <div class="warnbox"><span class="tag">Say this — it wins technical credibility</span>
+      <p>"Real rejection is feed- and membrane-specific. We're showing a modelled value; a facility deployment has to validate it experimentally rather than quoting a brochure number." Volunteering the limit of your own model is worth more than any number you could claim.</p></div>
+  </div></div>
+</section>
+
+<!-- ============ P4 ============ -->
+<section id="p4">
+  <h2>04 · Verification <span class="chip warn">VERIFY</span></h2>
+  <p class="lede">The differentiator. No hardware vendor offers this, because hardware alone cannot create accountability.</p>
+
+  <div class="card"><div class="hd"><h4>Quality gate</h4><span class="where">right column</span></div><div class="bd">
+    <p>Four parameters against BIS IS 10500 with a PASS/FAIL chip in the header. Fluoride 1.0 mg/L, nitrate 45 mg/L, TDS 500 mg/L, pH 6.5–8.5.</p>
+    <p><strong>Say:</strong> "These are drinking-water limits, deliberately stricter than the effluent limits a facility would otherwise be judged against. Treated industrial discharge and treated drinking water are not the same target, and we chose the harder one."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Digital water passport</h4><span class="where">right column</span></div><div class="bd">
+    <p>The full record for the most recent batch: batch ID, facility, NOC number, source stream, feed temperature, litres in and out with recovery percentage, heat used (marked <em>recovered</em>), all three contaminant readings against their limits, the verdict, the destination, and both hashes.</p>
+    <p><strong>Say:</strong> "This answers five questions checkably — where did this water come from, how was it treated, how much was recovered, was it safe, and where did it go. No regulator in India can answer those five questions about any facility today."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Batch ledger</h4><span class="where">left column</span></div><div class="bd">
+    <p>The last ten batches, newest first. Each row: batch ID, PASS/FAIL chip, timestamp, litres in and out, recovery %, heat used, fluoride reading, destination, and the <code>prev_hash ▸ hash</code> link.</p>
+    <p>Failed batches are shaded red and routed to <em>Quarantine — re-treat</em>. <strong>The failure stays on the ledger.</strong> Make that point explicitly — a log that only records successes is not a verification system.</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>MongoDB pipeline inspector</h4><span class="where">left column, top</span></div><div class="bd">
+    <p>Four tabs showing the actual documents being written, with a live document counter and a change-stream event feed underneath.</p>
+    <ul>
+      <li><code>sensor_readings</code> — the latest time-series document, including a vendor-specific payload shape.</li>
+      <li><code>treatment_batches</code> — the passport document with its <code>prev_hash</code> field.</li>
+      <li><code>dispatch_decisions</code> — written by the change-stream listener, with a human-readable <code>reason</code> field.</li>
+      <li><code>$group rollup</code> — the aggregation that feeds the compliance report.</li>
+    </ul>
+    <p>Each tab has an explanatory note underneath saying <em>why that MongoDB feature</em>. See <a href="#mongo">The MongoDB story</a>.</p>
+  </div></div>
+
+  <h3>The audit button</h3>
+  <p><span class="chip info">Re-verify hash chain</span> walks the entire chain: it checks that each batch's <code>prev_hash</code> matches the previous batch's <code>hash</code>, and independently recomputes each document's own hash from its contents. The masthead chip updates to <span class="chip pass">Verified · n</span>.</p>
+  <div class="say"><span class="tag">Say this</span>
+    <p>"Anyone can run this — the operator, the board, an NGO, a journalist. We're not asking anyone to trust our dashboard. Change a single historical figure and every subsequent hash breaks."</p></div>
+</section>
+
+<!-- ============ P5 ============ -->
+<section id="p5">
+  <h2>05 · Dispatch &amp; compliance <span class="chip warn">VERIFY</span></h2>
+
+  <div class="card"><div class="hd"><h4>CGWB stress-ranked destinations</h4><span class="where">left</span></div><div class="bd">
+    <p>Five rows: the cooling makeup loop, three named community destinations with their stage of extraction, and the quarantine route. Each shows litres delivered today.</p>
+    <p>The ranking is a <code>$geoNear</code> query against CGWB block-level assessment polygons, re-scored on every change-stream event. <strong>Cooling makeup is served first</strong> — the loop closes before anything leaves the fence — and only surplus verified permeate is dispatched outward.</p>
+    <p><strong>Say:</strong> "Priority is set by published groundwater stress data, not by whoever asks loudest. And ward offices get an SMS per delivery — not a dashboard login. That's how information actually reaches a Devanahalli-type community."</p>
+  </div></div>
+
+  <div class="card"><div class="hd"><h4>Statutory water balance</h4><span class="where">right</span></div><div class="bd">
+    <p>Ten rows: freshwater withdrawn, evaporative loss (consumed), blowdown generated, reject treated by MD, water recovered (verified), returned to cooling makeup, delivered to community, concentrate to ZLD, waste heat consumed, and <strong>discharged untreated: 0</strong>.</p>
+    <p>The footer computes the <strong>reuse fraction</strong> and chips it against the Liquid Waste Management Rules, 2024 — a mandatory floor of 20% by 2027–28 rising to 50% by 2030–31 for large water users.</p>
+    <p><strong>Say:</strong> "This is rendered in the shape KSPCB or BWSSB would actually consume. Karnataka's 2022 Data Centre Policy required no water report at all. Every figure here traces back to a signed batch in the ledger — nothing is operator-declared."</p>
+    <p>Note the distinction between <em>withdrawn</em> and <em>consumed</em> on the first two rows. That distinction is the one most corporate reporting quietly blurs, and having it as two separate rows is itself a statement.</p>
+  </div></div>
+</section>
+
+<!-- ============ PHYSICS ============ -->
+<section id="physics">
+  <h2>Every formula on screen</h2>
+  <p class="lede">Nothing in the console is a canned animation. One physics chain drives all six pages, so if a judge changes a control on one page, every other page moves consistently. If someone asks "is this hard-coded?", this table is your answer.</p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:190px">Quantity</th><th>Model</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>IT power</td><td class="mono">P = MW<sub>IT</sub> × load</td><td>Load follows a diurnal curve or the manual slider, smoothed so it ramps rather than jumps.</td></tr>
+      <tr><td>Heat rejected</td><td class="mono">Q = 0.96 × P</td><td>Essentially all IT power becomes heat.</td></tr>
+      <tr><td>Coolant flow</td><td class="mono">620 + 2100 × load  L/min</td><td>Pump scales with demand.</td></tr>
+      <tr><td>Loop ΔT</td><td class="mono">ΔT = Q × 60 / (ṁ × c<sub>p</sub>)</td><td>c<sub>p</sub> = 4.18 kJ/kg·K. Return temperature = supply + ΔT.</td></tr>
+      <tr><td>Junction temperature</td><td class="mono">T<sub>j</sub> = T<sub>supply</sub> + ΔT + 38·load + 5</td><td>Throttles above 85 °C.</td></tr>
+      <tr><td>Evaporation</td><td class="mono">1.593 × Q × f  L/h</td><td>From the latent heat of vaporisation (~2260 kJ/kg). f = 1.0 open tower, 0.14 closed loop.</td></tr>
+      <tr><td>Blowdown</td><td class="mono">evaporation / (CoC − 1)</td><td>CoC = 4.2 tower, 6.5 closed loop.</td></tr>
+      <tr><td>Makeup demand</td><td class="mono">evaporation + blowdown</td><td>What must be replaced from somewhere.</td></tr>
+      <tr><td>MD feed temperature</td><td class="mono">T<sub>f</sub> = T<sub>return</sub> − 2.5 °C</td><td>Loss across the heat exchanger. Permeate side held at 28 °C.</td></tr>
+      <tr><td>Polarisation coefficient</td><td class="mono">τ = 0.78 − 0.004·(T<sub>f</sub> − T<sub>p</sub>)</td><td>Bounded 0.55–0.82. Boundary layers get worse as ΔT grows.</td></tr>
+      <tr><td>Membrane surface temps</td><td class="mono">T<sub>fm</sub> = T<sub>f</sub> − (1−τ)/2·ΔT<br>T<sub>pm</sub> = T<sub>p</sub> + (1−τ)/2·ΔT</td><td>What the membrane actually sees.</td></tr>
+      <tr><td>Vapour pressure</td><td class="mono">Antoine equation</td><td><code>log₁₀P = 8.07131 − 1730.63/(233.426+T)</code>, mmHg → Pa.</td></tr>
+      <tr><td>Flux</td><td class="mono">J = B·(P<sub>w</sub>(T<sub>fm</sub>)·a<sub>w</sub> − P<sub>w</sub>(T<sub>pm</sub>))</td><td>B = 2.2×10⁻³ L/(m²·h·Pa), membrane area 40 m². a<sub>w</sub> reduced by feed TDS.</td></tr>
+      <tr><td>Permeate rate</td><td class="mono">J × area, capped by tank volume</td><td>Skid gated off below 38 °C feed.</td></tr>
+      <tr><td>Thermal demand</td><td class="mono">150 kWh per m³ permeate</td><td>Typical MD specific energy.</td></tr>
+      <tr><td>Rejection</td><td class="mono">99.42% nominal, 84.8% wetted</td><td>Degrades slightly above 52 °C feed.</td></tr>
+      <tr><td>Permeate quality</td><td class="mono">C<sub>perm</sub> = C<sub>intake</sub> × CoC × (1 − R)</td><td>Concentration factor first, then rejection. This is why blowdown is the right feed — and why fluoride breaks first.</td></tr>
+      <tr><td>Dispatch</td><td class="mono">makeup first, then surplus by stress rank</td><td>Failed batches bypass dispatch entirely.</td></tr>
+      <tr><td>Ledger hash</td><td class="mono">FNV-style 64-bit over the document JSON + prev_hash</td><td>Recomputable, so the chain is independently auditable.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Timing: one tick is 2 simulated minutes, advancing every 340 ms at 1×. A batch is minted every 2 simulated hours on accumulated volume. The console warm-starts with ~14 hours of history so it opens in a realistic working state rather than an empty shell.</p>
+</section>
+
+<!-- ============ MONGO ============ -->
+<section id="mongo">
+  <h2>The MongoDB story</h2>
+  <p class="lede">Each choice below is load-bearing. A relational store would either break outright or need scaffolding for every one of them — and that is the argument to make, rather than "we used a database".</p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:200px">Capability</th><th>Where it is used</th><th>Why MongoDB specifically</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Time Series collections</strong></td><td>All sensor telemetry — coolant temps, flow, conductivity, fluoride and nitrate probes, blowdown rate</td><td>Purpose-built for high-frequency IoT ingestion with columnar compression and native bucketing. This stream is what feeds the forecast model.</td></tr>
+      <tr><td><strong>Flexible document schema</strong></td><td>The hardware-agnostic ingestion layer</td><td>Every vendor's RO skid, ETP or MD unit emits a different reading shape. A rigid schema breaks on the second vendor you onboard; documents absorb each device's native shape in one collection with no migration. <em>This is the technical core of "hardware-agnostic".</em></td></tr>
+      <tr><td><strong>Change Streams</strong></td><td>Dispatch and anomaly detection</td><td>A new reading <em>pushes</em> the scheduler — "heat is dropping, ramp MD down" — instead of a cron job polling. Reactive control, not batch.</td></tr>
+      <tr><td><strong>Geospatial 2dsphere index</strong></td><td>Routing recovered water</td><td>Match facility location against CGWB stress polygons and nearby villages and borewells to rank dispatch destinations by need.</td></tr>
+      <tr><td><strong>Aggregation pipeline</strong></td><td>The compliance reporting API</td><td>Rolls up litres withdrawn / recovered / reused / discharged per facility, per region, per month, in the shape a regulator would consume.</td></tr>
+      <tr><td><strong>Hash-chained documents</strong></td><td>The digital water passport ledger</td><td>Each batch stores the previous batch's hash → tamper-evident and independently checkable, with <em>no blockchain infrastructure</em>. Buildable in a hackathon, auditable by a regulator.</td></tr>
+      <tr><td><strong>Atlas Triggers / Functions</strong></td><td>Community delivery notifications</td><td>Serverless functions fired off change streams push SMS/WhatsApp to ward offices — how information actually reaches a Devanahalli-type community, versus a dashboard nobody there opens.</td></tr>
+      <tr><td><strong>Atlas Charts</strong></td><td>The regulator-facing view</td><td>Fastest path to a working BWSSB/KSPCB dashboard without hand-building a frontend.</td></tr>
+      <tr><td><strong>Atlas Vector Search</strong> <span class="chip info">stretch</span></td><td>Regulatory Q&amp;A over clearance documents, NOC conditions and CGWB reports</td><td>Lets an inspector ask in natural language: "which facilities declared municipal supply but show groundwater-consistent conductivity signatures?"</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Data model</h3>
+  <div class="flow">facilities         { _id, name, operator, geo: &lt;2dsphere&gt;, cooling_type,
+                     noc_number, noc_limit_kld, declared_source, district }
+
+sensor_readings    // time-series: timeField ts, metaField {facility_id, device}
+                   { facility_id, ts, device, metric, value, unit, vendor_payload }
+
+treatment_batches  { batch_id, facility_id, source, input_L, heat_used_kWh, output_L,
+                     recovery_pct, fluoride_mgL, nitrate_mgL, tds_mgL, ph,
+                     quality: "PASS"|"FAIL", standard: "BIS IS 10500",
+                     destination, prev_hash, hash, ts }
+
+dispatch_decisions { facility_id, ts, action, reason, forecast_heat_kW,
+                     target: { village, ward, stress_index }, litres }
+
+compliance_reports // materialised by aggregation pipeline, per facility/region/period</div>
+
+  <div class="say"><span class="tag">The one-liner for a MongoDB judge</span>
+    <p>"Time-series handles the ingest, flexible documents make us hardware-agnostic, change streams make the dispatch reactive, geospatial ranks who needs the water most, aggregation produces the regulator's report, and a hash-chained field makes the whole thing tamper-evident without any blockchain. Every one of those is doing real work — pull any one out and a specific feature stops functioning."</p></div>
+</section>
+
+<!-- ============ FACILITIES ============ -->
+<section id="facilities">
+  <h2>The four facilities</h2>
+  <p>Each one in the dropdown is chosen to make a different argument. Switching rescopes the entire simulation, ledger and compliance report to that site's NOC. Use them if a judge asks "does this only work for one site?"</p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:150px">Facility</th><th style="width:110px">Declared source</th><th>The argument it makes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Devanahalli DC-3</strong><br>2.4 MW · 169%</td><td>Third-party tanker + borewell</td><td>The base case. Block at 169% stage of extraction, borewells at 1,000 ft against ~200 ft recharge. High intake fluoride means <strong>fluoride is the binding parameter</strong> — the gate rejects on it long before nitrate or TDS.</td></tr>
+      <tr><td><strong>Whitefield DC-11</strong><br>1.6 MW · 118%</td><td>BWSSB municipal supply</td><td><strong>The mismatch case.</strong> Declared municipal, but the conductivity signature is groundwater-consistent. This is exactly what no agency currently checks — and it is the single best illustration of why a verification layer needs to exist. It also defaults to an open evaporative tower, so it shows the bad architecture.</td></tr>
+      <tr><td><strong>Greater Noida DC-7</strong><br>3.1 MW · 105%</td><td>Treated non-potable industrial network</td><td><strong>The good case.</strong> A notified over-exploited zone, but fed from the industrial authority's treated non-potable network — the correct model, and the one worth evidencing publicly so others copy it. Also proves the product is not Karnataka-specific.</td></tr>
+      <tr><td><strong>Tarluvada Park DC-1</strong><br>4.0 MW · 64%</td><td><em>Unspecified in clearance</em></td><td><strong>The seawater case.</strong> Seawater cooling is proposed here, not deployed, and the environmental clearance names no water source at all — the NOC field literally reads "not in EC". Coastal mode runs a closed secondary loop against a seawater heat exchanger and logs intake/discharge ΔT to the same ledger.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ QA ============ -->
+<section id="qa">
+  <h2>Judge Q&amp;A</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:250px">Question</th><th>Answer</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Why not RO?</strong></td><td>RO is pressure-driven and runs on electricity — it cannot consume waste heat at all. Using it would defeat our own premise. MD is thermally driven, so it is the only mainstream option that actually eats the byproduct we claim to repurpose.</td></tr>
+      <tr><td><strong>Isn't this the Oracle patent?</strong></td><td>That patent claims a hardware method — fixed topology, one steady liquid loop, seawater feed. It claims nothing about forecasting, dispatch or public verification. We're inland, mixed-cooling-type, and software-only.</td></tr>
+      <tr><td><strong>How do you know MD rejects fluoride and nitrate?</strong></td><td>Thermally driven vapour–liquid separation excludes non-volatile ions by principle, and published MD fluoride-removal studies support it. Exact rejection is feed- and membrane-specific and needs facility validation — we say so rather than overclaim.</td></tr>
+      <tr><td><strong>What happens to the concentrate?</strong></td><td>It is smaller and more concentrated than the original blowdown. Named pathway: ZLD crystalliser or licensed industrial reuse. It's on the schematic — we don't hide the residual stream.</td></tr>
+      <tr><td><strong>Why should anyone trust your numbers?</strong></td><td>They shouldn't have to. Probes log automatically rather than being self-reported, and the chain is independently recomputable — press the audit button. That is the entire point of the product.</td></tr>
+      <tr><td><strong>Where's the accountability today?</strong></td><td>Nowhere. No mandated public reporting exists, and no agency checks declared source against actual practice. That gap <em>is</em> the product.</td></tr>
+      <tr><td><strong>Why software and not hardware?</strong></td><td>Heat availability tracks IT load, which is unpredictable across India's mixed fleet. A forecasting and dispatch layer is what makes <em>any</em> treatment hardware usable at all — and it works with what a facility already owns.</td></tr>
+      <tr><td><strong>Who buys this?</strong></td><td>Operators, for compliance with the 2024 Liquid Waste Management Rules' 20%→50% reuse targets and for ESG reporting that survives scrutiny. And regulators — BWSSB, KSPCB, CGWB — who currently have no verification instrument at all.</td></tr>
+      <tr><td><strong>Isn't seawater cooling the real answer?</strong></td><td>It isn't deployed anywhere in India yet, and the one flagship project's clearance doesn't even name a water source. Seawater can cut freshwater demand, but moving the problem from an aquifer to the ocean isn't a closed loop — there's still thermal discharge, intake entrainment and brine.</td></tr>
+      <tr><td><strong>What if a facility just doesn't install your sensors?</strong></td><td>Then it's exactly where it is today — unverifiable. Our wedge is that the 2024 reuse mandates are arriving with real deadlines, and a facility that can <em>prove</em> its reuse fraction is in a materially better position than one that can only assert it.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ HONESTY ============ -->
+<section id="honesty">
+  <h2>What is real, what is simulated</h2>
+  <p class="lede">Say this before anyone asks. Volunteering the boundary makes every other claim more credible.</p>
+  <h3>Real</h3>
+  <ul>
+    <li>The physics: heat balance, loop ΔT, evaporation from latent heat, cycles of concentration, the Antoine vapour-pressure relationship, temperature polarisation, the flux model, and the concentration-then-rejection chain that produces permeate quality.</li>
+    <li>The regulatory framing: BIS IS 10500 limits, the Liquid Waste Management Rules 2024 targets, the CGWB extraction figures, the absence of any mandated reporting requirement.</li>
+    <li>The hash chain: genuinely computed and genuinely re-verifiable in the browser.</li>
+    <li>The data model: a real MongoDB schema you could deploy against.</li>
+  </ul>
+  <h3>Simulated</h3>
+  <ul>
+    <li>The telemetry — it's synthetic, generated by the model rather than read from a facility. The console says so in the footer.</li>
+    <li>The four facilities are composites built from published reporting, not live customers.</li>
+    <li>Coefficients (membrane permeability B, area, specific thermal energy) are typical literature values, not measurements from a specific membrane.</li>
+  </ul>
+  <div class="say"><span class="tag">How to phrase it</span>
+    <p>"The plant is simulated, but it isn't faked — every number on screen is computed from a physical model, which is why changing a control on one page moves every other page consistently. What we'd need from a real deployment is calibration, not a redesign."</p></div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  NeeruAI Presenter's Handbook · companion to the Water Verification &amp; Heat Dispatch Console prototype.<br>
+  Sources: CGWB 2024 dynamic groundwater assessment · CEEW 2026 · Down To Earth (2025–26) · Mongabay India · Nxtra by Airtel ESG 2025 · BIS IS 10500 · WHO drinking-water guidelines · India Liquid Waste Management Rules 2024 · Karnataka Data Centre Policy 2022.
+</footer>
