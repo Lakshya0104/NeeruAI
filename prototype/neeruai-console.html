@@ -1,157 +1,206 @@
 <title>NeeruAI Water Verification Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
 :root{
-  --paper:#F0F3F0; --surface:#FFFFFF; --surface-2:#F7F9F7; --surface-sunk:#EAEEEA;
+  --paper:#EFF2EF; --surface:#FFFFFF; --surface-2:#F7F9F7; --surface-sunk:#E8ECE8;
   --ink:#16241F; --ink-2:#4E5F58; --ink-3:#7E8D86;
   --rule:#D6DDD7; --rule-strong:#BCC7BE;
-  --neeru:#0E5C6B; --neeru-soft:#DCEBEC; --neeru-line:#9CC3C8;
-  --ochre:#A8681C;
+  --neeru:#0E5C6B; --neeru-soft:#DEECEE; --neeru-line:#9CC3C8;
+  --ochre:#A8681C; --ochre-soft:#F5E7D4;
   --pass:#24704E; --pass-bg:#DCEEE3;
   --warn:#A8770C; --warn-bg:#F6EBCF;
   --fail:#A83A2D; --fail-bg:#F7E0DC;
   --cold:#3C7EA6; --hot:#C4562A; --bd:#8A6A2E; --perm:#0E8A8F; --conc:#7E4A3E;
-  --shadow:0 1px 0 rgba(22,36,31,.05), 0 2px 10px rgba(22,36,31,.05);
+  --shadow:0 1px 0 rgba(22,36,31,.04), 0 2px 12px rgba(22,36,31,.05);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#101815; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0C1311;
+    --paper:#0E1613; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0B1210;
     --ink:#E6EDE8; --ink-2:#A2B2AB; --ink-3:#7D8D86;
-    --rule:#2A3833; --rule-strong:#3A4A44;
-    --neeru:#5FB6C0; --neeru-soft:#16302F; --neeru-line:#2F595D;
-    --ochre:#D69A4E;
+    --rule:#2A3833; --rule-strong:#3C4C46;
+    --neeru:#5FB6C0; --neeru-soft:#15302F; --neeru-line:#2F595D;
+    --ochre:#D69A4E; --ochre-soft:#2C2114;
     --pass:#63C295; --pass-bg:#173026; --warn:#E0B24E; --warn-bg:#2F2711; --fail:#E88070; --fail-bg:#331815;
     --cold:#6BA9CC; --hot:#E38558; --bd:#C9A65E; --perm:#4FC6C9; --conc:#C08874;
-    --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 12px rgba(0,0,0,.3);
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 14px rgba(0,0,0,.32);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#101815; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0C1311;
+  --paper:#0E1613; --surface:#182320; --surface-2:#1D2A26; --surface-sunk:#0B1210;
   --ink:#E6EDE8; --ink-2:#A2B2AB; --ink-3:#7D8D86;
-  --rule:#2A3833; --rule-strong:#3A4A44;
-  --neeru:#5FB6C0; --neeru-soft:#16302F; --neeru-line:#2F595D;
-  --ochre:#D69A4E;
+  --rule:#2A3833; --rule-strong:#3C4C46;
+  --neeru:#5FB6C0; --neeru-soft:#15302F; --neeru-line:#2F595D;
+  --ochre:#D69A4E; --ochre-soft:#2C2114;
   --pass:#63C295; --pass-bg:#173026; --warn:#E0B24E; --warn-bg:#2F2711; --fail:#E88070; --fail-bg:#331815;
   --cold:#6BA9CC; --hot:#E38558; --bd:#C9A65E; --perm:#4FC6C9; --conc:#C08874;
-  --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 12px rgba(0,0,0,.3);
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 2px 14px rgba(0,0,0,.32);
 }
-
 *{box-sizing:border-box}
-body{
-  margin:0; background:var(--paper); color:var(--ink);
-  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
-  font-size:13px; line-height:1.5;
-}
-h1,h2,h3{font-family:"Source Serif 4",Georgia,serif; margin:0; text-wrap:balance; letter-spacing:-.005em}
-.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums}
-button{font:inherit; color:inherit}
-:focus-visible{outline:2px solid var(--neeru); outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:13px;line-height:1.5}
+h1,h2,h3,.serif{font-family:"Source Serif 4",Georgia,serif;margin:0;text-wrap:balance}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--neeru);outline-offset:2px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 
-/* ---------- masthead ---------- */
-.rail{height:3px; background:linear-gradient(90deg,var(--ochre) 0 22%,var(--neeru) 22% 100%)}
-.masthead{
-  background:var(--surface); border-bottom:1px solid var(--rule);
-  padding:12px 18px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-}
-.emblem{
-  width:38px;height:38px;border-radius:2px;border:1.5px solid var(--neeru);
-  display:grid;place-items:center;flex:none;background:var(--neeru-soft);
-}
-.emblem svg{display:block}
-.mast-id{display:flex;flex-direction:column;gap:1px;margin-right:auto}
-.mast-id .kn{font-family:"Noto Sans Kannada",sans-serif;color:var(--neeru);font-size:15px;line-height:1}
-.mast-id h1{font-size:19px}
-.mast-id .sub{color:var(--ink-2);font-size:11.5px;letter-spacing:.02em}
-.mast-meta{display:flex;gap:20px;align-items:center}
-.meta-cell{display:flex;flex-direction:column;gap:1px}
-.meta-cell .lbl{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+/* ============ chrome ============ */
+.rail{height:3px;background:linear-gradient(90deg,var(--ochre) 0 20%,var(--neeru) 20% 100%)}
+.masthead{background:var(--surface);border-bottom:1px solid var(--rule);
+  padding:11px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.emblem{width:36px;height:36px;border-radius:2px;border:1.5px solid var(--neeru);
+  display:grid;place-items:center;flex:none;background:var(--neeru-soft)}
+.mast-id{margin-right:auto;display:flex;flex-direction:column;gap:0}
+.mast-id .kn{font-family:"Noto Sans Kannada",sans-serif;color:var(--neeru);font-size:14px;line-height:1.2}
+.mast-id h1{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.mast-id .sub{color:var(--ink-2);font-size:11px}
+.mast-meta{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.meta-cell{display:flex;flex-direction:column}
+.meta-cell .lbl{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
 .meta-cell .val{font-size:13px;font-weight:500}
+select.fac{background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;padding:4px 8px;font-size:12px;max-width:230px}
 
-/* ---------- control strip ---------- */
-.controls{
-  background:var(--surface-2); border-bottom:1px solid var(--rule);
-  padding:8px 18px; display:flex; gap:18px; align-items:center; flex-wrap:wrap;
-}
-.ctl{display:flex;align-items:center;gap:8px}
-.ctl > span.lbl{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+/* stage nav */
+nav.stages{background:var(--surface);border-bottom:1px solid var(--rule);
+  display:flex;gap:0;padding:0 20px;overflow-x:auto}
+nav.stages button{background:none;border:0;border-bottom:2px solid transparent;
+  padding:9px 16px 8px;cursor:pointer;display:flex;gap:8px;align-items:baseline;white-space:nowrap;color:var(--ink-2)}
+nav.stages button .no{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);letter-spacing:.05em}
+nav.stages button .nm{font-size:12.5px}
+nav.stages button[aria-current="page"]{border-bottom-color:var(--neeru);color:var(--neeru)}
+nav.stages button[aria-current="page"] .nm{font-weight:600}
+nav.stages button[aria-current="page"] .no{color:var(--neeru)}
+nav.stages button:hover{color:var(--neeru)}
+
+/* controls */
+.controls{background:var(--surface-2);border-bottom:1px solid var(--rule);
+  padding:7px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.ctl{display:flex;align-items:center;gap:7px}
+.ctl > .lbl{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
 .seg{display:flex;border:1px solid var(--rule-strong);border-radius:3px;overflow:hidden;background:var(--surface)}
-.seg button{background:none;border:0;padding:4px 10px;font-size:11.5px;cursor:pointer;color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button{background:none;border:0;padding:3.5px 10px;font-size:11.5px;cursor:pointer;color:var(--ink-2);border-right:1px solid var(--rule)}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{background:var(--neeru);color:#fff;font-weight:600}
-input[type=range]{accent-color:var(--neeru);width:130px}
-.btn{
-  background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;
-  padding:4px 11px;font-size:11.5px;cursor:pointer;
-}
+input[type=range]{accent-color:var(--neeru);width:118px}
+.btn{background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;padding:3.5px 11px;font-size:11.5px;cursor:pointer}
 .btn:hover{border-color:var(--neeru);color:var(--neeru)}
-.btn.armed{background:var(--fail-bg);border-color:var(--fail);color:var(--fail);font-weight:600}
+.btn.on{background:var(--fail-bg);border-color:var(--fail);color:var(--fail);font-weight:600}
 
-/* ---------- KPI ribbon ---------- */
-.ribbon{
-  display:grid;grid-template-columns:repeat(6,1fr);
-  background:var(--surface);border-bottom:1px solid var(--rule);
-}
-.kpi{padding:10px 16px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:2px}
+/* kpi strip */
+.strip{display:grid;grid-template-columns:repeat(6,1fr);background:var(--surface);border-bottom:1px solid var(--rule)}
+.kpi{padding:7px 16px;border-right:1px solid var(--rule);display:flex;flex-direction:column;min-width:0}
 .kpi:last-child{border-right:0}
-.kpi .lbl{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
-.kpi .num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:22px;font-weight:500;line-height:1.15}
-.kpi .unit{font-size:11px;color:var(--ink-2);font-weight:400;margin-left:3px;font-family:"IBM Plex Sans",sans-serif}
-.kpi .foot{font-size:10.5px;color:var(--ink-3)}
+.kpi .lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:17px;font-weight:500;line-height:1.3}
+.kpi .unit{font-size:10.5px;color:var(--ink-2);margin-left:3px;font-family:"IBM Plex Sans",sans-serif}
 .kpi.good .num{color:var(--pass)} .kpi.bad .num{color:var(--fail)}
 
-/* ---------- layout ---------- */
-.wrap{padding:14px 18px 26px;display:flex;flex-direction:column;gap:14px}
-.console{display:grid;grid-template-columns:290px minmax(0,1fr) 320px;gap:14px;align-items:start}
-.lower{display:grid;grid-template-columns:1.15fr 1.25fr 1fr;gap:14px;align-items:start}
-.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+/* ============ page shell ============ */
+main{padding:16px 20px 30px}
+.page{display:none}
+.page.on{display:block}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.gridA{display:grid;grid-template-columns:300px minmax(0,1fr);gap:14px;align-items:start}
+.gridB{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
 
 .panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);min-width:0}
-.panel > header{
-  padding:8px 12px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px;
-}
+.panel > header{padding:8px 13px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px}
 .panel > header h2{font-size:13px;font-weight:700}
-.panel > header .tag{
-  margin-left:auto;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
-}
+.panel > header .tag{margin-left:auto;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
 .panel .body{padding:12px}
-.panel .body.tight{padding:8px}
+.panel .body.tight{padding:7px}
 .panel .body.flush{padding:0}
+.note{font-size:10.5px;color:var(--ink-3);padding:8px 13px;border-top:1px solid var(--rule);line-height:1.55}
+.note b,.note strong{color:var(--ink-2)}
+.note code{font-family:"IBM Plex Mono",monospace;font-size:10px;background:var(--surface-sunk);padding:0 3px;border-radius:2px}
 
-/* ---------- instrument list ---------- */
-.readouts{display:flex;flex-direction:column}
-.ro{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline;padding:5px 12px;border-bottom:1px solid var(--rule)}
-.ro:last-child{border-bottom:0}
-.ro .n{color:var(--ink-2);font-size:11.5px}
-.ro .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:500}
-.ro .v small{color:var(--ink-3);font-weight:400;margin-left:2px}
-.bar{height:3px;background:var(--surface-sunk);border-radius:2px;overflow:hidden;grid-column:1/-1;margin-top:3px}
-.bar i{display:block;height:100%;background:var(--neeru);transition:width .25s linear}
+.page-lede{display:flex;gap:20px;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap}
+.page-lede h2{font-size:22px;font-weight:600;letter-spacing:-.012em}
+.page-lede p{margin:2px 0 0;color:var(--ink-2);max-width:66ch;font-size:12.5px}
+.page-lede .stagemark{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--neeru);letter-spacing:.14em;display:block;margin-bottom:3px}
 
-/* facility register */
-.reg{display:flex;flex-direction:column}
-.reg button{
-  text-align:left;background:none;border:0;border-bottom:1px solid var(--rule);
-  padding:8px 12px;cursor:pointer;display:grid;gap:2px;width:100%
-}
-.reg button:last-child{border-bottom:0}
-.reg button[aria-pressed="true"]{background:var(--neeru-soft);box-shadow:inset 3px 0 0 var(--neeru)}
-.reg .nm{font-weight:600;font-size:12.5px}
-.reg .dt{font-size:10.5px;color:var(--ink-3)}
-.chip{
-  display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:600;
-  letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:2px;
-}
+/* ============ hero ============ */
+.hero{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);overflow:hidden}
+.hero-top{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:0}
+.hero-copy{padding:34px 36px 30px;border-right:1px solid var(--rule)}
+.hero-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre);margin-bottom:14px}
+.hero h2{font-size:37px;line-height:1.13;font-weight:600;letter-spacing:-.022em}
+.hero h2 em{font-style:normal;color:var(--neeru)}
+.hero .tagline{font-family:"Source Serif 4",serif;font-size:16.5px;line-height:1.45;color:var(--ink-2);margin:16px 0 0;max-width:44ch}
+.hero .defn{margin:20px 0 0;padding:13px 15px;border-left:2.5px solid var(--neeru);background:var(--surface-2);font-size:12.5px;line-height:1.62;max-width:56ch}
+.hero-cta{display:flex;gap:9px;margin-top:22px;flex-wrap:wrap}
+.cta{background:var(--neeru);color:#fff;border:1px solid var(--neeru);border-radius:3px;padding:8px 17px;font-size:12.5px;font-weight:600;cursor:pointer}
+.cta:hover{filter:brightness(1.12)}
+.cta.ghost{background:none;color:var(--neeru);border-color:var(--rule-strong)}
+.cta.ghost:hover{border-color:var(--neeru)}
+.hero-vis{padding:22px 26px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)}
+.hero-vis .cap{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px;align-items:center}
+.livedot{width:6px;height:6px;border-radius:50%;background:var(--pass);box-shadow:0 0 0 3px var(--pass-bg)}
+@keyframes bp{0%,100%{opacity:1}50%{opacity:.35}}
+.livedot{animation:bp 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.livedot{animation:none}}
+
+.layers{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule)}
+.layer{padding:18px 22px 20px;border-right:1px solid var(--rule)}
+.layer:last-child{border-right:0}
+.layer .lno{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;color:var(--ink-3)}
+.layer h3{font-size:15px;margin:5px 0 0;font-weight:700;display:flex;align-items:center;gap:8px}
+.layer h3 .dot{width:9px;height:9px;border-radius:2px;flex:none}
+.layer .what{font-size:12px;color:var(--ink-2);margin:7px 0 0;line-height:1.6}
+.layer .how{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--neeru);margin-top:9px;padding-top:8px;border-top:1px dashed var(--rule-strong)}
+
+.figs{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--rule);background:var(--surface-2)}
+.fig{padding:15px 20px 16px;border-right:1px solid var(--rule)}
+.fig:last-child{border-right:0}
+.fig .v{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:500;line-height:1.1;color:var(--ink)}
+.fig .v.red{color:var(--fail)}
+.fig .k{font-size:11px;color:var(--ink-2);margin-top:5px;line-height:1.45}
+.fig .src{font-size:9.5px;color:var(--ink-3);margin-top:4px;letter-spacing:.03em}
+
+.gap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.gapcard{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:16px 18px;box-shadow:var(--shadow)}
+.gapcard h4{font-family:"Source Serif 4",serif;font-size:14px;margin:0 0 6px;font-weight:700}
+.gapcard p{margin:0;font-size:11.8px;color:var(--ink-2);line-height:1.62}
+.gapcard .mk{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ochre);margin-bottom:8px}
+
+/* ============ shared components ============ */
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:1.5px 6px;border-radius:2px}
 .chip.pass{background:var(--pass-bg);color:var(--pass)}
 .chip.warn{background:var(--warn-bg);color:var(--warn)}
 .chip.fail{background:var(--fail-bg);color:var(--fail)}
 .chip.info{background:var(--neeru-soft);color:var(--neeru)}
+.chip.ochre{background:var(--ochre-soft);color:var(--ochre)}
 
-/* ---------- schematic ---------- */
-.schem{width:100%;height:auto;display:block;background:var(--surface-2)}
+.readouts{display:flex;flex-direction:column}
+.ro{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline;padding:5px 13px;border-bottom:1px solid var(--rule)}
+.ro:last-child{border-bottom:0}
+.ro .n{color:var(--ink-2);font-size:11.5px}
+.ro .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:500}
+.ro .v small{color:var(--ink-3);font-weight:400;margin-left:3px}
+.bar{height:3px;background:var(--surface-sunk);border-radius:2px;overflow:hidden;grid-column:1/-1;margin-top:3px}
+.bar i{display:block;height:100%;background:var(--neeru);transition:width .25s linear}
+
+canvas{display:block;width:100%;height:auto}
+svg.fig-svg{width:100%;height:auto;display:block;background:var(--surface-2)}
+.legend{display:flex;gap:13px;flex-wrap:wrap;padding:8px 13px;border-top:1px solid var(--rule);font-size:10.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:13px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.legend .sq{width:9px;height:9px;border-radius:50%}
+
+table{border-collapse:collapse;width:100%;font-size:11.5px}
+th,td{text-align:left;padding:5px 13px;border-bottom:1px solid var(--rule)}
+th{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+tr:last-child td{border-bottom:0}
+tfoot td{font-weight:600;background:var(--surface-2)}
+
+/* schematic */
 .nodeBox{fill:var(--surface);stroke:var(--rule-strong);stroke-width:1.2}
-.nodeBox.act{stroke:var(--neeru);stroke-width:1.6}
+.nodeBox.act{stroke:var(--neeru);stroke-width:1.7}
 .nodeTitle{font-family:"IBM Plex Sans",sans-serif;font-size:10px;font-weight:700;fill:var(--ink)}
 .nodeSub{font-family:"IBM Plex Sans",sans-serif;font-size:8.4px;fill:var(--ink-3);letter-spacing:.05em}
 .nodeVal{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500;fill:var(--neeru)}
@@ -159,12 +208,10 @@ input[type=range]{accent-color:var(--neeru);width:130px}
 .pipeGhost{fill:none;stroke:var(--rule);stroke-width:5;stroke-linecap:round;opacity:.5}
 .pipeLbl{font-family:"IBM Plex Mono",monospace;font-size:8.6px;fill:var(--ink-2)}
 .zoneLbl{font-family:"Source Serif 4",serif;font-size:10px;font-weight:700;fill:var(--ink-3);letter-spacing:.14em}
-.legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--rule);font-size:10.5px;color:var(--ink-2)}
-.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
 
-/* ---------- ledger ---------- */
-.ledger{display:flex;flex-direction:column;max-height:404px;overflow-y:auto}
-.batch{padding:8px 12px;border-bottom:1px solid var(--rule);display:grid;gap:3px}
+/* ledger */
+.ledger{display:flex;flex-direction:column;max-height:430px;overflow-y:auto}
+.batch{padding:8px 13px;border-bottom:1px solid var(--rule);display:grid;gap:3px}
 .batch:last-child{border-bottom:0}
 .batch.fail{background:var(--fail-bg)}
 .batch .r1{display:flex;align-items:center;gap:6px}
@@ -175,56 +222,48 @@ input[type=range]{accent-color:var(--neeru);width:130px}
 .batch .r2 .over{color:var(--fail);font-weight:600}
 .batch .hash{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-3);word-break:break-all}
 .batch .dest{font-size:10.5px;color:var(--ink-2)}
-
-/* ---------- passport ---------- */
-.passport{border:1px dashed var(--neeru-line);background:var(--neeru-soft);border-radius:3px;padding:10px 12px;display:grid;gap:5px}
-.pp-row{display:grid;grid-template-columns:96px 1fr;gap:8px;font-size:11.5px}
-.pp-row .k{color:var(--ink-2);letter-spacing:.03em}
+.passport{border:1px dashed var(--neeru-line);background:var(--neeru-soft);border-radius:3px;padding:11px 13px;display:grid;gap:5px}
+.pp-row{display:grid;grid-template-columns:98px 1fr;gap:8px;font-size:11.5px}
+.pp-row .k{color:var(--ink-2)}
 .pp-row .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
 
-/* ---------- charts ---------- */
-canvas{display:block;width:100%;height:auto}
-
-/* ---------- mongo inspector ---------- */
+/* mongo */
 .tabs{display:flex;border-bottom:1px solid var(--rule);overflow-x:auto}
-.tabs button{
-  background:none;border:0;border-bottom:2px solid transparent;padding:7px 11px;
-  font-size:11px;cursor:pointer;color:var(--ink-2);white-space:nowrap;
-  font-family:"IBM Plex Mono",monospace;
-}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:7px 11px;font-size:11px;cursor:pointer;
+  color:var(--ink-2);white-space:nowrap;font-family:"IBM Plex Mono",monospace}
 .tabs button[aria-pressed="true"]{color:var(--neeru);border-bottom-color:var(--neeru);font-weight:600}
-pre.doc{
-  margin:0;padding:11px 12px;background:var(--surface-sunk);
-  font-family:"IBM Plex Mono",monospace;font-size:10.5px;line-height:1.55;
-  overflow-x:auto;max-height:250px;overflow-y:auto;color:var(--ink);
-  border-bottom:1px solid var(--rule);
-}
+pre.doc{margin:0;padding:11px 13px;background:var(--surface-sunk);font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;line-height:1.55;overflow-x:auto;max-height:270px;overflow-y:auto;color:var(--ink);border-bottom:1px solid var(--rule)}
 pre.doc .k{color:var(--neeru)} pre.doc .s{color:var(--pass)} pre.doc .n{color:var(--hot)} pre.doc .c{color:var(--ink-3)}
-.streamlog{display:flex;flex-direction:column;max-height:120px;overflow-y:auto}
-.ev{display:grid;grid-template-columns:52px 1fr;gap:8px;padding:4px 12px;border-bottom:1px solid var(--rule);font-size:10.5px}
+.streamlog{display:flex;flex-direction:column;max-height:132px;overflow-y:auto}
+.ev{display:grid;grid-template-columns:50px 1fr;gap:8px;padding:4px 13px;border-bottom:1px solid var(--rule);font-size:10.5px}
 .ev:last-child{border-bottom:0}
 .ev .ts{font-family:"IBM Plex Mono",monospace;color:var(--ink-3)}
 .ev .msg{color:var(--ink-2)}
 .ev .msg b{color:var(--ink);font-weight:600}
 
-/* ---------- compliance table ---------- */
-table{border-collapse:collapse;width:100%;font-size:11.5px}
-th,td{text-align:left;padding:5px 12px;border-bottom:1px solid var(--rule)}
-th{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
-tr:last-child td{border-bottom:0}
-tfoot td{font-weight:600;background:var(--surface-2)}
+/* heat cascade */
+.cascade{display:flex;flex-direction:column}
+.band{display:grid;grid-template-columns:88px 1fr auto;gap:11px;align-items:center;padding:9px 13px;border-bottom:1px solid var(--rule)}
+.band:last-child{border-bottom:0}
+.band .rng{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500}
+.band .use{font-size:11.5px;color:var(--ink-2);line-height:1.4}
+.band .use b{color:var(--ink);font-weight:600;display:block;font-size:12px}
+.band.active{background:var(--ochre-soft)}
+.band.active .rng{color:var(--ochre)}
+.swatch{width:5px;align-self:stretch;border-radius:3px;grid-row:1;min-height:32px}
 
-.note{font-size:10.5px;color:var(--ink-3);padding:8px 12px;border-top:1px solid var(--rule);line-height:1.5}
-.foot{
-  padding:14px 18px;border-top:1px solid var(--rule);color:var(--ink-3);font-size:10.5px;
-  display:flex;gap:18px;flex-wrap:wrap;background:var(--surface)
-}
-@media (max-width:1180px){
-  .console{grid-template-columns:1fr}
-  .lower{grid-template-columns:1fr}
-  .ribbon{grid-template-columns:repeat(3,1fr)}
+.foot{padding:14px 20px;border-top:1px solid var(--rule);color:var(--ink-3);font-size:10.5px;
+  display:flex;gap:20px;flex-wrap:wrap;background:var(--surface)}
+@media (max-width:1200px){
+  .grid3,.grid2,.gridA,.gridB{grid-template-columns:1fr}
+  .strip{grid-template-columns:repeat(3,1fr)}
   .kpi{border-bottom:1px solid var(--rule)}
+  .hero-top{grid-template-columns:1fr}
+  .hero-copy{border-right:0;border-bottom:1px solid var(--rule);padding:26px 24px}
+  .hero h2{font-size:28px}
+  .layers,.figs,.gap{grid-template-columns:1fr}
+  .layer,.fig{border-right:0;border-bottom:1px solid var(--rule)}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -233,9 +272,8 @@ tfoot td{font-weight:600;background:var(--surface-2)}
 
 <header class="masthead">
   <div class="emblem" aria-hidden="true">
-    <svg width="22" height="24" viewBox="0 0 22 24">
-      <path d="M11 1.5 C11 1.5 3.5 10.4 3.5 15.4 A7.5 7.5 0 0 0 18.5 15.4 C18.5 10.4 11 1.5 11 1.5 Z"
-            fill="none" stroke="#0E5C6B" stroke-width="1.5"/>
+    <svg width="21" height="23" viewBox="0 0 22 24">
+      <path d="M11 1.5 C11 1.5 3.5 10.4 3.5 15.4 A7.5 7.5 0 0 0 18.5 15.4 C18.5 10.4 11 1.5 11 1.5 Z" fill="none" stroke="#0E5C6B" stroke-width="1.5"/>
       <path d="M6.6 15.6 q2.2-2 4.4 0 t4.4 0" fill="none" stroke="#0E5C6B" stroke-width="1.3"/>
       <path d="M6.6 18.6 q2.2-2 4.4 0 t4.4 0" fill="none" stroke="#0E5C6B" stroke-width="1.3" opacity=".55"/>
     </svg>
@@ -243,37 +281,45 @@ tfoot td{font-weight:600;background:var(--surface-2)}
   <div class="mast-id">
     <span class="kn">ನೀರುAI</span>
     <h1>Water Verification &amp; Heat Dispatch Console</h1>
-    <span class="sub">Prototype instance · Karnataka State Pollution Control Board / BWSSB shared view · CGWB data linkage active</span>
+    <span class="sub">Prototype · KSPCB / BWSSB shared view · CGWB data linkage active</span>
   </div>
   <div class="mast-meta">
+    <div class="meta-cell"><span class="lbl">Facility</span>
+      <select class="fac" id="facSel" aria-label="Facility"></select></div>
     <div class="meta-cell"><span class="lbl">Sim clock (IST)</span><span class="val mono" id="clock">06:00</span></div>
-    <div class="meta-cell"><span class="lbl">Ledger height</span><span class="val mono" id="ledgerHeight">0</span></div>
-    <div class="meta-cell"><span class="lbl">Chain state</span><span class="val" id="chainState"><span class="chip pass">Verified</span></span></div>
+    <div class="meta-cell"><span class="lbl">Ledger</span><span class="val mono" id="ledgerHeight">0</span></div>
+    <div class="meta-cell"><span class="lbl">Chain</span><span class="val" id="chainState"><span class="chip pass">Verified</span></span></div>
   </div>
 </header>
 
-<div class="controls">
+<nav class="stages" id="nav" aria-label="Stages">
+  <button data-p="hero" aria-current="page"><span class="no">◈</span><span class="nm">Overview</span></button>
+  <button data-p="dc"><span class="no">01</span><span class="nm">Data centre &amp; cooling</span></button>
+  <button data-p="heat"><span class="no">02</span><span class="nm">Heat recovery</span></button>
+  <button data-p="md"><span class="no">03</span><span class="nm">Membrane distillation</span></button>
+  <button data-p="verify"><span class="no">04</span><span class="nm">Verification</span></button>
+  <button data-p="dispatch"><span class="no">05</span><span class="nm">Dispatch &amp; compliance</span></button>
+</nav>
+
+<div class="controls" id="controls">
   <div class="ctl"><span class="lbl">Cooling architecture</span>
     <div class="seg" id="modeSeg" role="group" aria-label="Cooling architecture">
       <button data-mode="tower" aria-pressed="false">Open evaporative tower</button>
       <button data-mode="closed" aria-pressed="true">Closed liquid loop</button>
-    </div>
-  </div>
+    </div></div>
   <div class="ctl"><span class="lbl">IT load</span>
     <div class="seg" id="loadSeg" role="group" aria-label="IT load source">
-      <button data-src="auto" aria-pressed="true">Diurnal profile</button>
+      <button data-src="auto" aria-pressed="true">Diurnal</button>
       <button data-src="manual" aria-pressed="false">Manual</button>
     </div>
     <input type="range" id="loadSlider" min="10" max="100" value="62" aria-label="Manual IT load percent" disabled>
-    <span class="mono" id="loadRead" style="width:38px">62%</span>
-  </div>
+    <span class="mono" id="loadRead" style="width:36px">62%</span></div>
   <div class="ctl"><span class="lbl">Speed</span>
     <div class="seg" id="speedSeg" role="group" aria-label="Simulation speed">
       <button data-sp="0" aria-pressed="false">Hold</button>
       <button data-sp="1" aria-pressed="true">1×</button>
       <button data-sp="4" aria-pressed="false">4×</button>
-    </div>
-  </div>
+    </div></div>
   <div class="ctl" style="margin-left:auto">
     <button class="btn" id="faultBtn">Inject membrane wetting fault</button>
     <button class="btn" id="burstBtn">Inject AI training burst</button>
@@ -281,52 +327,145 @@ tfoot td{font-weight:600;background:var(--surface-2)}
   </div>
 </div>
 
-<div class="ribbon" id="ribbon">
-  <div class="kpi"><span class="lbl">Net freshwater draw</span><span class="num" id="k_draw">—<span class="unit">KL/day</span></span><span class="foot" id="k_draw_f">against NOC cap 140 KL/day</span></div>
-  <div class="kpi good"><span class="lbl">Water recovered today</span><span class="num" id="k_rec">—<span class="unit">KL</span></span><span class="foot" id="k_rec_f">from blowdown / RO reject</span></div>
-  <div class="kpi"><span class="lbl">Recovery ratio</span><span class="num" id="k_ratio">—<span class="unit">%</span></span><span class="foot">permeate ÷ reject feed</span></div>
-  <div class="kpi"><span class="lbl">Waste heat utilised</span><span class="num" id="k_heat">—<span class="unit">kW<sub>th</sub></span></span><span class="foot" id="k_heat_f">0% of rejected heat</span></div>
-  <div class="kpi"><span class="lbl">Batches released</span><span class="num" id="k_batch">—</span><span class="foot" id="k_batch_f">0 quarantined on BIS gate</span></div>
-  <div class="kpi"><span class="lbl">Litres to community</span><span class="num" id="k_comm">—<span class="unit">L</span></span><span class="foot" id="k_comm_f">verified deliveries</span></div>
+<div class="strip" id="strip">
+  <div class="kpi"><span class="lbl">Net freshwater draw</span><span class="num" id="k_draw">—<span class="unit">KL/day</span></span></div>
+  <div class="kpi good"><span class="lbl">Recovered today</span><span class="num" id="k_rec">—<span class="unit">KL</span></span></div>
+  <div class="kpi"><span class="lbl">Recovery ratio</span><span class="num" id="k_ratio">—<span class="unit">%</span></span></div>
+  <div class="kpi"><span class="lbl">Waste heat utilised</span><span class="num" id="k_heat">—<span class="unit">kW</span></span></div>
+  <div class="kpi"><span class="lbl">Batches released</span><span class="num" id="k_batch">—</span></div>
+  <div class="kpi"><span class="lbl">Litres to community</span><span class="num" id="k_comm">—<span class="unit">L</span></span></div>
 </div>
 
-<main class="wrap">
+<main>
 
-<section class="console">
-  <!-- LEFT -->
-  <div class="col">
-    <section class="panel">
-      <header><h2>Facility register</h2><span class="tag">4 monitored</span></header>
-      <div class="body flush reg" id="reg"></div>
-      <p class="note" id="regNote"></p>
-    </section>
+<!-- ================= HERO ================= -->
+<section class="page on" id="p_hero">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <div class="hero-eyebrow">NeeruAI · closed-loop water &amp; heat operating system</div>
+        <h2>India's data centres draw water nobody measures, and reject heat nobody uses. <em>We close both loops, and prove it.</em></h2>
+        <p class="tagline">Don't just purify the water a data centre throws away. Make the data centre need less water in the first place.</p>
+        <div class="defn">
+          <strong>NeeruAI</strong> reduces freshwater demand with closed liquid cooling, recovers water from the concentrated reject stream using the facility's <em>own</em> waste heat, and cryptographically verifies every recovered litre before it is reused or released.
+        </div>
+        <div class="hero-cta">
+          <button class="cta" data-go="dc">Open the live plant simulation →</button>
+          <button class="cta ghost" data-go="md">Jump to the membrane module</button>
+        </div>
+      </div>
+      <div class="hero-vis">
+        <div class="cap"><span class="livedot"></span><span>Simulation running · <span id="heroStat" class="mono"></span></span></div>
+        <canvas id="heroCanvas" width="1180" height="620" aria-label="Live schematic of the closed water and heat loop"></canvas>
+      </div>
+    </div>
 
-    <section class="panel">
-      <header><h2>Live instrumentation</h2><span class="tag">1 Hz · time-series</span></header>
-      <div class="body flush readouts" id="readouts"></div>
-    </section>
+    <div class="layers">
+      <div class="layer">
+        <span class="lno">LAYER 01</span>
+        <h3><span class="dot" style="background:var(--pass)"></span>REDUCE</h3>
+        <p class="what">Cut the freshwater draw at its source. Direct-to-chip and immersion cooling move heat in a <em>recirculating</em> loop instead of evaporating municipal or borewell water into the sky.</p>
+        <div class="how">open tower → closed liquid loop</div>
+      </div>
+      <div class="layer">
+        <span class="lno">LAYER 02</span>
+        <h3><span class="dot" style="background:var(--neeru)"></span>RECOVER</h3>
+        <p class="what">Whatever is still lost, take back. Waste heat drives membrane distillation on the blowdown stream — already concentrated, already contaminated, today simply drained.</p>
+        <div class="how">waste heat → MD → permeate</div>
+      </div>
+      <div class="layer">
+        <span class="lno">LAYER 03</span>
+        <h3><span class="dot" style="background:var(--ochre)"></span>VERIFY</h3>
+        <p class="what">Prove it happened. Inline probes feed a hash-chained ledger checked against BIS IS 10500 <em>drinking-water</em> limits — not the laxer industrial-effluent limits every operator quietly reports against.</p>
+        <div class="how">sensor → gate → chained ledger</div>
+      </div>
+    </div>
+
+    <div class="figs">
+      <div class="fig"><div class="v red">169%</div><div class="k">Devanahalli groundwater extraction, against the sustainable limit</div><div class="src">CGWB</div></div>
+      <div class="fig"><div class="v">1,000 ft</div><div class="k">Typical borewell depth. Natural recharge reaches ~200 ft</div><div class="src">Field reporting</div></div>
+      <div class="fig"><div class="v">60.47%</div><div class="k">National stage of extraction; 11.1% of units over-exploited</div><div class="src">CGWB 2024</div></div>
+      <div class="fig"><div class="v">150 bn L</div><div class="k">Annual water use by Indian data centres</div><div class="src">CEEW 2026</div></div>
+      <div class="fig"><div class="v red">0</div><div class="k">Facilities required to publish actual consumption or discharge</div><div class="src">No rule exists</div></div>
+    </div>
   </div>
 
-  <!-- CENTRE -->
-  <div class="col">
+  <div class="gap">
+    <div class="gapcard">
+      <div class="mk">The false binary</div>
+      <h4>Seawater cooling in India is proposed, not deployed</h4>
+      <p>Andhra Pradesh's policy floats it for Tarluvada, but the environmental clearance names no water source at all. The real fight today is groundwater vs. municipal vs. treated non-potable vs. recycled blowdown — and almost nobody discloses which. Seawater can cut freshwater demand, but moving the problem from an aquifer to the ocean is not a closed loop.</p>
+    </div>
+    <div class="gapcard">
+      <div class="mk">The verification gap</div>
+      <h4>Once a clearance is granted, nobody checks</h4>
+      <p>A groundwater NOC fixes an extraction cap. Nothing requires publishing what is actually drawn or discharged, and no agency verifies the declared source against on-site practice. The EU mandates disclosure; India does not. Without independent verification, "water-neutral" is unfalsifiable — which is the definition of greenwashing.</p>
+    </div>
+    <div class="gapcard">
+      <div class="mk">Why software</div>
+      <h4>Heat availability tracks an unpredictable IT load</h4>
+      <p>Oracle's 2018 patent claims a fixed hardware topology on a steady seawater loop. India's fleet is mixed air- and liquid-cooled, inland, and fragmented. A forecasting and dispatch layer is what makes <em>any</em> treatment hardware usable — an RO skid, an ETP, a BWSSB plant, a future MD unit. That layer is the product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 01 DATA CENTRE ================= -->
+<section class="page" id="p_dc">
+  <div class="page-lede">
+    <div><span class="stagemark">STAGE 01 · REDUCE</span>
+      <h2>Data centre &amp; cooling hardware</h2>
+      <p>Where the heat is made and where the water is lost. Silicon rejects heat into a cold plate; the cold plate hands it to a recirculating coolant loop; only what evaporates or blows down ever has to be replaced from the aquifer.</p></div>
+  </div>
+  <div class="gridA">
+    <div class="stack">
+      <section class="panel"><header><h2>Rack thermal state</h2><span class="tag" id="dcRacks">4 racks</span></header>
+        <svg class="fig-svg" id="rackSvg" viewBox="0 0 320 300" role="img" aria-label="Rack elevation coloured by node temperature"></svg>
+        <p class="note" id="rackNote"></p>
+      </section>
+      <section class="panel"><header><h2>Loop instrumentation</h2><span class="tag">1 Hz</span></header>
+        <div class="body flush readouts" id="dcReadouts"></div>
+      </section>
+    </div>
+    <div class="stack">
+      <section class="panel">
+        <header><h2>Cold plate — die to coolant, cross-section</h2><span class="tag">direct-to-chip</span></header>
+        <div class="body tight"><canvas id="plateCanvas" width="1680" height="452" aria-label="Animated cross-section of a cold plate showing coolant heating along microchannels"></canvas></div>
+        <div class="legend">
+          <span><i class="sq" style="background:var(--cold)"></i>Coolant, cold</span>
+          <span><i class="sq" style="background:var(--hot)"></i>Coolant, heated</span>
+          <span style="color:var(--ink-3)">Particle colour is the actual fluid temperature at that point along the channel. Speed is the real flow rate.</span>
+        </div>
+        <p class="note">Heat leaves the die through the thermal interface into the cold plate's microchannels. The coolant is <b>not consumed</b> — the same fluid returns to the CDU and comes back. That single architectural choice is Layer 1: it decouples compute growth from water withdrawal. Junction temperature is <code>Tj = T_coolant_in + Q · R_th</code>; above 85 °C the node throttles and the sim shows it.</p>
+      </section>
+      <section class="panel">
+        <header><h2>Water balance of the cooling architecture</h2><span class="tag" id="dcModeTag">Closed liquid loop</span></header>
+        <div class="body tight"><canvas id="waterCanvas" width="1680" height="360" aria-label="Comparison of water lost per hour under open tower versus closed loop"></canvas></div>
+        <p class="note" id="dcWaterNote"></p>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 HEAT ================= -->
+<section class="page" id="p_heat">
+  <div class="page-lede">
+    <div><span class="stagemark">STAGE 02 · RECOVER</span>
+      <h2>Heat recovery &amp; plant architecture</h2>
+      <p>The whole plant on one sheet, with the heat cascade that decides what the rejected energy is allowed to do. High-grade heat goes to the process that needs it most; only the degraded remainder is thrown away.</p></div>
+  </div>
+  <div class="stack">
     <section class="panel">
-      <header><h2>Plant schematic — live hardware simulation</h2><span class="tag" id="schemMode">Closed liquid loop</span></header>
-      <svg class="schem" viewBox="0 0 900 462" role="img" aria-label="Animated process schematic of the data centre cooling and water recovery plant">
+      <header><h2>Plant schematic — live process simulation</h2><span class="tag" id="schemMode">Closed liquid loop</span></header>
+      <svg class="fig-svg" viewBox="0 0 900 462" role="img" aria-label="Animated process schematic of the cooling and water recovery plant">
         <text class="zoneLbl" x="16" y="26">LAYER 1 · REDUCE</text>
         <text class="zoneLbl" x="330" y="26">LAYER 2 · RECOVER</text>
         <text class="zoneLbl" x="672" y="26">LAYER 3 · VERIFY</text>
         <line x1="16" y1="34" x2="884" y2="34" stroke="var(--rule)" stroke-width="1"/>
-
-        <!-- ghosts -->
-        <g id="ghosts"></g>
-        <!-- pipes -->
-        <g id="pipes"></g>
-        <!-- nodes -->
-        <g id="nodes"></g>
+        <g id="ghosts"></g><g id="pipes"></g><g id="nodes"></g>
       </svg>
       <div class="legend">
         <span><i style="background:var(--hot)"></i>Hot coolant return</span>
-        <span><i style="background:var(--cold)"></i>Cold coolant supply / makeup</span>
+        <span><i style="background:var(--cold)"></i>Cold supply / makeup</span>
         <span><i style="background:var(--bd)"></i>Blowdown / RO reject</span>
         <span><i style="background:var(--ochre)"></i>Recovered waste heat</span>
         <span><i style="background:var(--perm)"></i>MD permeate</span>
@@ -334,680 +473,1068 @@ tfoot td{font-weight:600;background:var(--surface-2)}
         <span style="color:var(--ink-3)">Dash speed is proportional to actual flow.</span>
       </div>
     </section>
-
-    <section class="panel">
-      <header><h2>Heat availability &amp; membrane-distillation dispatch</h2><span class="tag">6 h window · 30 min forecast</span></header>
-      <div class="body tight"><canvas id="chart" width="1720" height="440"></canvas></div>
-      <p class="note">Solid line: rejected heat at the coolant return. Filled band: heat actually consumed by the MD skid. Dashed segment right of the rule is the forecast the dispatch engine is acting on — it is what lets the skid ramp <em>before</em> the heat arrives instead of chasing it.</p>
-    </section>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="col">
-    <section class="panel">
-      <header><h2>Digital water passport</h2><span class="tag">latest batch</span></header>
-      <div class="body"><div class="passport" id="passport"></div></div>
-    </section>
-
-    <section class="panel">
-      <header><h2>Batch ledger</h2><span class="tag">hash-chained</span></header>
-      <div class="body flush ledger" id="ledger"></div>
+    <div class="grid2">
+        <section class="panel"><header><h2>Heat cascade</h2><span class="tag">grade-matched use</span></header>
+          <div class="body flush cascade" id="cascade"></div>
+          <p class="note">Don't spend high-grade heat on an easy job. The band highlighted is where the coolant return currently sits — and it is what decides whether the MD skid can run at all. Below ~38 °C the driving force collapses and the dispatch engine idles the skid instead of burning pump energy for nothing.</p>
+        </section>
+      <section class="panel">
+        <header><h2>Heat availability &amp; MD dispatch</h2><span class="tag">6 h window · 30 min forecast</span></header>
+        <div class="body tight"><canvas id="chart" width="1500" height="700" aria-label="Rejected heat versus heat consumed by the membrane distillation skid, with forecast"></canvas></div>
+        <p class="note">Solid line: heat rejected at the coolant return. Filled band: heat actually consumed by the MD skid. The dashed segment right of the rule is the <b>forecast</b> the dispatch engine acts on — it is what lets the skid ramp <em>before</em> the heat arrives instead of chasing it. Try <b>Inject AI training burst</b> and watch the forecast lead the actual.</p>
+      </section>
+    </div>
+    <section class="panel"><header><h2>Counter-flow heat exchanger profile</h2><span class="tag">live LMTD</span></header>
+      <div class="body tight"><canvas id="hxCanvas" width="1500" height="430" aria-label="Temperature profile along the counter-flow heat exchanger"></canvas></div>
+      <p class="note" id="hxNote"></p>
     </section>
   </div>
 </section>
 
-<section class="lower">
-  <section class="panel">
-    <header><h2>MongoDB pipeline inspector</h2><span class="tag" id="wr">0 docs</span></header>
-    <div class="tabs" id="tabs" role="group" aria-label="Collection">
-      <button data-c="sensor_readings" aria-pressed="true">sensor_readings</button>
-      <button data-c="treatment_batches" aria-pressed="false">treatment_batches</button>
-      <button data-c="dispatch_decisions" aria-pressed="false">dispatch_decisions</button>
-      <button data-c="aggregation" aria-pressed="false">$group rollup</button>
+<!-- ================= 03 MD ================= -->
+<section class="page" id="p_md">
+  <div class="page-lede">
+    <div><span class="stagemark">STAGE 03 · RECOVER</span>
+      <h2>Membrane distillation module</h2>
+      <p>The core hardware, simulated at the pore. Hot concentrated blowdown flows across a hydrophobic membrane; only water <em>vapour</em> crosses. Fluoride, nitrate and dissolved salts are non-volatile — they physically cannot follow.</p></div>
+  </div>
+  <div class="stack">
+    <section class="panel">
+      <header><h2>Direct-contact MD module — pore-scale simulation</h2><span class="tag" id="mdState">running</span></header>
+      <div class="body tight"><canvas id="mdCanvas" width="1720" height="600" aria-label="Animated cross-section of the membrane module showing water vapour crossing pores while ions are rejected"></canvas></div>
+      <div class="legend">
+        <span><i class="sq" style="background:var(--cold)"></i>H₂O molecule</span>
+        <span><i class="sq" style="background:var(--ochre)"></i>F⁻ fluoride</span>
+        <span><i class="sq" style="background:#7A5AA8"></i>NO₃⁻ nitrate</span>
+        <span><i class="sq" style="background:var(--conc)"></i>Dissolved salts / TDS</span>
+        <span><i style="background:var(--ink-3);height:2px"></i>Vapour crossing a pore</span>
+        <span style="color:var(--ink-3)">Crossing rate is the computed flux. Ion bounces are rejection events.</span>
+      </div>
+      <p class="note" id="mdNote"></p>
+    </section>
+    <div class="grid3">
+      <section class="panel"><header><h2>Flux model</h2><span class="tag">Antoine driving force</span></header>
+        <div class="body tight"><canvas id="fluxCanvas" width="1000" height="640" aria-label="Membrane flux against feed temperature with the live operating point"></canvas></div>
+        <p class="note">Vapour flux is <code>J = B·(P<sub>w</sub>(T<sub>fm</sub>)·a<sub>w</sub> − P<sub>w</sub>(T<sub>pm</sub>))</code>, with saturation pressure from the Antoine equation. Flux rises <b>exponentially</b> with feed temperature — which is exactly why grade-matched waste heat, not electricity, is the right input, and why RO could never use this energy at all.</p>
+      </section>
+      <section class="panel"><header><h2>Temperature polarisation</h2><span class="tag">boundary layer</span></header>
+        <div class="body tight"><canvas id="tpCanvas" width="1000" height="640" aria-label="Temperature profile across the feed boundary layer, membrane and permeate boundary layer"></canvas></div>
+        <p class="note">The membrane surface is never as hot as the bulk feed. Boundary layers eat part of the driving force — the polarisation coefficient <span class="mono" id="tpCoef">τ</span> is what separates the ΔT you measure from the ΔT the membrane actually sees. Ignoring it is how paper designs overpromise flux by 30%.</p>
+      </section>
+      <section class="panel"><header><h2>Rejection &amp; permeate quality</h2><span class="tag">BIS IS 10500</span></header>
+        <div class="body flush readouts" id="mdQual"></div>
+        <p class="note" id="mdQualNote"></p>
+      </section>
     </div>
-    <pre class="doc" id="docView"></pre>
-    <div class="streamlog" id="stream"></div>
-    <p class="note" id="collNote"></p>
-  </section>
+  </div>
+</section>
 
-  <section class="panel">
-    <header><h2>Dispatch — CGWB stress-ranked destinations</h2><span class="tag">2dsphere · 12 km radius</span></header>
-    <table>
-      <thead><tr><th>Destination</th><th>Stage of extraction</th><th class="num">Rank</th><th class="num">Delivered today</th></tr></thead>
-      <tbody id="destTable"></tbody>
-    </table>
-    <p class="note">Ranking is a <code>$geoNear</code> against CGWB block-level assessment polygons, re-scored on every change-stream event. Cooling makeup is served first — the loop is closed before anything leaves the fence — and only surplus verified permeate is dispatched outward. Ward offices receive an SMS on each delivery; no dashboard login required.</p>
-  </section>
+<!-- ================= 04 VERIFY ================= -->
+<section class="page" id="p_verify">
+  <div class="page-lede">
+    <div><span class="stagemark">STAGE 04 · VERIFY</span>
+      <h2>Quality gate, water passport &amp; ledger</h2>
+      <p>The differentiator no hardware vendor offers. Every batch is gated against drinking-water limits, written as a document that carries the previous batch's hash, and re-checkable by anyone — including the regulator.</p></div>
+  </div>
+  <div class="gridB">
+    <div class="stack">
+      <section class="panel"><header><h2>MongoDB pipeline inspector</h2><span class="tag" id="wr">0 docs</span></header>
+        <div class="tabs" id="tabs" role="group" aria-label="Collection">
+          <button data-c="sensor_readings" aria-pressed="true">sensor_readings</button>
+          <button data-c="treatment_batches" aria-pressed="false">treatment_batches</button>
+          <button data-c="dispatch_decisions" aria-pressed="false">dispatch_decisions</button>
+          <button data-c="aggregation" aria-pressed="false">$group rollup</button>
+        </div>
+        <pre class="doc" id="docView"></pre>
+        <div class="streamlog" id="stream"></div>
+        <p class="note" id="collNote"></p>
+      </section>
+      <section class="panel"><header><h2>Batch ledger</h2><span class="tag">hash-chained</span></header>
+        <div class="body flush ledger" id="ledger"></div>
+      </section>
+    </div>
+    <div class="stack">
+      <section class="panel"><header><h2>Quality gate</h2><span class="tag" id="gateTag">—</span></header>
+        <div class="body flush readouts" id="gateRead"></div>
+        <p class="note">Limits are <b>BIS IS 10500 drinking water</b>, deliberately stricter than the industrial-effluent limits a facility would otherwise be judged against. A batch that fails any parameter is routed to quarantine and re-treated. It is never released, and the failure stays on the public ledger.</p>
+      </section>
+      <section class="panel"><header><h2>Digital water passport</h2><span class="tag">latest batch</span></header>
+        <div class="body"><div class="passport" id="passport"></div></div>
+      </section>
+    </div>
+  </div>
+</section>
 
-  <section class="panel">
-    <header><h2>Statutory water balance</h2><span class="tag">auto-generated</span></header>
-    <table>
-      <thead><tr><th>Parameter</th><th class="num">Today</th><th class="num">Unit</th></tr></thead>
-      <tbody id="balance"></tbody>
-      <tfoot><tr><td>Reuse fraction <span class="chip info" id="ruleChip">LWM 2024</span></td><td class="num" id="reuseFrac">—</td><td class="num">%</td></tr></tfoot>
-    </table>
-    <p class="note">Rendered in the shape KSPCB / BWSSB would consume. The Liquid Waste Management Rules, 2024 set a mandatory reuse floor of 20% by 2027–28 rising to 50% by 2030–31 for large water users; Karnataka's 2022 Data Centre Policy required no water report at all. Every figure here traces to a signed batch in the ledger — nothing is operator-declared.</p>
-  </section>
+<!-- ================= 05 DISPATCH ================= -->
+<section class="page" id="p_dispatch">
+  <div class="page-lede">
+    <div><span class="stagemark">STAGE 05 · VERIFY</span>
+      <h2>Dispatch &amp; statutory compliance</h2>
+      <p>Where verified water goes, ranked by CGWB groundwater stress — and the water balance a regulator can actually consume, generated from signed batches rather than operator declarations.</p></div>
+  </div>
+  <div class="grid2">
+    <section class="panel">
+      <header><h2>Dispatch — CGWB stress-ranked destinations</h2><span class="tag">2dsphere · 12 km</span></header>
+      <table><thead><tr><th>Destination</th><th>Stage of extraction</th><th class="num">Rank</th><th class="num">Delivered today</th></tr></thead>
+        <tbody id="destTable"></tbody></table>
+      <p class="note">Ranking is a <code>$geoNear</code> against CGWB block-level assessment polygons, re-scored on every change-stream event. Cooling makeup is served first — the loop is closed before anything leaves the fence — and only surplus verified permeate is dispatched outward. Ward offices get an SMS per delivery; no dashboard login required, because that is how information actually reaches a Devanahalli-type community.</p>
+    </section>
+    <section class="panel">
+      <header><h2>Statutory water balance</h2><span class="tag">auto-generated</span></header>
+      <table><thead><tr><th>Parameter</th><th class="num">Today</th><th class="num">Unit</th></tr></thead>
+        <tbody id="balance"></tbody>
+        <tfoot><tr><td>Reuse fraction <span class="chip info" id="ruleChip">LWM 2024</span></td><td class="num" id="reuseFrac">—</td><td class="num">%</td></tr></tfoot></table>
+      <p class="note">Rendered in the shape KSPCB / BWSSB would consume. The Liquid Waste Management Rules, 2024 set a reuse floor of 20% by 2027–28 rising to 50% by 2030–31 for large water users; Karnataka's 2022 Data Centre Policy required no water report at all. Every figure traces to a signed batch — nothing here is operator-declared.</p>
+    </section>
+  </div>
 </section>
 </main>
 
 <footer class="foot">
   <span><strong>Prototype</strong> — simulated plant, synthetic telemetry. Not connected to a live facility.</span>
-  <span>Quality gate: BIS IS 10500 (fluoride 1.0 mg/L acceptable, nitrate 45 mg/L, TDS 500 mg/L) — deliberately stricter than industrial-effluent limits.</span>
+  <span>Quality gate: BIS IS 10500 (fluoride 1.0 mg/L, nitrate 45 mg/L, TDS 500 mg/L) — stricter than industrial-effluent limits.</span>
   <span>Groundwater context: CGWB 2024 dynamic assessment.</span>
 </footer>
 
 <script>
 "use strict";
-/* ============================================================
-   NeeruAI console — plant simulation + verification ledger
-   ============================================================ */
-
 const $ = id => document.getElementById(id);
-const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
-const fmt = (v,d=0)=>v.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const fmt=(v,d=0)=>(isFinite(v)?v:0).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const CSS = k => getComputedStyle(document.documentElement).getPropertyValue(k).trim();
 
 /* ---------- facilities ---------- */
-const FACILITIES = [
-  { id:'DC-DVN-03', name:'Devanahalli DC-3', district:'Bengaluru Rural', itMW:2.4,
-    noc:'CGWB/KA/2024/0881', nocCap:140, declared:'Third-party tanker + borewell',
-    stage:169, intake:{F:1.8,NO3:38,TDS:420,pH:7.4}, cooling:'closed',
-    note:'Block at 169% stage of extraction. Borewells at 1,000 ft; recharge reaches ~200 ft. Fluoride is the binding parameter here — the quality gate will reject on it before nitrate or TDS.' },
-  { id:'DC-WFD-11', name:'Whitefield DC-11', district:'Bengaluru Urban', itMW:1.6,
-    noc:'CGWB/KA/2023/0412', nocCap:96, declared:'BWSSB municipal supply',
-    stage:118, intake:{F:0.9,NO3:96,TDS:610,pH:7.1}, cooling:'tower',
-    note:'Declared municipal supply, but conductivity signature is groundwater-consistent — exactly the mismatch no agency currently checks. Shallow wells in this belt run nitrate far above the 45 mg/L limit.' },
-  { id:'DC-GNO-07', name:'Greater Noida DC-7', district:'Gautam Buddha Nagar', itMW:3.1,
-    noc:'CGWA/UP/2024/1190', nocCap:210, declared:'Treated non-potable industrial network',
-    stage:105, intake:{F:1.1,NO3:52,TDS:780,pH:7.8}, cooling:'closed',
-    note:'Notified over-exploited zone at 104.79% stage of extraction. Fed from the industrial authority’s treated non-potable network — the correct model, and the one worth evidencing publicly.' },
-  { id:'DC-VZG-01', name:'Tarluvada Park DC-1', district:'Visakhapatnam', itMW:4.0,
-    noc:'— (not specified in EC)', nocCap:0, declared:'Unspecified in clearance',
-    stage:64, intake:{F:0.6,NO3:22,TDS:340,pH:8.0}, cooling:'closed',
-    note:'Seawater cooling is proposed here, not deployed. The environmental clearance does not name a water source at all. Coastal mode runs a closed secondary loop against a seawater heat exchanger and logs intake/discharge ΔT to the same ledger.' }
+const FACILITIES=[
+ {id:'DC-DVN-03',name:'Devanahalli DC-3',district:'Bengaluru Rural',itMW:2.4,noc:'CGWB/KA/2024/0881',nocCap:140,
+  declared:'Third-party tanker + borewell',stage:169,intake:{F:1.8,NO3:38,TDS:420,pH:7.4},cooling:'closed',
+  note:'Block at 169% stage of extraction. Borewells at 1,000 ft; recharge reaches ~200 ft. Fluoride is the binding parameter here — the gate rejects on it long before nitrate or TDS.'},
+ {id:'DC-WFD-11',name:'Whitefield DC-11',district:'Bengaluru Urban',itMW:1.6,noc:'CGWB/KA/2023/0412',nocCap:96,
+  declared:'BWSSB municipal supply',stage:118,intake:{F:0.9,NO3:96,TDS:610,pH:7.1},cooling:'tower',
+  note:'Declared municipal supply, but the conductivity signature is groundwater-consistent — exactly the mismatch no agency currently checks. Shallow wells in this belt run nitrate far above 45 mg/L.'},
+ {id:'DC-GNO-07',name:'Greater Noida DC-7',district:'Gautam Buddha Nagar',itMW:3.1,noc:'CGWA/UP/2024/1190',nocCap:210,
+  declared:'Treated non-potable industrial network',stage:105,intake:{F:1.1,NO3:52,TDS:780,pH:7.8},cooling:'closed',
+  note:'Notified over-exploited zone at 104.79%. Fed from the industrial authority’s treated non-potable network — the correct model, and the one worth evidencing publicly.'},
+ {id:'DC-VZG-01',name:'Tarluvada Park DC-1',district:'Visakhapatnam',itMW:4.0,noc:'— (not in EC)',nocCap:0,
+  declared:'Unspecified in clearance',stage:64,intake:{F:0.6,NO3:22,TDS:340,pH:8.0},cooling:'closed',
+  note:'Seawater cooling is proposed here, not deployed; the clearance names no water source at all. Coastal mode runs a closed secondary loop against a seawater heat exchanger and logs intake/discharge ΔT to the same ledger.'}
 ];
-let fac = FACILITIES[0];
+let fac=FACILITIES[0];
 
-/* ---------- destinations (CGWB stress-ranked) ---------- */
-const DESTS = [
-  { n:'Cooling makeup loop', s:'—', rank:0, l:0, internal:true },
-  { n:'Chikkajala ward tap cluster', s:'Over-exploited · 169%', rank:1, l:0 },
-  { n:'Bettakote borewell recharge', s:'Over-exploited · 152%', rank:2, l:0 },
-  { n:'Vishwanathapura tanker offset', s:'Critical · 128%', rank:3, l:0 },
-  { n:'Quarantine — re-treat', s:'Failed BIS gate', rank:9, l:0, quar:true }
+const DESTS=[
+ {n:'Cooling makeup loop',s:'—',rank:0,l:0,internal:true},
+ {n:'Chikkajala ward tap cluster',s:'Over-exploited · 169%',rank:1,l:0},
+ {n:'Bettakote borewell recharge',s:'Over-exploited · 152%',rank:2,l:0},
+ {n:'Vishwanathapura tanker offset',s:'Critical · 128%',rank:3,l:0},
+ {n:'Quarantine — re-treat',s:'Failed BIS gate',rank:9,l:0,quar:true}
 ];
+const BIS={F:1.0,NO3:45,TDS:500};
 
 /* ---------- schematic geometry ---------- */
-const N = {
-  servers:{x:24, y:56, w:150,h:66, t:'SERVER HALL', s:'DIRECT-TO-CHIP'},
-  cdu    :{x:215,y:56, w:150,h:66, t:'CDU / COLD PLATES', s:'CLOSED COOLANT'},
-  hx     :{x:406,y:56, w:150,h:66, t:'HEAT EXCHANGER', s:'HEAT CASCADE TAP'},
-  tower  :{x:597,y:56, w:150,h:66, t:'COOLING TOWER', s:'HEAT REJECTION'},
-  intake :{x:24, y:262,w:150,h:66, t:'BOREWELL INTAKE', s:'FRESHWATER TOP-UP'},
-  bd     :{x:215,y:262,w:150,h:66, t:'BLOWDOWN TANK', s:'CONCENTRATED REJECT'},
-  md     :{x:406,y:262,w:150,h:66, t:'MD SKID', s:'THERMALLY DRIVEN'},
-  gate   :{x:597,y:262,w:150,h:66, t:'QUALITY GATE', s:'BIS IS 10500'},
-  zld    :{x:406,y:378,w:150,h:50, t:'ZLD CRYSTALLISER', s:'CONCENTRATE'},
-  disp   :{x:772,y:262,w:104,h:66, t:'DISPATCH', s:'WARD / RECHARGE'}
+const N={
+ servers:{x:24,y:56,w:150,h:66,t:'SERVER HALL',s:'DIRECT-TO-CHIP'},
+ cdu:{x:215,y:56,w:150,h:66,t:'CDU / COLD PLATES',s:'CLOSED COOLANT'},
+ hx:{x:406,y:56,w:150,h:66,t:'HEAT EXCHANGER',s:'HEAT CASCADE TAP'},
+ tower:{x:597,y:56,w:150,h:66,t:'COOLING TOWER',s:'HEAT REJECTION'},
+ intake:{x:24,y:262,w:150,h:66,t:'BOREWELL INTAKE',s:'FRESHWATER TOP-UP'},
+ bd:{x:215,y:262,w:150,h:66,t:'BLOWDOWN TANK',s:'CONCENTRATED REJECT'},
+ md:{x:406,y:262,w:150,h:66,t:'MD SKID',s:'THERMALLY DRIVEN'},
+ gate:{x:597,y:262,w:150,h:66,t:'QUALITY GATE',s:'BIS IS 10500'},
+ zld:{x:406,y:378,w:150,h:50,t:'ZLD CRYSTALLISER',s:'CONCENTRATE'},
+ disp:{x:772,y:262,w:104,h:66,t:'DISPATCH',s:'WARD / RECHARGE'}
 };
-const cx = k => N[k].x + N[k].w/2, cyy = k => N[k].y + N[k].h/2;
-
-const PIPES = [
-  { id:'p_ret',  d:`M${N.servers.x+N.servers.w} 78 H${N.cdu.x}`,               c:'--hot',   f:'coolant' },
-  { id:'p_hot',  d:`M${N.cdu.x+N.cdu.w} 78 H${N.hx.x}`,                        c:'--hot',   f:'coolant' },
-  { id:'p_rej',  d:`M${N.hx.x+N.hx.w} 78 H${N.tower.x}`,                       c:'--hot',   f:'reject'  },
-  { id:'p_sup',  d:`M${N.cdu.x} 108 H${N.servers.x+N.servers.w}`,              c:'--cold',  f:'coolant' },
-  { id:'p_heat', d:`M481 122 V262`,                                            c:'--ochre', f:'heat'    },
-  { id:'p_bd',   d:`M672 122 V206 H290 V262`,                                  c:'--bd',    f:'bd'      },
-  { id:'p_feed', d:`M${N.bd.x+N.bd.w} 295 H${N.md.x}`,                          c:'--bd',    f:'feed'    },
-  { id:'p_perm', d:`M${N.md.x+N.md.w} 295 H${N.gate.x}`,                        c:'--perm',  f:'perm'    },
-  { id:'p_out',  d:`M${N.gate.x+N.gate.w} 295 H${N.disp.x}`,                    c:'--perm',  f:'out'     },
-  { id:'p_conc', d:`M481 328 V378`,                                            c:'--conc',  f:'conc'    },
-  { id:'p_mk',   d:`M657 328 V446 H194 V108`,                                   c:'--cold',  f:'makeup'  },
-  { id:'p_fw',   d:`M99 262 V170 H194`,                                        c:'--cold',  f:'fresh'   }
+const PIPES=[
+ {id:'p_ret',d:'M174 78 H215',c:'--hot'},{id:'p_hot',d:'M365 78 H406',c:'--hot'},
+ {id:'p_rej',d:'M556 78 H597',c:'--hot'},{id:'p_sup',d:'M215 108 H174',c:'--cold'},
+ {id:'p_heat',d:'M481 122 V262',c:'--ochre'},{id:'p_bd',d:'M672 122 V206 H290 V262',c:'--bd'},
+ {id:'p_feed',d:'M365 295 H406',c:'--bd'},{id:'p_perm',d:'M556 295 H597',c:'--perm'},
+ {id:'p_out',d:'M747 295 H772',c:'--perm'},{id:'p_conc',d:'M481 328 V378',c:'--conc'},
+ {id:'p_mk',d:'M657 328 V446 H194 V108',c:'--cold'},{id:'p_fw',d:'M99 262 V170 H194',c:'--cold'}
 ];
-const PIPE_LBL = [
-  {x:194,y:50,id:'l_ret',a:'middle'},
-  {x:385,y:50,id:'l_hot',a:'middle'},
-  {x:577,y:50,id:'l_rej',a:'middle'},
-  {x:296,y:140,id:'l_sup',a:'middle'},
-  {x:489,y:196,id:'l_heat',a:'start'},
-  {x:302,y:199,id:'l_bd',a:'start'},
-  {x:385,y:287,id:'l_feed',a:'middle'},
-  {x:576,y:287,id:'l_perm',a:'middle'},
-  {x:762,y:287,id:'l_out',a:'middle'},
-  {x:489,y:358,id:'l_conc',a:'start'},
-  {x:400,y:440,id:'l_mk',a:'middle'},
-  {x:132,y:164,id:'l_fw',a:'start'}
+const PIPE_LBL=[
+ {x:194,y:50,id:'l_ret',a:'middle'},{x:385,y:50,id:'l_hot',a:'middle'},{x:577,y:50,id:'l_rej',a:'middle'},
+ {x:296,y:140,id:'l_sup',a:'middle'},{x:489,y:196,id:'l_heat',a:'start'},{x:302,y:199,id:'l_bd',a:'start'},
+ {x:385,y:287,id:'l_feed',a:'middle'},{x:576,y:287,id:'l_perm',a:'middle'},{x:824,y:254,id:'l_out',a:'middle'},
+ {x:489,y:358,id:'l_conc',a:'start'},{x:250,y:440,id:'l_mk',a:'middle'},{x:132,y:164,id:'l_fw',a:'start'}
 ];
-
 function buildSchematic(){
-  const g = $('ghosts'), p = $('pipes'), n = $('nodes');
-  g.innerHTML = PIPES.map(x=>`<path class="pipeGhost" d="${x.d}"/>`).join('');
-  p.innerHTML = PIPES.map(x=>`<path class="pipe" id="${x.id}" d="${x.d}" stroke="var(${x.c})"/>`).join('')
-    + PIPE_LBL.map(l=>`<text class="pipeLbl" id="${l.id}" x="${l.x}" y="${l.y}" text-anchor="${l.a}"></text>`).join('');
-  n.innerHTML = Object.entries(N).map(([k,b])=>`
-    <g>
-      <rect class="nodeBox" id="box_${k}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="3"/>
-      <text class="nodeTitle" x="${b.x+10}" y="${b.y+18}">${b.t}</text>
-      <text class="nodeSub"   x="${b.x+10}" y="${b.y+30}">${b.s}</text>
-      <text class="nodeVal"   id="v_${k}"  x="${b.x+10}" y="${b.y+50}"></text>
-      <text class="nodeVal"   id="v2_${k}" x="${b.x+10}" y="${b.y+62}" style="fill:var(--ink-2);font-size:9.4px"></text>
-    </g>`).join('')
-    + `<g id="rackbars"></g>`;
-  let rb='';
-  for(let i=0;i<9;i++) rb += `<rect id="rk${i}" x="${100+i*8}" y="96" width="5" height="20" rx="1" fill="var(--neeru)" opacity=".25"/>`;
-  $('rackbars').innerHTML = rb;
+ $('ghosts').innerHTML=PIPES.map(x=>`<path class="pipeGhost" d="${x.d}"/>`).join('');
+ $('pipes').innerHTML=PIPES.map(x=>`<path class="pipe" id="${x.id}" d="${x.d}" stroke="var(${x.c})"/>`).join('')
+   +PIPE_LBL.map(l=>`<text class="pipeLbl" id="${l.id}" x="${l.x}" y="${l.y}" text-anchor="${l.a}"></text>`).join('');
+ $('nodes').innerHTML=Object.entries(N).map(([k,b])=>`<g>
+   <rect class="nodeBox" id="box_${k}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="3"/>
+   <text class="nodeTitle" x="${b.x+10}" y="${b.y+18}">${b.t}</text>
+   <text class="nodeSub" x="${b.x+10}" y="${b.y+30}">${b.s}</text>
+   <text class="nodeVal" id="v_${k}" x="${b.x+10}" y="${b.y+50}"></text>
+   <text class="nodeVal" id="v2_${k}" x="${b.x+10}" y="${b.y+62}" style="fill:var(--ink-2);font-size:9.4px"></text></g>`).join('');
 }
 
-/* ---------- simulation state ---------- */
-const S = {
-  t: 360,            // sim minutes since midnight
-  speed: 1,
-  mode: 'closed',
-  loadSrc: 'auto',
-  manualLoad: 0.62,
-  load: 0.62,
-  burst: 0,
-  wetting: 0,
-  bdTank: 0,         // litres held
-  ticks: 0,
-  acc: { feed:0, perm:0, heat:0 },
-  batchNo: 1240,
-  chain: [],
-  today: { withdrawn:0, evap:0, bdGen:0, recovered:0, makeup:0, community:0, conc:0, heatUsed:0, feed:0 },
-  released:0, quarantined:0,
-  docs:{ sensor_readings:0, treatment_batches:0, dispatch_decisions:0 },
-  hist: [],          // {heat, used}
-  events: [],
-  lastDocs: {}
-};
-const TICK_MIN = 2;  // sim minutes per tick
+/* ---------- physics ---------- */
+// Antoine: saturation vapour pressure of water, Pa (T in degC)
+function Pw(T){ return 133.322*Math.pow(10, 8.07131 - 1730.63/(233.426+clamp(T,1,99))); }
+const MD_AREA=40, MD_B=2.2e-3;   // m2, L/(m2.h.Pa)
 
-function loadProfile(t){
-  const h = t/60;
-  // diurnal: overnight batch training trough, daytime inference ramp, evening peak
-  let base = 0.46 + 0.26*Math.sin((h-9.5)/24*2*Math.PI) + 0.10*Math.sin((h-3)/12*2*Math.PI);
-  return clamp(base, 0.16, 0.97);
-}
+const S={t:360,speed:1,mode:'closed',loadSrc:'auto',manualLoad:.62,load:.62,burst:0,wetting:0,
+ bdTank:0,batchNo:1240,chain:[],ticks:0,acc:{feed:0,perm:0,heat:0},
+ today:{withdrawn:0,evap:0,bdGen:0,recovered:0,makeup:0,community:0,conc:0,heatUsed:0,feed:0},
+ released:0,quarantined:0,docs:{sensor_readings:0,treatment_batches:0,dispatch_decisions:0},
+ hist:[],events:[],lastDocs:{},F:null};
+const TICK_MIN=2;
+
+const loadProfile=t=>{const h=t/60;
+ return clamp(.46+.26*Math.sin((h-9.5)/24*2*Math.PI)+.10*Math.sin((h-3)/12*2*Math.PI),.16,.97);};
 
 function step(){
-  S.t = (S.t + TICK_MIN) % 1440;
-  if(S.burst>0) S.burst -= TICK_MIN;
-  if(S.wetting>0){ S.wetting -= TICK_MIN; if(S.wetting<=0) logEvent('Membrane integrity restored — rejection back to nominal'); }
+ S.t=(S.t+TICK_MIN)%1440; S.ticks++;
+ if(S.burst>0) S.burst-=TICK_MIN;
+ if(S.wetting>0){S.wetting-=TICK_MIN; if(S.wetting<=0){logEvent('Membrane integrity restored — rejection back to nominal'); WET.length=0;}}
 
-  /* --- IT load & heat --- */
-  const target = (S.loadSrc==='manual' ? S.manualLoad : loadProfile(S.t)) + (S.burst>0 ? 0.30 : 0);
-  S.load += (clamp(target,0.10,0.99) - S.load) * 0.28;
-  const itkW  = fac.itMW*1000*S.load;
-  const heat  = itkW*0.96;                                   // kW rejected
+ const target=(S.loadSrc==='manual'?S.manualLoad:loadProfile(S.t))+(S.burst>0?.30:0);
+ S.load+=(clamp(target,.10,.99)-S.load)*.28;
+ const itkW=fac.itMW*1000*S.load, heat=itkW*.96;
 
-  /* --- coolant loop --- */
-  const flow  = 620 + 2100*S.load;                            // L/min through the CDU (recirculating)
-  const supply= S.mode==='closed' ? 32 : 27;
-  const dT    = heat*60/(flow*4.18);
-  const ret   = supply + dT;
+ /* coolant loop */
+ const flow=620+2100*S.load;                       // L/min recirculating
+ const supply=S.mode==='closed'?32:27;
+ const dT=heat*60/(flow*4.18), ret=supply+dT;
+ const Tj=supply + dT + 38*S.load + 5;             // junction = coolant in + loop rise + die-to-coolant drop
+ const throttle=Tj>85;
 
-  /* --- water: evaporation + blowdown --- */
-  const evapFactor = S.mode==='tower' ? 1.0 : 0.14;           // closed loop: adiabatic assist only
-  const evapLph = 1.593*heat*evapFactor;
-  const coc     = S.mode==='tower' ? 4.2 : 6.5;               // cycles of concentration
-  const bdLph   = evapLph/(coc-1);
-  const makeupDemand = evapLph + bdLph;
+ /* evaporation + blowdown */
+ const evapFactor=S.mode==='tower'?1.0:.14;
+ const evapLph=1.593*heat*evapFactor;
+ const coc=S.mode==='tower'?4.2:6.5;
+ const bdLph=evapLph/(coc-1);
+ const makeupDemand=evapLph+bdLph;
+ const hrs=TICK_MIN/60;
+ S.today.evap+=evapLph*hrs; S.today.bdGen+=bdLph*hrs; S.bdTank+=bdLph*hrs;
 
-  const hrs = TICK_MIN/60;
-  S.today.evap  += evapLph*hrs;
-  S.today.bdGen += bdLph*hrs;
-  S.bdTank      += bdLph*hrs;
+ /* --- membrane distillation, Antoine-driven --- */
+ const Tf=clamp(ret-2.5,20,78);                    // feed after the HX tap
+ const Tp=28;                                      // permeate/condenser side
+ const tau=clamp(.78-.004*(Tf-Tp),.55,.82);        // temperature polarisation coefficient
+ const Tfm=Tf-(1-tau)/2*(Tf-Tp), Tpm=Tp+(1-tau)/2*(Tf-Tp);
+ const feedTDS=fac.intake.TDS*coc;
+ const aw=1-5.4e-7*feedTDS;
+ const flux=Math.max(0, MD_B*(Pw(Tfm)*aw-Pw(Tpm)));           // L/m2.h
+ const mdOn = Tf>38 && S.bdTank>1;
+ const permCap = mdOn ? flux*MD_AREA : 0;                      // L/h permeate capacity
+ const recFrac = clamp(.58+.021*(Tf-36),.35,.86);
+ const feedCap = permCap/recFrac;
+ const feedL=Math.min(feedCap*hrs,S.bdTank);
+ const permL=feedL*recFrac, concL=feedL-permL;
+ S.bdTank-=feedL;
+ const mdThermal=permL>0?(permL/1000)*150/hrs:0;
+ S.today.feed+=feedL; S.today.conc+=concL; S.today.heatUsed+=mdThermal*hrs;
 
-  /* --- MD skid: thermally driven, gated on available ΔT --- */
-  const mdOn   = ret > 38 && S.bdTank > 1;
-  const mdCap  = mdOn ? clamp(82*(ret-36), 0, 940) : 0;       // L/h feed capacity
-  const feedL  = Math.min(mdCap*hrs, S.bdTank);
-  const recFrac= clamp(0.58 + 0.021*(ret-36), 0, 0.86);
-  const permL  = feedL*recFrac;
-  const concL  = feedL - permL;
-  S.bdTank -= feedL;
-  const mdThermal = permL>0 ? (permL/1000)*150/hrs : 0;        // kWth (150 kWh/m3 specific)
+ /* quality across the membrane */
+ const R=S.wetting>0?.848:clamp(.9942-Math.max(0,(Tf-52))*.0009,.97,.9955);
+ const q={F:fac.intake.F*coc*(1-R),NO3:fac.intake.NO3*coc*(1-R),
+          TDS:feedTDS*(1-R),pH:fac.intake.pH-.4+(S.wetting>0?.3:0)};
+ const pass=q.F<=BIS.F&&q.NO3<=BIS.NO3&&q.TDS<=BIS.TDS&&q.pH>=6.5&&q.pH<=8.5;
 
-  S.today.feed += feedL; S.today.conc += concL; S.today.heatUsed += mdThermal*hrs;
+ /* dispatch */
+ let toMakeup=0,toComm=0,dest;
+ if(permL>0&&pass){
+   toMakeup=Math.min(permL,makeupDemand*hrs); toComm=permL-toMakeup;
+   dest=toComm>.5?DESTS[1+(S.batchNo%3)]:DESTS[0];
+   S.today.recovered+=permL; S.today.makeup+=toMakeup; S.today.community+=toComm;
+   DESTS[0].l+=toMakeup; if(toComm>0)dest.l+=toComm;
+ } else if(permL>0){ dest=DESTS[4]; dest.l+=permL; }
+ const freshNeeded=Math.max(0,makeupDemand*hrs-toMakeup);
+ S.today.withdrawn+=freshNeeded;
 
-  /* --- water quality across the membrane --- */
-  const R = S.wetting>0 ? 0.848 : clamp(0.9942 - Math.max(0,(ret-52))*0.0009, 0.97, 0.9955);
-  const q = {
-    F  : fac.intake.F  *coc*(1-R),
-    NO3: fac.intake.NO3*coc*(1-R),
-    TDS: fac.intake.TDS*coc*(1-R),
-    pH : fac.intake.pH - 0.4 + (S.wetting>0?0.3:0)
-  };
-  const pass = q.F<=1.0 && q.NO3<=45 && q.TDS<=500 && q.pH>=6.5 && q.pH<=8.5;
+ /* batch every 2 sim-hours on accumulated volume */
+ S.acc.feed+=feedL; S.acc.perm+=permL; S.acc.heat+=mdThermal*hrs;
+ if(S.t%120<TICK_MIN&&S.acc.perm>1){
+   mintBatch({feedL:S.acc.feed,permL:S.acc.perm,q,pass,heat:S.acc.heat,
+     dest:pass?(toComm>.5?dest.n:'Cooling makeup loop'):'Quarantine — re-treat',Tf});
+   S.acc={feed:0,perm:0,heat:0};
+ }
+ S.hist.push({heat,used:mdThermal,t:S.t}); if(S.hist.length>190)S.hist.shift();
 
-  /* --- dispatch: close the loop first, then the highest-stress destination --- */
-  let toMakeup=0, toComm=0, dest;
-  if(permL>0 && pass){
-    toMakeup = Math.min(permL, makeupDemand*hrs);
-    toComm   = permL - toMakeup;
-    dest = toComm>0.5 ? DESTS[1+ (S.batchNo % 3)] : DESTS[0];
-    S.today.recovered += permL; S.today.makeup += toMakeup; S.today.community += toComm;
-    DESTS[0].l += toMakeup; if(toComm>0) dest.l += toComm;
-  } else if(permL>0){
-    dest = DESTS[4]; dest.l += permL;
-  }
-  const freshNeeded = Math.max(0, makeupDemand*hrs - toMakeup);
-  S.today.withdrawn += freshNeeded;
+ S.docs.sensor_readings+=8;
+ S.lastDocs.sensor_readings={ts:hhmm(S.t),facility_id:fac.id,device:'CDU-01',vendor:'Vertiv XDU-450',
+   metrics:{coolant_supply_C:+supply.toFixed(1),coolant_return_C:+ret.toFixed(1),flow_L_min:Math.round(flow),
+   it_load_pct:+(S.load*100).toFixed(1),heat_reject_kW:Math.round(heat),junction_temp_C:+Tj.toFixed(1)}};
 
-  /* --- batch record every 2 sim-hours, on accumulated volume --- */
-  S.acc.feed += feedL; S.acc.perm += permL; S.acc.heat += mdThermal*hrs;
-  S.ticks++;
-  let newBatch=null;
-  if(S.t % 120 < TICK_MIN && S.acc.perm > 1){
-    newBatch = mintBatch({feedL:S.acc.feed, permL:S.acc.perm, q, pass, heat:S.acc.heat,
-                          dest: pass? (toComm>0.5? dest.n : 'Cooling makeup loop') : 'Quarantine — re-treat', ret});
-    S.acc = { feed:0, perm:0, heat:0 };
-  }
-
-  /* --- telemetry history --- */
-  S.hist.push({heat, used:mdThermal, t:S.t});
-  if(S.hist.length>190) S.hist.shift();
-
-  /* --- mongo write accounting (8 probes / tick, bucketed time-series) --- */
-  S.docs.sensor_readings += 8;
-  S.lastDocs.sensor_readings = {
-    ts:hhmm(S.t), facility_id:fac.id, device:'CDU-01', vendor:'Vertiv XDU-450',
-    metrics:{ coolant_supply_C:+supply.toFixed(1), coolant_return_C:+ret.toFixed(1),
-              flow_L_min:Math.round(flow), it_load_pct:+(S.load*100).toFixed(1),
-              heat_reject_kW:Math.round(heat) }
-  };
-  return {itkW, heat, flow, supply, ret, dT, evapLph, bdLph, makeupDemand, feedL, permL, concL,
-          mdThermal, q, pass, toMakeup, toComm, freshNeeded, mdCap, coc, R, newBatch, mdOn};
+ return S.F={itkW,heat,flow,supply,ret,dT,Tj,throttle,evapLph,bdLph,makeupDemand,coc,
+   Tf,Tp,Tfm,Tpm,tau,flux,mdOn,permCap,feedL,permL,concL,mdThermal,recFrac,
+   q,pass,R,toMakeup,toComm,freshNeeded,feedTDS};
 }
 
-/* ---------- hash chain ---------- */
-function h32(str){
-  let h1=0x811c9dc5, h2=0x01000193;
-  for(let i=0;i<str.length;i++){
-    h1 ^= str.charCodeAt(i); h1 = Math.imul(h1, 0x01000193)>>>0;
-    h2 = (Math.imul(h2 ^ str.charCodeAt(i), 0x85ebca6b))>>>0;
-  }
-  return (h1>>>0).toString(16).padStart(8,'0') + (h2>>>0).toString(16).padStart(8,'0');
-}
+/* ---------- ledger ---------- */
+function h32(str){let h1=0x811c9dc5,h2=0x01000193;
+ for(let i=0;i<str.length;i++){h1^=str.charCodeAt(i);h1=Math.imul(h1,0x01000193)>>>0;
+  h2=(Math.imul(h2^str.charCodeAt(i),0x85ebca6b))>>>0;}
+ return (h1>>>0).toString(16).padStart(8,'0')+(h2>>>0).toString(16).padStart(8,'0');}
 function mintBatch(o){
-  const prev = S.chain.length ? S.chain[S.chain.length-1].hash : '0'.repeat(16);
-  const b = {
-    batch_id:'MD-00'+(++S.batchNo), facility_id:fac.id, source:'cooling-blowdown',
-    input_L:Math.round(o.feedL), output_L:Math.round(o.permL),
-    recovery_pct:+(o.permL/o.feedL*100).toFixed(1),
-    heat_used_kWh:+o.heat.toFixed(1),
-    fluoride_mgL:+o.q.F.toFixed(3), nitrate_mgL:+o.q.NO3.toFixed(1),
-    tds_mgL:Math.round(o.q.TDS), ph:+o.q.pH.toFixed(2),
-    standard:'BIS IS 10500', quality:o.pass?'PASS':'FAIL',
-    destination:o.dest, feed_temp_C:+o.ret.toFixed(1), ts:hhmm(S.t)
-  };
-  b.prev_hash = prev;
-  b.hash = h32(JSON.stringify(b));
-  S.chain.push(b);
-  if(S.chain.length>140) S.chain.shift();
-  S.docs.treatment_batches++; S.docs.dispatch_decisions++;
-  S.lastDocs.treatment_batches = b;
-  S.lastDocs.dispatch_decisions = {
-    facility_id:fac.id, ts:b.ts, action:o.pass?'ROUTE_VERIFIED_PERMEATE':'HOLD_QUARANTINE',
-    reason:o.pass?'BIS IS 10500 gate passed on all parameters'
-                 :`fluoride ${b.fluoride_mgL} mg/L exceeds BIS acceptable limit 1.0 mg/L`,
-    forecast_heat_kW:Math.round(forecastHeat()), litres:b.output_L,
-    target:{ name:o.dest, stage_of_extraction_pct: o.dest.indexOf('Cooling')===0?null:169 }
-  };
-  if(o.pass){ S.released++; logEvent(`<b>${b.batch_id}</b> released · ${b.output_L} L → ${o.dest}`); }
-  else { S.quarantined++; logEvent(`<b>${b.batch_id}</b> QUARANTINED · fluoride ${b.fluoride_mgL} mg/L > 1.0`); }
-  return b;
+ const prev=S.chain.length?S.chain[S.chain.length-1].hash:'0'.repeat(16);
+ const b={batch_id:'MD-00'+(++S.batchNo),facility_id:fac.id,source:'cooling-blowdown',
+  input_L:Math.round(o.feedL),output_L:Math.round(o.permL),
+  recovery_pct:+(o.permL/o.feedL*100).toFixed(1),heat_used_kWh:+o.heat.toFixed(1),
+  fluoride_mgL:+o.q.F.toFixed(3),nitrate_mgL:+o.q.NO3.toFixed(1),tds_mgL:Math.round(o.q.TDS),
+  ph:+o.q.pH.toFixed(2),standard:'BIS IS 10500',quality:o.pass?'PASS':'FAIL',
+  destination:o.dest,feed_temp_C:+o.Tf.toFixed(1),ts:hhmm(S.t)};
+ b.prev_hash=prev; b.hash=h32(JSON.stringify(b));
+ S.chain.push(b); if(S.chain.length>140)S.chain.shift();
+ S.docs.treatment_batches++; S.docs.dispatch_decisions++;
+ S.lastDocs.treatment_batches=b;
+ S.lastDocs.dispatch_decisions={facility_id:fac.id,ts:b.ts,
+   action:o.pass?'ROUTE_VERIFIED_PERMEATE':'HOLD_QUARANTINE',
+   reason:o.pass?'BIS IS 10500 gate passed on all parameters'
+    :`fluoride ${b.fluoride_mgL} mg/L exceeds BIS acceptable limit 1.0 mg/L`,
+   forecast_heat_kW:Math.round(forecastHeat()),litres:b.output_L,
+   target:{name:o.dest,stage_of_extraction_pct:o.dest.indexOf('Cooling')===0?null:fac.stage}};
+ if(o.pass){S.released++;logEvent(`<b>${b.batch_id}</b> released · ${b.output_L} L → ${o.dest}`);}
+ else{S.quarantined++;logEvent(`<b>${b.batch_id}</b> QUARANTINED · fluoride ${b.fluoride_mgL} mg/L > 1.0`);}
 }
-function forecastHeat(){
-  const t2 = (S.t+30)%1440;
-  const l = (S.loadSrc==='manual'? S.manualLoad : loadProfile(t2));
-  return fac.itMW*1000*l*0.96;
+const forecastHeat=()=>{const t2=(S.t+30)%1440;
+ return fac.itMW*1000*(S.loadSrc==='manual'?S.manualLoad:loadProfile(t2))*.96;};
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+function logEvent(msg){S.events.unshift({t:hhmm(S.t),msg}); if(S.events.length>40)S.events.pop();}
+
+/* =========================================================
+   PARTICLE SIMULATIONS
+   ========================================================= */
+/* --- MD module --- */
+const MD={W:1720,H:600,feedTop:104,feedBot:250,memTop:250,memBot:298,permTop:298,permBot:440,
+  x0:96,x1:1624};
+const PORES=[]; for(let x=MD.x0+52;x<MD.x1-30;x+=58) PORES.push({x,w:15});
+const WET=[];
+let mdParts=[], vapours=[];
+function initMD(){
+ mdParts=[];
+ const kinds=[['H2O',.62],['F',.13],['NO3',.12],['TDS',.13]];
+ for(let i=0;i<150;i++){
+   const r=Math.random(); let k='H2O',a=0;
+   for(const [n,w] of kinds){a+=w; if(r<a){k=n;break;}}
+   mdParts.push({x:MD.x0+Math.random()*(MD.x1-MD.x0),y:MD.feedTop+8+Math.random()*(MD.feedBot-MD.feedTop-16),
+     k,side:'feed',v:.4+Math.random()*.6,vy:(Math.random()-.5)*.5});
+ }
+ for(let i=0;i<70;i++)
+   mdParts.push({x:MD.x0+Math.random()*(MD.x1-MD.x0),y:MD.permTop+8+Math.random()*(MD.permBot-MD.permTop-16),
+     k:'H2O',side:'perm',v:.4+Math.random()*.6,vy:(Math.random()-.5)*.5});
+ vapours=[];
 }
-function hhmm(m){ return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
-function logEvent(msg){
-  S.events.unshift({t:hhmm(S.t), msg});
-  if(S.events.length>40) S.events.pop();
+const KCOL={H2O:'--cold',F:'--ochre',NO3:'#7A5AA8',TDS:'--conc'};
+const kcol=k=>k==='NO3'?'#7A5AA8':CSS(KCOL[k]);
+
+function drawMD(dt){
+ const c=$('mdCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ g.clearRect(0,0,MD.W,MD.H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,MD.W,MD.H);
+
+ /* waste-heat feed heater */
+ g.fillStyle=CSS('--ochre-soft'); g.fillRect(MD.x0,36,MD.x1-MD.x0,50);
+ g.strokeStyle=CSS('--ochre'); g.lineWidth=2; g.strokeRect(MD.x0,36,MD.x1-MD.x0,50);
+ label(g,'WASTE-HEAT EXCHANGER — feed heater',MD.x0+14,58,'--ochre',20,700);
+ label(g,fmt(F.mdThermal,0)+' kW recovered from the coolant return',MD.x0+14,78,'--ink-2',17);
+
+ /* channels */
+ g.fillStyle=CSS('--surface-2'); g.fillRect(MD.x0,MD.feedTop,MD.x1-MD.x0,MD.feedBot-MD.feedTop);
+ g.strokeStyle=CSS('--rule-strong'); g.lineWidth=2; g.strokeRect(MD.x0,MD.feedTop,MD.x1-MD.x0,MD.feedBot-MD.feedTop);
+ g.fillStyle=CSS('--surface-2'); g.fillRect(MD.x0,MD.permTop,MD.x1-MD.x0,MD.permBot-MD.permTop);
+ g.strokeRect(MD.x0,MD.permTop,MD.x1-MD.x0,MD.permBot-MD.permTop);
+ g.fillStyle=CSS('--neeru-soft'); g.fillRect(MD.x0,MD.permBot,MD.x1-MD.x0,44);
+ g.strokeStyle=CSS('--neeru'); g.strokeRect(MD.x0,MD.permBot,MD.x1-MD.x0,44);
+ label(g,'CONDENSER PLATE — '+F.Tp.toFixed(0)+' °C',MD.x0+14,MD.permBot+28,'--neeru',19,700);
+
+ /* membrane + pores */
+ g.fillStyle=CSS('--ink-3'); g.globalAlpha=.20; g.fillRect(MD.x0,MD.memTop,MD.x1-MD.x0,MD.memBot-MD.memTop); g.globalAlpha=1;
+ g.strokeStyle=CSS('--ink-2'); g.lineWidth=2.5;
+ g.beginPath(); g.moveTo(MD.x0,MD.memTop); g.lineTo(MD.x1,MD.memTop);
+ g.moveTo(MD.x0,MD.memBot); g.lineTo(MD.x1,MD.memBot); g.stroke();
+ PORES.forEach((p,i)=>{
+   const wet=WET.includes(i);
+   g.fillStyle=CSS(wet?'--fail':'--surface');
+   g.fillRect(p.x-p.w/2,MD.memTop+1,p.w,MD.memBot-MD.memTop-2);
+   g.strokeStyle=CSS(wet?'--fail':'--rule-strong'); g.lineWidth=1.6;
+   g.strokeRect(p.x-p.w/2,MD.memTop+1,p.w,MD.memBot-MD.memTop-2);
+ });
+
+ /* particles */
+ const flowSpeed=clamp(F.flux/22,.15,2.2)*(F.mdOn?1:.25);
+ const crossP=clamp(F.flux/2400,0,.05)*(F.mdOn?1:0);
+ for(const p of mdParts){
+   const dir=p.side==='feed'?1:-1;
+   p.x+=dir*(1.1+p.v*1.5)*flowSpeed*dt;
+   p.y+=p.vy*dt*.5;
+   const top=p.side==='feed'?MD.feedTop+7:MD.permTop+7;
+   const bot=p.side==='feed'?MD.feedBot-7:MD.permBot-7;
+   if(p.y<top||p.y>bot){p.vy*=-1;p.y=clamp(p.y,top,bot);}
+   if(p.x>MD.x1-6)p.x=MD.x0+6; if(p.x<MD.x0+6)p.x=MD.x1-6;
+   if(p.side==='feed'&&p.y>MD.feedBot-16){
+     const pore=PORES.findIndex(q=>Math.abs(q.x-p.x)<q.w/2);
+     const isWet=pore>=0&&WET.includes(pore);
+     if(p.k==='H2O'&&pore>=0&&Math.random()<crossP){
+       vapours.push({x:PORES[pore].x,y:MD.memTop,t:0,leak:false});
+       p.y=MD.feedTop+10+Math.random()*20; p.x=MD.x0+10+Math.random()*80;
+     } else if(isWet&&p.k!=='H2O'&&Math.random()<.02){
+       vapours.push({x:PORES[pore].x,y:MD.memTop,t:0,leak:true,k:p.k});
+       p.y=MD.feedTop+10+Math.random()*20;
+     } else { p.vy=-Math.abs(p.vy)||-.4; }
+   }
+   g.beginPath();
+   g.arc(p.x,p.y,p.k==='H2O'?4.2:5.4,0,7); g.fillStyle=kcol(p.k); g.fill();
+   if(p.k!=='H2O'){g.strokeStyle=CSS('--surface');g.lineWidth=1.2;g.stroke();}
+ }
+ /* vapour crossings */
+ g.setLineDash([4,4]);
+ for(let i=vapours.length-1;i>=0;i--){
+   const v=vapours[i]; v.t+=dt*.05;
+   const y=lerp(MD.memTop,MD.permTop+14,clamp(v.t,0,1));
+   g.beginPath(); g.moveTo(v.x,MD.memTop); g.lineTo(v.x,y);
+   g.strokeStyle=v.leak?CSS('--fail'):CSS('--ink-3'); g.lineWidth=2; g.stroke();
+   g.beginPath(); g.arc(v.x,y,v.leak?5:3.4,0,7);
+   g.fillStyle=v.leak?kcol(v.k):CSS('--cold'); g.fill();
+   if(v.t>=1){
+     mdParts.push({x:v.x,y:MD.permTop+14,k:v.leak?v.k:'H2O',side:'perm',v:.4+Math.random()*.6,vy:(Math.random()-.5)*.5});
+     vapours.splice(i,1);
+     if(mdParts.length>260) mdParts.splice(mdParts.findIndex(p=>p.side==='perm'),1);
+   }
+ }
+ g.setLineDash([]);
+
+ /* channel labels last, on a backing plate so the particles never eat them */
+ const plate=(txt,x,y,col,size)=>{
+   g.font=`700 ${size}px "IBM Plex Sans", sans-serif`; g.textAlign='left';
+   const w=g.measureText(txt).width;
+   g.fillStyle=CSS('--surface'); g.globalAlpha=.88; g.fillRect(x-7,y-size-2,w+14,size+10); g.globalAlpha=1;
+   g.fillStyle=CSS(col)||col; g.fillText(txt,x,y);
+ };
+ plate('FEED CHANNEL — blowdown, '+F.Tf.toFixed(1)+' °C, '+fmt(F.feedTDS,0)+' mg/L TDS',MD.x0+12,MD.feedTop+26,'--hot',19);
+ plate('flow →',MD.x1-84,MD.feedTop+26,'--ink-3',17);
+ plate('HYDROPHOBIC PTFE MEMBRANE · 0.2 µm pores'+(WET.length?'   ·   WETTED PORES DETECTED':''),
+   MD.x0+12,MD.memTop-9,WET.length?'--fail':'--ink-2',17);
+ plate('PERMEATE CHANNEL — recovered water, '+F.q.TDS.toFixed(0)+' mg/L TDS',MD.x0+12,MD.permBot-12,'--perm',19);
+ plate('← counter-flow',MD.x1-160,MD.permBot-12,'--ink-3',17);
+
+ /* readouts across the base */
+ const rows=[['Flux',F.flux.toFixed(1)+' L/m²·h'],['Permeate',fmt(F.permCap,0)+' L/h'],
+   ['ΔT at membrane',(F.Tfm-F.Tpm).toFixed(1)+' K'],['Rejection',(F.R*100).toFixed(2)+' %']];
+ rows.forEach((r,i)=>{
+   const x=16+i*424;
+   g.textAlign='left';
+   g.fillStyle=CSS('--ink-3'); g.font='500 15px "IBM Plex Sans", sans-serif'; g.fillText(r[0],x,516);
+   g.fillStyle=CSS('--ink'); g.font='500 24px "IBM Plex Mono", monospace'; g.fillText(r[1],x,546);
+ });
+ g.textAlign='left'; g.font='600 21px "IBM Plex Sans", sans-serif';
+ if(!F.mdOn){ g.fillStyle=CSS('--warn');
+   g.fillText('SKID IDLE — feed below 38 °C, driving force collapsed',16,586);
+ } else if(WET.length){ g.fillStyle=CSS('--fail');
+   g.fillText('PORE WETTING — ions breaking through; the quality gate will reject this batch',16,586);
+ } else { g.fillStyle=CSS('--pass');
+   g.fillText('Only H₂O crosses. F⁻, NO₃⁻ and dissolved salts are non-volatile — rejected by physics.',16,586);
+ }
 }
-
-/* ---------- rendering ---------- */
-let dash = {};
-function render(f){
-  $('clock').textContent = hhmm(S.t);
-  $('loadRead').textContent = Math.round(S.load*100)+'%';
-  $('ledgerHeight').textContent = S.chain.length;
-
-  /* KPI ribbon */
-  const elapsedMin = Math.max(TICK_MIN, S.ticks*TICK_MIN);
-  const drawKLd = S.today.withdrawn*(1440/elapsedMin)/1000;
-  $('k_draw').innerHTML = fmt(drawKLd,1)+'<span class="unit">KL/day</span>';
-  const capTxt = fac.nocCap? `against NOC cap ${fac.nocCap} KL/day` : 'no source specified in clearance';
-  $('k_draw_f').textContent = capTxt;
-  $('k_draw').parentElement.className = 'kpi' + (fac.nocCap && drawKLd>fac.nocCap ? ' bad':'');
-  $('k_rec').innerHTML = fmt(S.today.recovered/1000,1)+'<span class="unit">KL</span>';
-  const ratio = S.today.feed>0 ? S.today.recovered/S.today.feed*100 : 0;
-  $('k_ratio').innerHTML = fmt(ratio,1)+'<span class="unit">%</span>';
-  $('k_heat').innerHTML = fmt(f.mdThermal,0)+'<span class="unit">kW<sub>th</sub></span>';
-  $('k_heat_f').textContent = fmt(f.heat>0? f.mdThermal/f.heat*100:0,1)+'% of rejected heat, recovered not purchased';
-  $('k_batch').textContent = S.released;
-  $('k_batch_f').textContent = S.quarantined+' quarantined on BIS gate';
-  $('k_comm').innerHTML = fmt(S.today.community,0)+'<span class="unit">L</span>';
-
-  /* readouts */
-  const ro = [
-    ['IT load', (S.load*100).toFixed(1), '%', S.load],
-    ['Heat rejected', fmt(f.heat,0), 'kW', f.heat/(fac.itMW*1000)],
-    ['Coolant supply / return', f.supply.toFixed(1)+' / '+f.ret.toFixed(1), '°C', clamp((f.ret-32)/28,0,1)],
-    ['Coolant flow', fmt(f.flow,0), 'L/min', f.flow/2720],
-    ['Evaporative loss', fmt(f.evapLph,0), 'L/h', clamp(f.evapLph/4200,0,1)],
-    ['Blowdown generated', fmt(f.bdLph,0), 'L/h', clamp(f.bdLph/1400,0,1)],
-    ['Blowdown tank', fmt(S.bdTank,0), 'L held', clamp(S.bdTank/900,0,1)],
-    ['MD feed capacity', fmt(f.mdCap,0), 'L/h', f.mdCap/940],
-    ['Membrane rejection', (f.R*100).toFixed(2), '%', f.R],
-    ['Permeate fluoride', f.q.F.toFixed(3), 'mg/L · BIS 1.0', clamp(f.q.F/1.0,0,1)],
-    ['Permeate nitrate', f.q.NO3.toFixed(1), 'mg/L · BIS 45', clamp(f.q.NO3/45,0,1)],
-    ['Permeate TDS', fmt(f.q.TDS,0), 'mg/L · BIS 500', clamp(f.q.TDS/500,0,1)]
-  ];
-  $('readouts').innerHTML = ro.map(([n,v,u,frac],i)=>{
-    const crit = i>=9 && frac>=1;
-    return `<div class="ro"><span class="n">${n}</span>
-      <span class="v" style="${crit?'color:var(--fail)':''}">${v}<small>${u}</small></span>
-      <span class="bar"><i style="width:${clamp(frac*100,0,100)}%;background:${crit?'var(--fail)':'var(--neeru)'}"></i></span></div>`;
-  }).join('');
-
-  /* schematic node values */
-  const sv = (k,a,b)=>{ $('v_'+k).textContent=a; $('v2_'+k).textContent=b||''; };
-  sv('servers', fmt(f.itkW/1000,2)+' MW IT', (S.load*100).toFixed(0)+'% utilisation');
-  sv('cdu', f.supply.toFixed(1)+' → '+f.ret.toFixed(1)+' °C', fmt(f.flow,0)+' L/min recirculating');
-  sv('hx', 'ΔT '+f.dT.toFixed(1)+' K', fmt(f.heat,0)+' kW available');
-  sv('tower', fmt(f.evapLph,0)+' L/h evaporated', S.mode==='tower'?'open evaporative':'adiabatic assist only');
-  sv('intake', fmt(f.freshNeeded*30,0)+' L/h', fac.nocCap? 'NOC cap '+fac.nocCap+' KL/d' : 'source unspecified');
-  sv('bd', fmt(S.bdTank,0)+' L held', fmt(f.coc,1)+' cycles of concentration');
-  sv('md', f.mdOn? fmt(f.permL*30,0)+' L/h permeate' : 'idle — ΔT too low', f.mdOn? fmt(f.mdThermal,0)+' kW'+'th consumed':'awaiting heat');
-  sv('gate', f.pass? 'PASS' : 'FAIL', 'F '+f.q.F.toFixed(2)+' · NO₃ '+f.q.NO3.toFixed(0)+' · TDS '+fmt(f.q.TDS,0));
-  sv('zld', fmt(f.concL*30,0)+' L/h', 'to crystalliser');
-  sv('disp', fmt(f.toComm*30,0)+' L/h', 'ward delivery');
-  $('v_gate').style.fill = f.pass? 'var(--pass)':'var(--fail)';
-  $('box_gate').classList.toggle('act', true);
-  $('box_md').classList.toggle('act', f.mdOn);
-  $('box_tower').classList.toggle('act', S.mode==='tower');
-
-  /* pipe animation + labels */
-  const flows = {
-    p_ret:f.flow/40, p_hot:f.flow/40, p_sup:f.flow/40, p_rej:f.heat/90,
-    p_heat:f.mdThermal/8, p_bd:f.bdLph/22, p_feed:f.feedL*30/22, p_perm:f.permL*30/18,
-    p_out:f.toComm*30/12, p_conc:f.concL*30/10, p_mk:(f.toMakeup*30)/16, p_fw:f.freshNeeded*30/16
-  };
-  for(const id in flows){
-    dash[id] = (dash[id]||0) - clamp(flows[id],0,26);
-    const el = $(id);
-    el.style.strokeDashoffset = dash[id];
-    el.style.opacity = flows[id] < 0.4 ? .18 : 1;
-  }
-  const retColor = `color-mix(in srgb, var(--hot) ${clamp((f.ret-34)/16*100,10,100)}%, var(--cold))`;
-  $('p_hot').setAttribute('stroke', retColor); $('p_ret').setAttribute('stroke', retColor);
-  const L = (id,txt)=>$(id).textContent=txt;
-  L('l_ret', fmt(f.flow,0)+' L/min'); L('l_hot', f.ret.toFixed(1)+' °C');
-  L('l_rej', fmt(f.heat-f.mdThermal,0)+' kW'); L('l_sup', f.supply.toFixed(1)+' °C');
-  L('l_heat', fmt(f.mdThermal,0)+' kW cascaded');
-  L('l_bd', fmt(f.bdLph,0)+' L/h blowdown');
-  L('l_feed', fmt(f.feedL*30,0)+' L/h'); L('l_perm', fmt(f.permL*30,0)+' L/h');
-  L('l_out', fmt(f.toComm*30,0)+' L/h'); L('l_conc', fmt(f.concL*30,0)+' L/h');
-  L('l_mk', fmt(f.toMakeup*30,0)+' L/h verified makeup — loop closed before anything leaves the fence');
-  L('l_fw', fmt(f.freshNeeded*30,0)+' L/h fresh top-up');
-
-  for(let i=0;i<9;i++){
-    const on = (i/9) < S.load;
-    $('rk'+i).setAttribute('opacity', on? (0.55+0.45*Math.sin(Date.now()/220+i)).toFixed(2) : '0.15');
-  }
-
-  /* passport */
-  const b = S.chain[S.chain.length-1];
-  if(b){
-    const lim = (v,l,d)=> `<span style="${v>l?'color:var(--fail);font-weight:600':''}">${v.toFixed(d)}</span> <span style="color:var(--ink-3)">/ ${l}</span>`;
-    $('passport').innerHTML = `
-      <div class="pp-row"><span class="k">Batch</span><span class="v">${b.batch_id}</span></div>
-      <div class="pp-row"><span class="k">Facility</span><span class="v">${b.facility_id}</span></div>
-      <div class="pp-row"><span class="k">NOC</span><span class="v">${fac.noc}</span></div>
-      <div class="pp-row"><span class="k">Source</span><span class="v">${b.source}</span></div>
-      <div class="pp-row"><span class="k">Input → output</span><span class="v">${fmt(b.input_L)} L → ${fmt(b.output_L)} L (${b.recovery_pct}%)</span></div>
-      <div class="pp-row"><span class="k">Heat used</span><span class="v">${b.heat_used_kWh} kWh <span style="color:var(--ink-3)">recovered</span></span></div>
-      <div class="pp-row"><span class="k">Fluoride</span><span class="v">${lim(b.fluoride_mgL,1.0,3)} mg/L</span></div>
-      <div class="pp-row"><span class="k">Nitrate</span><span class="v">${lim(b.nitrate_mgL,45,1)} mg/L</span></div>
-      <div class="pp-row"><span class="k">TDS</span><span class="v">${lim(b.tds_mgL,500,0)} mg/L</span></div>
-      <div class="pp-row"><span class="k">pH</span><span class="v">${b.ph}</span></div>
-      <div class="pp-row"><span class="k">Verdict</span><span class="v"><span class="chip ${b.quality==='PASS'?'pass':'fail'}">${b.quality} · BIS IS 10500</span></span></div>
-      <div class="pp-row"><span class="k">Destination</span><span class="v">${b.destination}</span></div>
-      <div class="pp-row"><span class="k">prev_hash</span><span class="v" style="font-size:10px;color:var(--ink-2)">${b.prev_hash}</span></div>
-      <div class="pp-row"><span class="k">hash</span><span class="v" style="font-size:10px">${b.hash}</span></div>`;
-  }
-
-  /* ledger */
-  $('ledger').innerHTML = S.chain.slice(-9).reverse().map(x=>`
-    <div class="batch ${x.quality==='FAIL'?'fail':''}">
-      <div class="r1"><span class="id">${x.batch_id}</span>
-        <span class="chip ${x.quality==='PASS'?'pass':'fail'}">${x.quality}</span>
-        <span class="t">${x.ts}</span></div>
-      <div class="r2"><span>in <b>${fmt(x.input_L)}</b> L</span><span>out <b>${fmt(x.output_L)}</b> L</span>
-        <span>${x.recovery_pct}%</span><span>${x.heat_used_kWh} kWh</span>
-        <span class="${x.fluoride_mgL>1?'over':''}">F ${x.fluoride_mgL}</span></div>
-      <div class="dest">→ ${x.destination}</div>
-      <div class="hash">${x.prev_hash} ▸ ${x.hash}</div>
-    </div>`).join('') || '<div class="batch"><span class="dest">Awaiting first batch…</span></div>';
-
-  /* destinations */
-  $('destTable').innerHTML = DESTS.map(d=>`<tr>
-      <td>${d.n}</td><td>${d.s}</td>
-      <td class="num">${d.internal?'—':(d.quar?'—':d.rank)}</td>
-      <td class="num">${fmt(d.l,0)} L</td></tr>`).join('');
-
-  /* water balance */
-  const bal = [
-    ['Freshwater withdrawn', S.today.withdrawn, 'L'],
-    ['Evaporative loss (consumed)', S.today.evap, 'L'],
-    ['Blowdown generated', S.today.bdGen, 'L'],
-    ['Reject treated by MD', S.today.feed, 'L'],
-    ['Water recovered (verified)', S.today.recovered, 'L'],
-    ['Returned to cooling makeup', S.today.makeup, 'L'],
-    ['Delivered to community', S.today.community, 'L'],
-    ['Concentrate to ZLD', S.today.conc, 'L'],
-    ['Waste heat consumed', S.today.heatUsed, 'kWh'],
-    ['Discharged untreated', 0, 'L']
-  ];
-  $('balance').innerHTML = bal.map(([n,v,u])=>`<tr><td>${n}</td><td class="num">${fmt(v,0)}</td><td class="num">${u}</td></tr>`).join('');
-  const rf = S.today.bdGen>0 ? S.today.recovered/S.today.bdGen*100 : 0;
-  $('reuseFrac').textContent = fmt(rf,1);
-  $('ruleChip').className = 'chip ' + (rf>=50?'pass': rf>=20?'warn':'fail');
-  $('ruleChip').textContent = rf>=50 ? 'LWM 2024 · 2030–31 target met' : rf>=20 ? 'LWM 2024 · 2027–28 target met' : 'LWM 2024 · below 20% floor';
-
-  /* mongo inspector */
-  const tot = S.docs.sensor_readings+S.docs.treatment_batches+S.docs.dispatch_decisions;
-  $('wr').textContent = fmt(tot)+' docs written';
-  renderDoc();
-  $('stream').innerHTML = S.events.slice(0,7).map(e=>`<div class="ev"><span class="ts">${e.t}</span><span class="msg">${e.msg}</span></div>`).join('')
-    || '<div class="ev"><span class="ts">—</span><span class="msg">Change stream open, awaiting events…</span></div>';
-
-  drawChart();
+function label(g,txt,x,y,col,size,weight){
+ g.fillStyle=CSS(col)||col; g.font=`${weight||500} ${size}px "IBM Plex Sans", sans-serif`;
+ g.textAlign='left'; g.fillText(txt,x,y);
 }
 
-/* ---------- doc viewer ---------- */
-let activeColl = 'sensor_readings';
-const COLL_NOTE = {
-  sensor_readings:'Native <b>time-series collection</b> — <code>timeField: "ts"</code>, <code>metaField: {facility_id, device}</code>. Every vendor writes its own reading shape into one collection; onboarding a second skid needs no migration, which is the whole point of a hardware-agnostic ingestion layer.',
-  treatment_batches:'The <b>digital water passport</b>. Each document carries the previous batch\'s hash, so the log is tamper-evident and independently checkable — no blockchain infrastructure, just a chained document field.',
-  dispatch_decisions:'Written by a <b>change-stream listener</b>: a new reading pushes the scheduler instead of a cron job polling it. The <code>reason</code> field is what a regulator reads when asking why a batch was held.',
-  aggregation:'The <b>compliance API</b> — one aggregation pipeline produces the statutory water balance per facility, region and period. This is the artefact Karnataka\'s 2022 Data Centre Policy never asked for.'
+/* --- cold plate --- */
+let plateParts=[];
+const PL={W:1680,H:452,chX0:150,chX1:1540,rows:5,top:96,gap:34};
+function initPlate(){plateParts=[];
+ for(let r=0;r<PL.rows;r++) for(let i=0;i<26;i++)
+   plateParts.push({r,x:PL.chX0+Math.random()*(PL.chX1-PL.chX0)});}
+function drawPlate(dt){
+ const c=$('plateCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ g.clearRect(0,0,PL.W,PL.H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,PL.W,PL.H);
+ /* die */
+ const dieY=PL.top+PL.rows*PL.gap+34, glow=clamp((F.Tj-40)/55,0,1);
+ g.fillStyle=`color-mix(in srgb, ${CSS('--hot')} ${(glow*100).toFixed(0)}%, ${CSS('--surface-sunk')})`;
+ g.fillRect(PL.chX0+180,dieY,PL.chX1-PL.chX0-360,74);
+ g.strokeStyle=CSS('--ink-2'); g.lineWidth=2.5; g.strokeRect(PL.chX0+180,dieY,PL.chX1-PL.chX0-360,74);
+ label(g,'GPU / CPU DIE',PL.chX0+200,dieY+30,'--ink',20,700);
+ label(g,'Tj '+F.Tj.toFixed(1)+' °C'+(F.throttle?'  ·  THROTTLING':''),PL.chX0+200,dieY+56,F.throttle?'--fail':'--ink-2',19,600);
+ label(g,fmt(F.itkW,0)+' kW rejected into the plate',PL.chX1-560,dieY+44,'--ink-3',18);
+ /* TIM */
+ g.fillStyle=CSS('--ochre-soft'); g.fillRect(PL.chX0+180,dieY-14,PL.chX1-PL.chX0-360,14);
+ label(g,'thermal interface',PL.chX0+186,dieY-3,'--ochre',13);
+ /* cold plate body */
+ g.fillStyle=CSS('--surface-2'); g.fillRect(PL.chX0-40,PL.top-24,PL.chX1-PL.chX0+80,PL.rows*PL.gap+34);
+ g.strokeStyle=CSS('--rule-strong'); g.lineWidth=2; g.strokeRect(PL.chX0-40,PL.top-24,PL.chX1-PL.chX0+80,PL.rows*PL.gap+34);
+ label(g,'COLD PLATE — parallel microchannels',PL.chX0-26,PL.top-38,'--ink-2',19,700);
+ /* channels + particles */
+ for(let r=0;r<PL.rows;r++){
+   const y=PL.top+r*PL.gap;
+   g.fillStyle=CSS('--surface-sunk'); g.fillRect(PL.chX0,y,PL.chX1-PL.chX0,20);
+   g.strokeStyle=CSS('--rule'); g.lineWidth=1.4; g.strokeRect(PL.chX0,y,PL.chX1-PL.chX0,20);
+ }
+ const sp=clamp(F.flow/620,.4,4.5);
+ for(const p of plateParts){
+   p.x+=sp*1.9*dt; if(p.x>PL.chX1-6) p.x=PL.chX0+6;
+   const f=(p.x-PL.chX0)/(PL.chX1-PL.chX0);
+   const T=lerp(F.supply,F.ret,f);
+   const mix=clamp((T-26)/26,0,1);
+   g.beginPath(); g.arc(p.x,PL.top+p.r*PL.gap+10,5,0,7);
+   g.fillStyle=`color-mix(in srgb, ${CSS('--hot')} ${(mix*100).toFixed(0)}%, ${CSS('--cold')})`;
+   g.fill();
+ }
+ /* inlet / outlet callouts */
+ g.font='500 19px "IBM Plex Mono", monospace';
+ label(g,'IN  '+F.supply.toFixed(1)+' °C',6,PL.top+42,'--cold',19,600);
+ label(g,'OUT '+F.ret.toFixed(1)+' °C',PL.chX1+52,PL.top+42,'--hot',19,600);
+ label(g,fmt(F.flow,0)+' L/min',PL.chX1+52,PL.top+66,'--ink-3',17);
+ label(g,'ΔT '+F.dT.toFixed(1)+' K',6,PL.top+66,'--ink-3',17);
+ /* heat flux */
+ label(g,'Heat flux at the die: '+(F.itkW*1000/((PL.chX1-PL.chX0-360)/8*4)).toFixed(0)+' W per rack-U equivalent · coolant is recirculated, not consumed',
+   PL.chX0-40,PL.H-18,'--ink-3',18);
+}
+
+/* --- water balance bars --- */
+function drawWater(){
+ const c=$('waterCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ const W=1680,H=360; g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,W,H);
+ const heat=F.heat;
+ const scen=[
+  {n:'Open evaporative tower',evap:1.593*heat,coc:4.2,cur:S.mode==='tower'},
+  {n:'Closed liquid loop',evap:1.593*heat*.14,coc:6.5,cur:S.mode==='closed'}
+ ].map(s=>{const bd=s.evap/(s.coc-1);return{...s,bd,total:s.evap+bd};});
+ const max=Math.max(...scen.map(s=>s.total))*1.18||1;
+ const x0=300,x1=W-330;
+ scen.forEach((s,i)=>{
+   const y=90+i*120;
+   g.fillStyle=CSS(s.cur?'--ink':'--ink-3');
+   g.font=`${s.cur?600:500} 22px "IBM Plex Sans", sans-serif`; g.textAlign='right';
+   g.fillText(s.n,x0-22,y+24);
+   if(s.cur){g.fillStyle=CSS('--neeru');g.font='600 15px "IBM Plex Mono", monospace';g.fillText('▶ ACTIVE',x0-22,y+48);}
+   const wE=(s.evap/max)*(x1-x0), wB=(s.bd/max)*(x1-x0);
+   g.globalAlpha=s.cur?1:.42;
+   g.fillStyle=CSS('--hot'); g.fillRect(x0,y,wE,40);
+   g.fillStyle=CSS('--bd'); g.fillRect(x0+wE,y,wB,40);
+   g.globalAlpha=1;
+   g.textAlign='left'; g.fillStyle=CSS(s.cur?'--ink':'--ink-3'); g.font='500 21px "IBM Plex Mono", monospace';
+   g.fillText(fmt(s.total,0)+' L/h',x0+wE+wB+16,y+28);
+   g.fillStyle=CSS('--ink-3'); g.font='500 15px "IBM Plex Sans", sans-serif';
+   g.fillText('evaporated '+fmt(s.evap,0)+' · blowdown '+fmt(s.bd,0)+' L/h  ·  '+s.coc.toFixed(1)+' cycles',x0,y+62);
+ });
+ const saving=(1-scen[1].total/scen[0].total)*100;
+ g.fillStyle=CSS('--pass'); g.font='600 23px "IBM Plex Sans", sans-serif'; g.textAlign='left';
+ g.fillText(saving.toFixed(0)+'% less water leaves the site by switching architecture — before a drop is recovered.',300,H-40);
+ g.textAlign='left'; g.fillStyle=CSS('--ink-3'); g.font='500 16px "IBM Plex Sans", sans-serif';
+ g.fillText('At the current IT load of '+(S.load*100).toFixed(0)+'% ('+fmt(heat,0)+' kW rejected)',300,44);
+}
+
+/* --- heat exchanger profile --- */
+function drawHX(){
+ const c=$('hxCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ const W=1500,H=430,pl=126,pr=200,pt=44,pb=54;
+ g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,W,H);
+ const hin=F.ret,hout=F.Tf,cin=F.Tp,cout=F.Tp+(hin-hout)*.82;
+ const lo=Math.min(cin,hout)-6, hi=Math.max(hin,cout)+6;
+ const X=f=>pl+f*(W-pl-pr), Y=v=>H-pb-((v-lo)/(hi-lo))*(H-pt-pb);
+ g.strokeStyle=CSS('--rule'); g.lineWidth=2;
+ g.font='500 17px "IBM Plex Mono", monospace'; g.textAlign='right'; g.textBaseline='middle'; g.fillStyle=CSS('--ink-3');
+ for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;
+  g.beginPath();g.moveTo(pl,Y(v));g.lineTo(W-pr,Y(v));g.stroke();
+  g.fillText(v.toFixed(0)+' °C',pl-14,Y(v));}
+ const curve=(a,b,col,lw)=>{g.beginPath();
+  for(let i=0;i<=60;i++){const f=i/60;const v=lerp(a,b,Math.pow(f,.86));i?g.lineTo(X(f),Y(v)):g.moveTo(X(f),Y(v));}
+  g.strokeStyle=CSS(col);g.lineWidth=lw;g.stroke();};
+ curve(hin,hout,'--hot',5);           // hot stream, left→right
+ curve(cout,cin,'--cold',5);          // cold stream, counter-current
+ g.textAlign='left'; g.textBaseline='middle'; g.font='500 19px "IBM Plex Mono", monospace';
+ g.fillStyle=CSS('--hot'); g.fillText(hin.toFixed(1)+' °C in',pl+10,Y(hin)-24);
+ g.fillText(hout.toFixed(1)+' °C out',W-pr-160,Y(hout)+26);
+ g.fillStyle=CSS('--cold'); g.fillText(cout.toFixed(1)+' °C out',pl+30,Y(cout)+30);
+ g.fillText(cin.toFixed(1)+' °C in',W-pr-150,Y(cin)-24);
+ /* LMTD */
+ const d1=hin-cout,d2=hout-cin;
+ const lmtd=(d1>0&&d2>0&&Math.abs(d1-d2)>.01)?(d1-d2)/Math.log(d1/d2):(d1+d2)/2;
+ g.fillStyle=CSS('--ink-3'); g.font='500 17px "IBM Plex Sans", sans-serif'; g.textAlign='center';
+ g.fillText('HX length →',(pl+W-pr)/2,H-22);
+ g.textAlign='left'; g.fillStyle=CSS('--neeru'); g.font='600 22px "IBM Plex Mono", monospace';
+ g.fillText('LMTD '+lmtd.toFixed(1)+' K',W-pr+16,pt+40);
+ g.fillStyle=CSS('--ink-3'); g.font='500 15px "IBM Plex Sans", sans-serif';
+ g.fillText('duty '+fmt(F.mdThermal,0)+' kW',W-pr+16,pt+68);
+ g.fillText('to MD feed heater',W-pr+16,pt+90);
+ $('hxNote').innerHTML='Counter-flow, so the coolant return gives up heat to the MD feed along the whole length rather than pinching at one end. '+
+  '<b>LMTD is '+lmtd.toFixed(1)+' K</b> — this is what sets how hot the feed can get, and the feed temperature is what sets the flux on stage 03. '+
+  'Everything downstream is chained to this number.';
+}
+
+/* --- flux curve --- */
+function drawFlux(){
+ const c=$('fluxCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ const W=1000,H=640,pl=112,pr=40,pt=34,pb=64;
+ g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,W,H);
+ const t0=30,t1=80,jmax=60;
+ const X=t=>pl+((t-t0)/(t1-t0))*(W-pl-pr), Y=j=>H-pb-(j/jmax)*(H-pt-pb);
+ g.strokeStyle=CSS('--rule');g.lineWidth=2;g.font='500 17px "IBM Plex Mono", monospace';
+ g.textAlign='right';g.textBaseline='middle';g.fillStyle=CSS('--ink-3');
+ for(let i=0;i<=4;i++){const j=jmax*i/4;g.beginPath();g.moveTo(pl,Y(j));g.lineTo(W-pr,Y(j));g.stroke();
+  g.fillText(j.toFixed(0),pl-12,Y(j));}
+ g.textAlign='center';g.textBaseline='top';
+ for(let t=30;t<=80;t+=10) g.fillText(t+' °C',X(t),H-pb+12);
+ g.save();g.translate(26,H/2);g.rotate(-Math.PI/2);g.textAlign='center';g.textBaseline='middle';
+ g.font='500 17px "IBM Plex Sans", sans-serif';g.fillText('flux  L/m²·h',0,0);g.restore();
+ g.beginPath();
+ for(let t=t0;t<=t1;t+=1){
+   const tau=clamp(.78-.004*(t-F.Tp),.55,.82);
+   const tfm=t-(1-tau)/2*(t-F.Tp), tpm=F.Tp+(1-tau)/2*(t-F.Tp);
+   const j=Math.max(0,MD_B*(Pw(tfm)*(1-5.4e-7*F.feedTDS)-Pw(tpm)));
+   t===t0?g.moveTo(X(t),Y(Math.min(j,jmax))):g.lineTo(X(t),Y(Math.min(j,jmax)));
+ }
+ g.strokeStyle=CSS('--neeru');g.lineWidth=5;g.stroke();
+ /* idle zone */
+ g.fillStyle=CSS('--warn-bg');g.globalAlpha=.75;g.fillRect(pl,pt,X(38)-pl,H-pt-pb);g.globalAlpha=1;
+ g.fillStyle=CSS('--warn');g.font='600 15px "IBM Plex Sans", sans-serif';g.textAlign='left';
+ g.save();g.translate(X(34),pt+120);g.rotate(-Math.PI/2);g.fillText('skid idled below 38 °C',0,0);g.restore();
+ /* operating point */
+ const jx=Math.min(F.flux,jmax);
+ g.setLineDash([5,6]);g.strokeStyle=CSS('--rule-strong');g.lineWidth=2;
+ g.beginPath();g.moveTo(X(F.Tf),Y(jx));g.lineTo(X(F.Tf),H-pb);g.moveTo(X(F.Tf),Y(jx));g.lineTo(pl,Y(jx));g.stroke();
+ g.setLineDash([]);
+ g.beginPath();g.arc(X(F.Tf),Y(jx),9,0,7);g.fillStyle=CSS('--hot');g.fill();
+ g.strokeStyle=CSS('--surface');g.lineWidth=3;g.stroke();
+ g.fillStyle=CSS('--ink');g.font='600 21px "IBM Plex Mono", monospace';g.textAlign='left';
+ g.fillText(F.flux.toFixed(1)+' L/m²·h  @ '+F.Tf.toFixed(1)+' °C',clamp(X(F.Tf)+18,pl,W-pr-330),Y(jx)-20);
+}
+
+/* --- temperature polarisation --- */
+function drawTP(){
+ const c=$('tpCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ const W=1000,H=640,pl=112,pr=40,pt=48,pb=64;
+ g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,W,H);
+ const lo=F.Tp-5,hi=F.Tf+5;
+ const X=f=>pl+f*(W-pl-pr), Y=v=>H-pb-((v-lo)/(hi-lo))*(H-pt-pb);
+ g.strokeStyle=CSS('--rule');g.lineWidth=2;g.textAlign='right';g.textBaseline='middle';
+ g.font='500 17px "IBM Plex Mono", monospace';g.fillStyle=CSS('--ink-3');
+ for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;g.beginPath();g.moveTo(pl,Y(v));g.lineTo(W-pr,Y(v));g.stroke();
+  g.fillText(v.toFixed(0)+' °C',pl-12,Y(v));}
+ /* membrane band */
+ g.fillStyle=CSS('--ink-3');g.globalAlpha=.16;g.fillRect(X(.44),pt,X(.56)-X(.44),H-pt-pb);g.globalAlpha=1;
+ g.fillStyle=CSS('--ink-2');g.font='600 15px "IBM Plex Sans", sans-serif';g.textAlign='center';
+ g.fillText('membrane',X(.5),H-pb+22);
+ g.fillText('feed boundary layer',X(.22),H-pb+22); g.fillText('permeate boundary layer',X(.79),H-pb+22);
+ /* profile */
+ g.beginPath();
+ g.moveTo(X(0),Y(F.Tf)); g.lineTo(X(.30),Y(F.Tf));
+ g.lineTo(X(.44),Y(F.Tfm)); g.lineTo(X(.56),Y(F.Tpm));
+ g.lineTo(X(.70),Y(F.Tp)); g.lineTo(X(1),Y(F.Tp));
+ g.strokeStyle=CSS('--hot');g.lineWidth=5;g.stroke();
+ [[X(.15),F.Tf,'T_feed bulk','--hot'],[X(.44),F.Tfm,'T_fm surface','--ochre'],
+  [X(.56),F.Tpm,'T_pm surface','--neeru'],[X(.86),F.Tp,'T_perm bulk','--cold']]
+ .forEach(([x,v,t,col],i)=>{
+   g.beginPath();g.arc(x,Y(v),7,0,7);g.fillStyle=CSS(col);g.fill();
+   g.fillStyle=CSS('--ink-2');g.font='500 17px "IBM Plex Mono", monospace';
+   g.textAlign=i<2?'left':'right';
+   g.fillText(t+'  '+v.toFixed(1)+'°',i<2?x+14:x-14,Y(v)-20);
+ });
+ /* effective vs measured */
+ g.fillStyle=CSS('--ink');g.font='600 20px "IBM Plex Mono", monospace';g.textAlign='left';
+ g.fillText('measured ΔT '+(F.Tf-F.Tp).toFixed(1)+' K',pl+8,pt-6);
+ g.fillStyle=CSS('--fail');
+ g.fillText('effective ΔT '+(F.Tfm-F.Tpm).toFixed(1)+' K',pl+330,pt-6);
+ $('tpCoef').textContent='τ = '+F.tau.toFixed(2);
+}
+
+/* --- hero loop motif --- */
+function drawHero(){
+ const c=$('heroCanvas'),g=c.getContext('2d'),F=S.F; if(!F)return;
+ const W=1180,H=620; g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface-2'); g.fillRect(0,0,W,H);
+ const box=(x,y,w,h,t,v,col)=>{
+   g.fillStyle=CSS('--surface');g.strokeStyle=CSS(col);g.lineWidth=2.4;
+   g.fillRect(x,y,w,h);g.strokeRect(x,y,w,h);
+   g.fillStyle=CSS('--ink');g.font='700 19px "IBM Plex Sans", sans-serif';g.textAlign='left';
+   g.fillText(t,x+16,y+30);
+   g.fillStyle=CSS(col);g.font='500 20px "IBM Plex Mono", monospace';
+   g.fillText(v,x+16,y+58);
+ };
+ const arrow=(pts,col,ph)=>{
+   g.strokeStyle=CSS(col);g.lineWidth=3;g.setLineDash([10,8]);g.lineDashOffset=-ph;
+   g.beginPath();g.moveTo(pts[0],pts[1]);
+   for(let i=2;i<pts.length;i+=2)g.lineTo(pts[i],pts[i+1]);
+   g.stroke();g.setLineDash([]);
+ };
+ const ph=(Date.now()/28)%18*(F.mdOn?1:.2);
+ /* the return loop is drawn first, along the outer margin, so no box sits on it */
+ arrow([1120,330,1152,330,1152,26,232,26,232,84],'--perm',ph);
+ g.fillStyle=CSS('--perm');g.font='500 16px "IBM Plex Mono", monospace';g.textAlign='center';
+ g.fillText('recovered water returns to the loop',660,18);
+
+ box(70,84,330,86,'DATA CENTRE',fmt(F.itkW,0)+' kW rejected','--hot');
+ box(690,84,430,86,'WASTE HEAT → MD',fmt(F.mdThermal,0)+' kW driving distillation','--ochre');
+ box(70,286,330,86,'BLOWDOWN',fmt(F.bdLph,0)+' L/h reject','--bd');
+ box(690,286,430,86,'VERIFIED WATER',fmt(F.permCap,0)+' L/h · '+(F.pass?'PASS':'HELD'),F.pass?'--pass':'--fail');
+ box(370,470,430,86,'PUBLIC LEDGER',S.chain.length+' chained batches','--neeru');
+
+ arrow([400,127,690,127],'--hot',ph);
+ arrow([235,170,235,286],'--bd',ph);
+ arrow([400,329,690,329],'--bd',ph);
+ arrow([905,170,905,286],'--ochre',ph);
+ arrow([785,372,785,470],'--perm',ph);
+
+ g.fillStyle=CSS('--ink-3');g.font='500 16px "IBM Plex Mono", monospace';g.textAlign='center';
+ g.fillText('waste heat',545,116);
+ g.fillText('concentrated reject',545,318);
+ g.textAlign='left';
+ g.fillText('blowdown',248,236);
+ g.fillText('drives distillation',918,236);
+ g.fillStyle=CSS('--neeru');g.font='600 17px "IBM Plex Sans", sans-serif';
+ g.fillText('every litre signed',370,584);
+ g.fillStyle=CSS('--ink-3');g.font='500 15px "IBM Plex Sans", sans-serif';
+ g.fillText('Closed loop · nothing leaves the site unverified',370,606);
+}
+
+/* =========================================================
+   DOM RENDER
+   ========================================================= */
+let dash={}, activePage='hero', activeColl='sensor_readings';
+const COLL_NOTE={
+ sensor_readings:'Native <b>time-series collection</b> — <code>timeField:"ts"</code>, <code>metaField:{facility_id,device}</code>. Every vendor writes its own reading shape into one collection; onboarding a second skid needs no migration, which is the entire point of a hardware-agnostic ingestion layer.',
+ treatment_batches:'The <b>digital water passport</b>. Each document carries the previous batch\'s hash, so the log is tamper-evident and independently checkable — no blockchain infrastructure, just a chained document field.',
+ dispatch_decisions:'Written by a <b>change-stream listener</b>: a new reading pushes the scheduler instead of a cron job polling it. The <code>reason</code> field is what a regulator reads when asking why a batch was held.',
+ aggregation:'The <b>compliance API</b> — one aggregation pipeline produces the statutory water balance per facility, region and period. This is the artefact Karnataka\'s 2022 Data Centre Policy never asked for.'
 };
-function renderDoc(){
-  let obj, head;
-  if(activeColl==='aggregation'){
-    head = 'db.treatment_batches.aggregate([ { $match: { facility_id: "'+fac.id+'" } },\n'+
-           '  { $group: { _id: "$quality", litres: { $sum: "$output_L" }, heat: { $sum: "$heat_used_kWh" }, n: { $sum: 1 } } } ])';
-    const pass = S.chain.filter(b=>b.quality==='PASS'), fail = S.chain.filter(b=>b.quality==='FAIL');
-    obj = [
-      { _id:'PASS', litres: Math.round(pass.reduce((a,b)=>a+b.output_L,0)), heat:+pass.reduce((a,b)=>a+b.heat_used_kWh,0).toFixed(1), n:pass.length },
-      { _id:'FAIL', litres: Math.round(fail.reduce((a,b)=>a+b.output_L,0)), heat:+fail.reduce((a,b)=>a+b.heat_used_kWh,0).toFixed(1), n:fail.length }
-    ];
-  } else {
-    head = 'db.'+activeColl+'.findOne({}, { sort: { ts: -1 } })';
-    obj = S.lastDocs[activeColl] || {};
-  }
-  $('docView').innerHTML = `<span class="c">// ${head.replace(/\n/g,'\n// ')}</span>\n` + colorJSON(obj);
-  $('collNote').innerHTML = COLL_NOTE[activeColl];
-}
-function colorJSON(o){
-  return JSON.stringify(o,null,2)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:')
-    .replace(/: "([^"]*)"/g,': <span class="s">"$1"</span>')
-    .replace(/: (-?\d+\.?\d*)/g,': <span class="n">$1</span>');
+
+function renderCommon(F){
+ $('clock').textContent=hhmm(S.t);
+ $('loadRead').textContent=Math.round(S.load*100)+'%';
+ $('ledgerHeight').textContent=S.chain.length;
+ const drawKLd=S.today.withdrawn*(1440/Math.max(TICK_MIN,S.ticks*TICK_MIN))/1000;
+ $('k_draw').innerHTML=fmt(drawKLd,1)+'<span class="unit">KL/day</span>';
+ $('k_draw').parentElement.className='kpi'+(fac.nocCap&&drawKLd>fac.nocCap?' bad':'');
+ $('k_rec').innerHTML=fmt(S.today.recovered/1000,1)+'<span class="unit">KL</span>';
+ $('k_ratio').innerHTML=fmt(S.today.feed>0?S.today.recovered/S.today.feed*100:0,1)+'<span class="unit">%</span>';
+ $('k_heat').innerHTML=fmt(F.mdThermal,0)+'<span class="unit">kW</span>';
+ $('k_batch').textContent=S.released;
+ $('k_comm').innerHTML=fmt(S.today.community,0)+'<span class="unit">L</span>';
 }
 
-/* ---------- chart ---------- */
+function roList(el,rows){
+ el.innerHTML=rows.map(([n,v,u,frac,bad])=>`<div class="ro"><span class="n">${n}</span>
+  <span class="v" style="${bad?'color:var(--fail)':''}">${v}<small>${u}</small></span>
+  <span class="bar"><i style="width:${clamp((frac||0)*100,0,100)}%;background:${bad?'var(--fail)':'var(--neeru)'}"></i></span></div>`).join('');
+}
+
+function renderDC(F){
+ /* rack elevation */
+ const racks=4,us=11;
+ let svg='';
+ for(let r=0;r<racks;r++){
+   const rx=14+r*78;
+   svg+=`<rect x="${rx}" y="18" width="66" height="252" rx="3" fill="var(--surface)" stroke="var(--rule-strong)" stroke-width="1.2"/>`;
+   svg+=`<text x="${rx+33}" y="286" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--ink-3)">R${r+1}</text>`;
+   for(let u=0;u<us;u++){
+     const share=clamp(S.load*1.18-(r*.06)-(u*.012),0,1);
+     const T=lerp(F.supply+4,F.Tj,share);
+     const mix=clamp((T-32)/54,0,1);
+     svg+=`<rect x="${rx+6}" y="${26+u*22}" width="54" height="17" rx="2"
+       fill="color-mix(in srgb, var(--hot) ${(mix*100).toFixed(0)}%, var(--neeru-soft))"
+       stroke="var(--rule)" stroke-width=".7"/>`;
+     svg+=`<rect x="${rx+10}" y="${31+u*22}" width="${(46*share).toFixed(1)}" height="3" rx="1.5" fill="var(--ink)" opacity=".28"/>`;
+   }
+ }
+ svg+=`<text x="14" y="12" font-family="IBM Plex Sans" font-size="9" fill="var(--ink-3)" letter-spacing=".08em">NODE TEMPERATURE · ${F.supply.toFixed(0)}–${F.Tj.toFixed(0)} °C</text>`;
+ $('rackSvg').innerHTML=svg;
+ $('dcRacks').textContent=racks+' racks · '+(racks*us)+' nodes';
+ $('rackNote').innerHTML=F.throttle
+  ? '<b style="color:var(--fail)">Junction temperature above 85 °C — top-of-rack nodes are throttling.</b> Raising coolant flow or dropping supply temperature recovers the headroom; both cost energy, which is why the forecast engine would rather pre-cool than react.'
+  : 'Each block is a node, shaded by its actual junction temperature. Load is not uniform down a rack — top-of-rack runs hotter, which is why a single facility-average temperature hides the constraint that actually matters.';
+ $('dcModeTag').textContent=S.mode==='tower'?'Open evaporative tower':'Closed liquid loop';
+ $('dcWaterNote').innerHTML=S.mode==='tower'
+  ? 'Currently on an <b>open evaporative tower</b>: most of the intake is evaporated into the atmosphere and permanently removed from the local watershed. This is the default across India\'s installed base — and it is why "usage" and "consumption" are not the same number. Switch the architecture above to see Layer 1 act.'
+  : 'Currently on a <b>closed liquid loop</b> with adiabatic assist only. The coolant recirculates; the only water that must be replaced is the small adiabatic loss and the blowdown. This is Layer 1 — attacking the cause, before any treatment hardware is involved.';
+ roList($('dcReadouts'),[
+  ['IT load',(S.load*100).toFixed(1),'%',S.load],
+  ['Heat rejected',fmt(F.heat,0),'kW',F.heat/(fac.itMW*1000)],
+  ['Junction temperature',F.Tj.toFixed(1),'°C · limit 85',clamp(F.Tj/85,0,1),F.throttle],
+  ['Coolant supply',F.supply.toFixed(1),'°C',clamp(F.supply/50,0,1)],
+  ['Coolant return',F.ret.toFixed(1),'°C',clamp(F.ret/70,0,1)],
+  ['Loop ΔT',F.dT.toFixed(1),'K',clamp(F.dT/22,0,1)],
+  ['Coolant flow',fmt(F.flow,0),'L/min',F.flow/2720],
+  ['Evaporative loss',fmt(F.evapLph,0),'L/h',clamp(F.evapLph/4200,0,1)],
+  ['Blowdown generated',fmt(F.bdLph,0),'L/h',clamp(F.bdLph/1400,0,1)],
+  ['Cycles of concentration',F.coc.toFixed(1),'×',F.coc/8]
+ ]);
+}
+
+function renderHeat(F){
+ const sv=(k,a,b)=>{$('v_'+k).textContent=a;$('v2_'+k).textContent=b||'';};
+ sv('servers',fmt(F.itkW/1000,2)+' MW IT',(S.load*100).toFixed(0)+'% utilisation');
+ sv('cdu',F.supply.toFixed(1)+' → '+F.ret.toFixed(1)+' °C',fmt(F.flow,0)+' L/min recirculating');
+ sv('hx','ΔT '+F.dT.toFixed(1)+' K',fmt(F.heat,0)+' kW available');
+ sv('tower',fmt(F.evapLph,0)+' L/h evaporated',S.mode==='tower'?'open evaporative':'adiabatic assist only');
+ sv('intake',fmt(F.freshNeeded*30,0)+' L/h',fac.nocCap?'NOC cap '+fac.nocCap+' KL/d':'source unspecified');
+ sv('bd',fmt(S.bdTank,0)+' L held',F.coc.toFixed(1)+' cycles of concentration');
+ sv('md',F.mdOn?fmt(F.permCap,0)+' L/h permeate':'idle — ΔT too low',F.mdOn?fmt(F.mdThermal,0)+' kWth consumed':'awaiting heat');
+ sv('gate',F.pass?'PASS':'FAIL','F '+F.q.F.toFixed(2)+' · NO₃ '+F.q.NO3.toFixed(0)+' · TDS '+fmt(F.q.TDS,0));
+ sv('zld',fmt(F.concL*30,0)+' L/h','to crystalliser');
+ sv('disp',fmt(F.toComm*30,0)+' L/h','ward delivery');
+ $('v_gate').style.fill=F.pass?'var(--pass)':'var(--fail)';
+ $('box_md').classList.toggle('act',F.mdOn);
+ $('box_tower').classList.toggle('act',S.mode==='tower');
+ $('box_gate').classList.add('act');
+ $('schemMode').textContent=S.mode==='tower'?'Open evaporative tower':'Closed liquid loop';
+
+ const flows={p_ret:F.flow/40,p_hot:F.flow/40,p_sup:F.flow/40,p_rej:F.heat/90,
+  p_heat:F.mdThermal/8,p_bd:F.bdLph/22,p_feed:F.feedL*30/22,p_perm:F.permL*30/18,
+  p_out:F.toComm*30/12,p_conc:F.concL*30/10,p_mk:F.toMakeup*30/16,p_fw:F.freshNeeded*30/16};
+ for(const id in flows){
+   dash[id]=(dash[id]||0)-clamp(flows[id],0,26);
+   const el=$(id); if(!el)continue;
+   el.style.strokeDashoffset=dash[id];
+   el.style.opacity=flows[id]<.4?.18:1;
+ }
+ const retColor=`color-mix(in srgb, var(--hot) ${clamp((F.ret-34)/16*100,10,100)}%, var(--cold))`;
+ $('p_hot').setAttribute('stroke',retColor); $('p_ret').setAttribute('stroke',retColor);
+ const L=(id,t)=>{const e=$(id); if(e)e.textContent=t;};
+ L('l_ret',fmt(F.flow,0)+' L/min'); L('l_hot',F.ret.toFixed(1)+' °C');
+ L('l_rej',fmt(F.heat-F.mdThermal,0)+' kW'); L('l_sup',F.supply.toFixed(1)+' °C');
+ L('l_heat',fmt(F.mdThermal,0)+' kW cascaded'); L('l_bd',fmt(F.bdLph,0)+' L/h blowdown');
+ L('l_feed',fmt(F.feedL*30,0)+' L/h'); L('l_perm',fmt(F.permL*30,0)+' L/h');
+ L('l_out',fmt(F.toComm*30,0)+' L/h'); L('l_conc',fmt(F.concL*30,0)+' L/h');
+ L('l_mk',fmt(F.toMakeup*30,0)+' L/h verified makeup — loop closed on site');
+ L('l_fw',fmt(F.freshNeeded*30,0)+' L/h fresh top-up');
+
+ const bands=[
+  [65,95,'Membrane distillation feed','Highest-value use. Flux rises exponentially with feed temperature.','--hot'],
+  [50,65,'Absorption pre-cooling / process preheat','Still useful work before the grade is spent.','--ochre'],
+  [38,50,'Low-grade MD / recovery threshold','Marginal driving force; the skid runs only if the tank has feed.','--neeru'],
+  [0,38,'Rejected to tower or dry cooler','Nothing left to extract. This is what today\'s facilities throw away in full.','--ink-3']
+ ];
+ $('cascade').innerHTML=bands.map(([lo,hi,nm,d,col])=>{
+   const on=F.ret>=lo&&F.ret<hi;
+   return `<div class="band${on?' active':''}">
+     <span class="rng">${lo===0?'< 38':lo+'–'+hi} °C</span>
+     <span class="use"><b>${nm}</b>${d}</span>
+     <span class="swatch" style="background:var(${col})"></span></div>`;
+ }).join('');
+ drawChart(); drawHX();
+}
+
 function drawChart(){
-  const c = $('chart'), ctx = c.getContext('2d');
-  const cs = getComputedStyle(document.documentElement);
-  const col = k => cs.getPropertyValue(k).trim();
-  const W=c.width, H=c.height, padL=112, padR=150, padT=22, padB=34;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = col('--surface'); ctx.fillRect(0,0,W,H);
-
-  const data = S.hist;
-  if(data.length<2) return;
-  const maxHeat = fac.itMW*1000;
-  const x = i => padL + (i/(data.length-1))*(W-padL-padR);
-  const y = v => H-padB - (v/maxHeat)*(H-padT-padB);
-
-  // grid + axis
-  ctx.strokeStyle = col('--rule'); ctx.lineWidth=2; ctx.font='500 20px "IBM Plex Mono", monospace';
-  ctx.fillStyle = col('--ink-3'); ctx.textAlign='right'; ctx.textBaseline='middle';
-  for(let i=0;i<=4;i++){
-    const v = maxHeat*i/4, yy = y(v);
-    ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(W-padR,yy); ctx.stroke();
-    ctx.fillText(Math.round(v)+' kW', padL-12, yy);
-  }
-  ctx.textAlign='center'; ctx.textBaseline='top';
-  for(let i=0;i<data.length;i+=Math.max(1,Math.floor(data.length/6))){
-    ctx.fillText(hhmm(data[i].t), x(i), H-padB+10);
-  }
-
-  // used-heat area
-  ctx.beginPath(); ctx.moveTo(x(0), y(0));
-  data.forEach((d,i)=>ctx.lineTo(x(i), y(d.used)));
-  ctx.lineTo(x(data.length-1), y(0)); ctx.closePath();
-  ctx.fillStyle = col('--neeru-soft'); ctx.fill();
-  ctx.beginPath(); data.forEach((d,i)=> i? ctx.lineTo(x(i),y(d.used)) : ctx.moveTo(x(i),y(d.used)));
-  ctx.strokeStyle = col('--perm'); ctx.lineWidth=3; ctx.stroke();
-
-  // rejected heat line
-  ctx.beginPath(); data.forEach((d,i)=> i? ctx.lineTo(x(i),y(d.heat)) : ctx.moveTo(x(i),y(d.heat)));
-  ctx.strokeStyle = col('--hot'); ctx.lineWidth=3.5; ctx.stroke();
-
-  // now-rule + forecast
-  const xn = x(data.length-1), last = data[data.length-1];
-  ctx.setLineDash([6,8]); ctx.strokeStyle=col('--rule-strong'); ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(xn,padT); ctx.lineTo(xn,H-padB); ctx.stroke();
-
-  const fh = forecastHeat(), xf = W-padR+92;
-  ctx.strokeStyle = col('--hot'); ctx.lineWidth=3.5;
-  ctx.beginPath(); ctx.moveTo(xn, y(last.heat)); ctx.lineTo(xf, y(fh)); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.beginPath(); ctx.arc(xf, y(fh), 6, 0, 7); ctx.fillStyle=col('--hot'); ctx.fill();
-  ctx.fillStyle = col('--ink-2'); ctx.textAlign='left'; ctx.textBaseline='middle';
-  ctx.font='500 19px "IBM Plex Mono", monospace';
-  ctx.fillText(Math.round(fh)+' kW', xf+12, y(fh));
-  ctx.fillStyle = col('--ink-3'); ctx.font='500 17px "IBM Plex Sans", sans-serif';
-  ctx.fillText('+30 min forecast', xf-38, padT+14);
-
-  ctx.beginPath(); ctx.arc(xn, y(last.heat), 6, 0, 7); ctx.fillStyle=col('--hot'); ctx.fill();
-  ctx.beginPath(); ctx.arc(xn, y(last.used), 6, 0, 7); ctx.fillStyle=col('--perm'); ctx.fill();
-
-  // inline legend
-  ctx.font='500 18px "IBM Plex Sans", sans-serif'; ctx.textAlign='left';
-  ctx.fillStyle=col('--hot'); ctx.fillRect(padL+8,padT+2,20,4);
-  ctx.fillStyle=col('--ink-2'); ctx.fillText('heat rejected', padL+34, padT+5);
-  ctx.fillStyle=col('--perm'); ctx.fillRect(padL+180,padT+2,20,4);
-  ctx.fillStyle=col('--ink-2'); ctx.fillText('heat consumed by MD skid', padL+206, padT+5);
+ const c=$('chart'),g=c.getContext('2d'); const data=S.hist; if(data.length<2)return;
+ const W=1500,H=700,pl=124,pr=170,pt=26,pb=42;
+ g.clearRect(0,0,W,H); g.fillStyle=CSS('--surface'); g.fillRect(0,0,W,H);
+ const maxHeat=fac.itMW*1000;
+ const X=i=>pl+(i/(data.length-1))*(W-pl-pr), Y=v=>H-pb-(v/maxHeat)*(H-pt-pb);
+ g.strokeStyle=CSS('--rule');g.lineWidth=2;g.font='500 19px "IBM Plex Mono", monospace';
+ g.fillStyle=CSS('--ink-3');g.textAlign='right';g.textBaseline='middle';
+ for(let i=0;i<=4;i++){const v=maxHeat*i/4;g.beginPath();g.moveTo(pl,Y(v));g.lineTo(W-pr,Y(v));g.stroke();
+  g.fillText(Math.round(v)+' kW',pl-14,Y(v));}
+ g.textAlign='center';g.textBaseline='top';
+ for(let i=0;i<data.length;i+=Math.max(1,Math.floor(data.length/6))) g.fillText(hhmm(data[i].t),X(i),H-pb+10);
+ g.beginPath();g.moveTo(X(0),Y(0));
+ data.forEach((d,i)=>g.lineTo(X(i),Y(d.used)));
+ g.lineTo(X(data.length-1),Y(0));g.closePath();g.fillStyle=CSS('--neeru-soft');g.fill();
+ g.beginPath();data.forEach((d,i)=>i?g.lineTo(X(i),Y(d.used)):g.moveTo(X(i),Y(d.used)));
+ g.strokeStyle=CSS('--perm');g.lineWidth=3.5;g.stroke();
+ g.beginPath();data.forEach((d,i)=>i?g.lineTo(X(i),Y(d.heat)):g.moveTo(X(i),Y(d.heat)));
+ g.strokeStyle=CSS('--hot');g.lineWidth=4;g.stroke();
+ const xn=X(data.length-1),last=data[data.length-1];
+ g.setLineDash([6,8]);g.strokeStyle=CSS('--rule-strong');g.lineWidth=2;
+ g.beginPath();g.moveTo(xn,pt);g.lineTo(xn,H-pb);g.stroke();
+ const fh=forecastHeat(),xf=W-pr+96;
+ g.strokeStyle=CSS('--hot');g.lineWidth=4;
+ g.beginPath();g.moveTo(xn,Y(last.heat));g.lineTo(xf,Y(fh));g.stroke();g.setLineDash([]);
+ g.beginPath();g.arc(xf,Y(fh),7,0,7);g.fillStyle=CSS('--hot');g.fill();
+ g.fillStyle=CSS('--ink-2');g.textAlign='left';g.textBaseline='middle';g.font='500 20px "IBM Plex Mono", monospace';
+ g.fillText(Math.round(fh)+' kW',xf-150,Y(fh)-42);
+ g.fillStyle=CSS('--ink-3');g.font='500 17px "IBM Plex Sans", sans-serif';
+ g.fillText('+30 min forecast',xf-140,pt+16);
+ g.beginPath();g.arc(xn,Y(last.heat),7,0,7);g.fillStyle=CSS('--hot');g.fill();
+ g.beginPath();g.arc(xn,Y(last.used),7,0,7);g.fillStyle=CSS('--perm');g.fill();
+ g.font='500 18px "IBM Plex Sans", sans-serif';g.textAlign='left';
+ g.fillStyle=CSS('--hot');g.fillRect(pl+10,pt+4,22,4);
+ g.fillStyle=CSS('--ink-2');g.fillText('heat rejected',pl+40,pt+7);
+ g.fillStyle=CSS('--perm');g.fillRect(pl+200,pt+4,22,4);
+ g.fillStyle=CSS('--ink-2');g.fillText('heat consumed by MD skid',pl+230,pt+7);
 }
 
-/* ---------- controls ---------- */
-function segWire(id, fn){
-  $(id).addEventListener('click', e=>{
-    const b = e.target.closest('button'); if(!b) return;
-    [...$(id).children].forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
-    fn(b);
-  });
+function renderMD(F){
+ $('mdState').textContent=F.mdOn?(WET.length?'wetting fault':'running'):'idle';
+ const q=F.q;
+ roList($('mdQual'),[
+  ['Membrane rejection',(F.R*100).toFixed(2),'%',F.R,WET.length>0],
+  ['Feed TDS',fmt(F.feedTDS,0),'mg/L',clamp(F.feedTDS/6000,0,1)],
+  ['Permeate fluoride',q.F.toFixed(3),'mg/L · BIS 1.0',clamp(q.F/BIS.F,0,1),q.F>BIS.F],
+  ['Permeate nitrate',q.NO3.toFixed(1),'mg/L · BIS 45',clamp(q.NO3/BIS.NO3,0,1),q.NO3>BIS.NO3],
+  ['Permeate TDS',fmt(q.TDS,0),'mg/L · BIS 500',clamp(q.TDS/BIS.TDS,0,1),q.TDS>BIS.TDS],
+  ['Permeate pH',q.pH.toFixed(2),'· 6.5–8.5',clamp((q.pH-6)/3,0,1),q.pH<6.5||q.pH>8.5],
+  ['Water recovery',(F.recFrac*100).toFixed(1),'% of feed',F.recFrac],
+  ['Specific thermal energy','150','kWh/m³',.6]
+ ]);
+ $('mdQualNote').innerHTML = WET.length
+  ? '<b style="color:var(--fail)">Wetting fault active.</b> Liquid has intruded the pores, so ions are convecting through instead of being left behind. Fluoride is the first parameter to break the drinking-water limit — which is exactly why the gate checks against BIS IS 10500 and not an effluent standard that would have waved this through.'
+  : 'Rejection is a physical property here, not a claim: the vapour phase carries no ions. Note the honest caveat — real rejection is feed- and membrane-specific, and a facility deployment must validate it experimentally rather than quoting a brochure number.';
+ $('mdNote').innerHTML='Feed enters at <b>'+F.Tf.toFixed(1)+' °C</b> from the waste-heat exchanger; the condenser plate holds <b>'+F.Tp.toFixed(0)+' °C</b>. '+
+  'The vapour-pressure difference across the membrane is the <em>only</em> thing moving water — no pressure pump, no electricity for separation. '+
+  'That is why RO could never use this energy and MD can: RO is pressure-driven, so waste heat is worthless to it. '+
+  'Press <b>Inject membrane wetting fault</b> to breach three pores and watch ions break through in real time.';
 }
-segWire('modeSeg', b=>{
-  S.mode = b.dataset.mode;
-  $('schemMode').textContent = S.mode==='tower'? 'Open evaporative tower' : 'Closed liquid loop';
-  logEvent(`Cooling architecture switched to <b>${S.mode==='tower'?'open evaporative tower':'closed liquid loop'}</b>`);
-});
-segWire('loadSeg', b=>{ S.loadSrc=b.dataset.src; $('loadSlider').disabled = S.loadSrc!=='manual'; });
-segWire('speedSeg', b=>{ S.speed = +b.dataset.sp; });
-$('loadSlider').addEventListener('input', e=>{ S.manualLoad = +e.target.value/100; });
-$('faultBtn').addEventListener('click', e=>{
-  S.wetting = 90;
-  logEvent('<b>Fault injected</b> — partial membrane wetting, rejection drops to ~85%');
-  e.target.classList.add('armed'); setTimeout(()=>e.target.classList.remove('armed'), 1500);
-});
-$('burstBtn').addEventListener('click', ()=>{
-  S.burst = 60; logEvent('<b>AI training burst</b> — IT load +30 pts for 60 min; forecast engine pre-ramps the MD skid');
-});
-$('auditBtn').addEventListener('click', ()=>{
-  let ok = true;
-  for(let i=1;i<S.chain.length;i++) if(S.chain[i].prev_hash !== S.chain[i-1].hash) ok = false;
-  for(const b of S.chain){
-    const {hash, ...rest} = b;
-    if(h32(JSON.stringify(rest)) !== hash) ok = false;
-  }
-  $('chainState').innerHTML = ok
-    ? `<span class="chip pass">Verified · ${S.chain.length}</span>`
-    : `<span class="chip fail">Tampered</span>`;
-  logEvent(ok? `Independent re-verification: <b>${S.chain.length} blocks intact</b>` : 'Chain verification <b>FAILED</b>');
-});
-$('tabs').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  [...$('tabs').children].forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
-  activeColl = b.dataset.c; renderDoc();
-});
 
-/* ---------- facility register ---------- */
-function buildRegister(){
-  $('reg').innerHTML = FACILITIES.map((f,i)=>`
-    <button data-i="${i}" aria-pressed="${f===fac}">
-      <span class="nm">${f.name}</span>
-      <span class="dt">${f.district} · ${f.itMW} MW IT · ${f.declared}</span>
-      <span><span class="chip ${f.stage>100?'fail':f.stage>90?'warn':'pass'}">${f.stage}% extraction</span></span>
-    </button>`).join('');
-  $('regNote').textContent = fac.note;
+function renderVerify(F){
+ const q=F.q;
+ $('gateTag').innerHTML=F.pass?'<span class="chip pass">PASS</span>':'<span class="chip fail">FAIL</span>';
+ roList($('gateRead'),[
+  ['Fluoride',q.F.toFixed(3),'/ 1.0 mg/L',clamp(q.F/BIS.F,0,1),q.F>BIS.F],
+  ['Nitrate',q.NO3.toFixed(1),'/ 45 mg/L',clamp(q.NO3/BIS.NO3,0,1),q.NO3>BIS.NO3],
+  ['TDS',fmt(q.TDS,0),'/ 500 mg/L',clamp(q.TDS/BIS.TDS,0,1),q.TDS>BIS.TDS],
+  ['pH',q.pH.toFixed(2),'/ 6.5–8.5',clamp((q.pH-6)/3,0,1),q.pH<6.5||q.pH>8.5]
+ ]);
+ const b=S.chain[S.chain.length-1];
+ if(b){
+  const lim=(v,l,d)=>`<span style="${v>l?'color:var(--fail);font-weight:600':''}">${v.toFixed(d)}</span> <span style="color:var(--ink-3)">/ ${l}</span>`;
+  $('passport').innerHTML=`
+   <div class="pp-row"><span class="k">Batch</span><span class="v">${b.batch_id}</span></div>
+   <div class="pp-row"><span class="k">Facility</span><span class="v">${b.facility_id}</span></div>
+   <div class="pp-row"><span class="k">NOC</span><span class="v">${fac.noc}</span></div>
+   <div class="pp-row"><span class="k">Source</span><span class="v">${b.source}</span></div>
+   <div class="pp-row"><span class="k">Feed temp</span><span class="v">${b.feed_temp_C} °C</span></div>
+   <div class="pp-row"><span class="k">In → out</span><span class="v">${fmt(b.input_L)} L → ${fmt(b.output_L)} L (${b.recovery_pct}%)</span></div>
+   <div class="pp-row"><span class="k">Heat used</span><span class="v">${b.heat_used_kWh} kWh <span style="color:var(--ink-3)">recovered</span></span></div>
+   <div class="pp-row"><span class="k">Fluoride</span><span class="v">${lim(b.fluoride_mgL,1.0,3)} mg/L</span></div>
+   <div class="pp-row"><span class="k">Nitrate</span><span class="v">${lim(b.nitrate_mgL,45,1)} mg/L</span></div>
+   <div class="pp-row"><span class="k">TDS</span><span class="v">${lim(b.tds_mgL,500,0)} mg/L</span></div>
+   <div class="pp-row"><span class="k">Verdict</span><span class="v"><span class="chip ${b.quality==='PASS'?'pass':'fail'}">${b.quality} · BIS IS 10500</span></span></div>
+   <div class="pp-row"><span class="k">Destination</span><span class="v">${b.destination}</span></div>
+   <div class="pp-row"><span class="k">prev_hash</span><span class="v" style="font-size:10px;color:var(--ink-2)">${b.prev_hash}</span></div>
+   <div class="pp-row"><span class="k">hash</span><span class="v" style="font-size:10px">${b.hash}</span></div>`;
+ }
+ $('ledger').innerHTML=S.chain.slice(-10).reverse().map(x=>`
+  <div class="batch ${x.quality==='FAIL'?'fail':''}">
+   <div class="r1"><span class="id">${x.batch_id}</span>
+    <span class="chip ${x.quality==='PASS'?'pass':'fail'}">${x.quality}</span><span class="t">${x.ts}</span></div>
+   <div class="r2"><span>in <b>${fmt(x.input_L)}</b> L</span><span>out <b>${fmt(x.output_L)}</b> L</span>
+    <span>${x.recovery_pct}%</span><span>${x.heat_used_kWh} kWh</span>
+    <span class="${x.fluoride_mgL>1?'over':''}">F ${x.fluoride_mgL}</span></div>
+   <div class="dest">→ ${x.destination}</div>
+   <div class="hash">${x.prev_hash} ▸ ${x.hash}</div></div>`).join('')
+  ||'<div class="batch"><span class="dest">Awaiting first batch…</span></div>';
+ const tot=S.docs.sensor_readings+S.docs.treatment_batches+S.docs.dispatch_decisions;
+ $('wr').textContent=fmt(tot)+' docs written';
+ renderDoc();
+ $('stream').innerHTML=S.events.slice(0,7).map(e=>`<div class="ev"><span class="ts">${e.t}</span><span class="msg">${e.msg}</span></div>`).join('')
+  ||'<div class="ev"><span class="ts">—</span><span class="msg">Change stream open, awaiting events…</span></div>';
 }
-$('reg').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  fac = FACILITIES[+b.dataset.i];
-  S.mode = fac.cooling;
-  [...$('modeSeg').children].forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.mode===S.mode)));
-  $('schemMode').textContent = S.mode==='tower'? 'Open evaporative tower' : 'Closed liquid loop';
-  Object.keys(S.today).forEach(k=>S.today[k]=0);
-  S.chain=[]; S.hist=[]; S.released=0; S.quarantined=0; S.bdTank=0;
-  DESTS.forEach(d=>d.l=0);
-  buildRegister();
-  logEvent(`Facility context switched to <b>${fac.id}</b> — ledger scoped to this NOC`);
+function renderDoc(){
+ let obj,head;
+ if(activeColl==='aggregation'){
+  head='db.treatment_batches.aggregate([ { $match: { facility_id: "'+fac.id+'" } },\n'+
+       '  { $group: { _id: "$quality", litres: { $sum: "$output_L" }, heat: { $sum: "$heat_used_kWh" }, n: { $sum: 1 } } } ])';
+  const p=S.chain.filter(b=>b.quality==='PASS'),f=S.chain.filter(b=>b.quality==='FAIL');
+  obj=[{_id:'PASS',litres:Math.round(p.reduce((a,b)=>a+b.output_L,0)),heat:+p.reduce((a,b)=>a+b.heat_used_kWh,0).toFixed(1),n:p.length},
+       {_id:'FAIL',litres:Math.round(f.reduce((a,b)=>a+b.output_L,0)),heat:+f.reduce((a,b)=>a+b.heat_used_kWh,0).toFixed(1),n:f.length}];
+ } else { head='db.'+activeColl+'.findOne({}, { sort: { ts: -1 } })'; obj=S.lastDocs[activeColl]||{}; }
+ $('docView').innerHTML=`<span class="c">// ${head.replace(/\n/g,'\n// ')}</span>\n`+colorJSON(obj);
+ $('collNote').innerHTML=COLL_NOTE[activeColl];
+}
+const colorJSON=o=>JSON.stringify(o,null,2).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+ .replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:')
+ .replace(/: "([^"]*)"/g,': <span class="s">"$1"</span>')
+ .replace(/: (-?\d+\.?\d*)/g,': <span class="n">$1</span>');
+
+function renderDispatch(){
+ $('destTable').innerHTML=DESTS.map(d=>`<tr><td>${d.n}</td><td>${d.s}</td>
+  <td class="num">${d.internal||d.quar?'—':d.rank}</td><td class="num">${fmt(d.l,0)} L</td></tr>`).join('');
+ const bal=[['Freshwater withdrawn',S.today.withdrawn,'L'],['Evaporative loss (consumed)',S.today.evap,'L'],
+  ['Blowdown generated',S.today.bdGen,'L'],['Reject treated by MD',S.today.feed,'L'],
+  ['Water recovered (verified)',S.today.recovered,'L'],['Returned to cooling makeup',S.today.makeup,'L'],
+  ['Delivered to community',S.today.community,'L'],['Concentrate to ZLD',S.today.conc,'L'],
+  ['Waste heat consumed',S.today.heatUsed,'kWh'],['Discharged untreated',0,'L']];
+ $('balance').innerHTML=bal.map(([n,v,u])=>`<tr><td>${n}</td><td class="num">${fmt(v,0)}</td><td class="num">${u}</td></tr>`).join('');
+ const rf=S.today.bdGen>0?S.today.recovered/S.today.bdGen*100:0;
+ $('reuseFrac').textContent=fmt(rf,1);
+ $('ruleChip').className='chip '+(rf>=50?'pass':rf>=20?'warn':'fail');
+ $('ruleChip').textContent=rf>=50?'LWM 2024 · 2030–31 target met':rf>=20?'LWM 2024 · 2027–28 target met':'LWM 2024 · below 20% floor';
+}
+
+function renderAll(){
+ const F=S.F; if(!F)return;
+ renderCommon(F);
+ if(activePage==='dc') renderDC(F);
+ else if(activePage==='heat') renderHeat(F);
+ else if(activePage==='md') renderMD(F);
+ else if(activePage==='verify') renderVerify(F);
+ else if(activePage==='dispatch') renderDispatch();
+ else if(activePage==='hero') $('heroStat').textContent=
+   S.chain.length+' batches · '+fmt(S.today.recovered,0)+' L recovered · '+fmt(S.F.heat,0)+' kW live';
+}
+
+/* ---------- animation loop ---------- */
+let lastT=performance.now();
+function frame(now){
+ const dt=clamp((now-lastT)/16.7,.2,3); lastT=now;
+ if(S.F){
+   if(activePage==='md') drawMD(dt);
+   else if(activePage==='dc'){ drawPlate(dt); drawWater(); }
+   else if(activePage==='hero') drawHero();
+   else if(activePage==='md'||activePage==='heat'){}
+ }
+ requestAnimationFrame(frame);
+}
+
+/* ---------- nav + controls ---------- */
+function go(p){
+ activePage=p;
+ document.querySelectorAll('.page').forEach(el=>el.classList.toggle('on',el.id==='p_'+p));
+ [...$('nav').children].forEach(b=>b.setAttribute('aria-current',b.dataset.p===p?'page':'false'));
+ const heroPage = p==='hero';
+ $('controls').style.display=heroPage?'none':'flex';
+ $('strip').style.display=heroPage?'none':'grid';
+ if(p==='md') drawFlux(),drawTP();
+ renderAll();
+ window.scrollTo({top:0,behavior:'instant'});
+}
+$('nav').addEventListener('click',e=>{const b=e.target.closest('button'); if(b)go(b.dataset.p);});
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+
+function segWire(id,fn){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ [...$(id).children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b);});}
+segWire('modeSeg',b=>{S.mode=b.dataset.mode;
+ logEvent(`Cooling architecture switched to <b>${S.mode==='tower'?'open evaporative tower':'closed liquid loop'}</b>`);renderAll();});
+segWire('loadSeg',b=>{S.loadSrc=b.dataset.src;$('loadSlider').disabled=S.loadSrc!=='manual';});
+segWire('speedSeg',b=>{S.speed=+b.dataset.sp;});
+$('loadSlider').addEventListener('input',e=>{S.manualLoad=+e.target.value/100;});
+$('faultBtn').addEventListener('click',e=>{
+ S.wetting=90; WET.length=0;
+ const idx=new Set(); while(idx.size<3) idx.add(Math.floor(Math.random()*PORES.length));
+ WET.push(...idx);
+ logEvent('<b>Fault injected</b> — partial pore wetting, rejection drops to ~85%');
+ e.target.classList.add('on'); setTimeout(()=>e.target.classList.remove('on'),1600);
+ if(activePage!=='md'){/* nudge the operator to the page where it is visible */}
+});
+$('burstBtn').addEventListener('click',()=>{S.burst=60;
+ logEvent('<b>AI training burst</b> — IT load +30 pts for 60 min; forecast pre-ramps the MD skid');});
+$('auditBtn').addEventListener('click',()=>{
+ let ok=true;
+ for(let i=1;i<S.chain.length;i++) if(S.chain[i].prev_hash!==S.chain[i-1].hash) ok=false;
+ for(const b of S.chain){const{hash,...rest}=b; if(h32(JSON.stringify(rest))!==hash) ok=false;}
+ $('chainState').innerHTML=ok?`<span class="chip pass">Verified · ${S.chain.length}</span>`:`<span class="chip fail">Tampered</span>`;
+ logEvent(ok?`Independent re-verification: <b>${S.chain.length} blocks intact</b>`:'Chain verification <b>FAILED</b>');
+});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ [...$('tabs').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+ activeColl=b.dataset.c; renderDoc();});
+
+$('facSel').innerHTML=FACILITIES.map((f,i)=>`<option value="${i}">${f.name} · ${f.district}</option>`).join('');
+$('facSel').addEventListener('change',e=>{
+ fac=FACILITIES[+e.target.value]; S.mode=fac.cooling;
+ [...$('modeSeg').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===S.mode)));
+ Object.keys(S.today).forEach(k=>S.today[k]=0);
+ S.chain=[];S.hist=[];S.released=0;S.quarantined=0;S.bdTank=0;S.ticks=0;S.acc={feed:0,perm:0,heat:0};
+ DESTS.forEach(d=>d.l=0);
+ logEvent(`Facility context switched to <b>${fac.id}</b> — ledger scoped to this NOC`);
+ for(let i=0;i<300;i++) step();
+ renderAll(); if(activePage==='md'){drawFlux();drawTP();}
 });
 
 /* ---------- boot ---------- */
-buildSchematic(); buildRegister();
+buildSchematic(); initMD(); initPlate();
 logEvent('Change stream open on <b>sensor_readings</b> · dispatch listener attached');
-// warm start so the console opens in a realistic working state
-for(let i=0;i<400;i++){ const f = step(); if(i===399) render(f); }
+for(let i=0;i<420;i++) step();
 $('auditBtn').click();
+go('hero');
+requestAnimationFrame(frame);
 
-let acc = 0;
 setInterval(()=>{
-  if(S.speed===0) return;
-  let f;
-  for(let i=0;i<S.speed;i++) f = step();
-  render(f);
-}, 320);
+ if(S.speed===0) return;
+ for(let i=0;i<S.speed;i++) step();
+ renderAll();
+ if(activePage==='md'){drawFlux();drawTP();}
+},340);
 </script>
