@@ -1,0 +1,813 @@
+<meta charset="utf-8">
+<title>NeeruAI — Project Submission</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+@page { size: A4; margin: 17mm 15mm 15mm 15mm; }
+:root{
+  --ink:#16241F; --ink-2:#4A5B54; --ink-3:#7B8A83;
+  --rule:#D2DAD4; --rule-strong:#B4BFB7;
+  --neeru:#0E5C6B; --neeru-soft:#E4F0F1; --neeru-line:#9CC3C8;
+  --ochre:#9E6118; --ochre-soft:#F7EAD8;
+  --pass:#22684A; --pass-bg:#DFEFE6;
+  --fail:#9E3427; --fail-bg:#F8E2DE;
+  --surface:#FFFFFF; --surface-2:#F6F8F6; --sunk:#EEF2EE;
+  --mgreen:#0E5C6B;
+}
+*{box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink)}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:9.4pt;line-height:1.52}
+h1,h2,h3,h4,.serif{font-family:"Source Serif 4",Georgia,serif;margin:0}
+.mono,code,pre{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- cover ---------- */
+.cover{height:263mm;display:flex;flex-direction:column;page-break-after:always;position:relative}
+.cover .rail{height:5px;background:linear-gradient(90deg,var(--ochre) 0 20%,var(--neeru) 20% 100%);margin-bottom:26mm}
+.cover .kn{font-family:"Noto Sans Kannada",sans-serif;color:var(--neeru);font-size:15pt;line-height:1}
+.cover h1{font-size:34pt;line-height:1.06;font-weight:600;letter-spacing:-.022em;margin-top:5mm;max-width:150mm}
+.cover .sub{font-family:"Source Serif 4",serif;font-size:13pt;color:var(--ink-2);margin-top:6mm;max-width:135mm;line-height:1.45}
+.cover .band{margin-top:12mm;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--rule);padding:5mm 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8mm}
+.cover .band .k{font-size:6.6pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.cover .band .v{font-size:10pt;font-weight:600;margin-top:1.5mm}
+.cover .lead{margin-top:9mm;padding:6mm 7mm;background:var(--neeru-soft);border-left:3px solid var(--neeru);max-width:150mm}
+.cover .lead p{margin:0;font-family:"Source Serif 4",serif;font-size:11pt;line-height:1.5}
+.cover .foot{margin-top:auto;border-top:1px solid var(--rule);padding-top:4mm;font-size:8pt;color:var(--ink-3);display:flex;gap:10mm;flex-wrap:wrap}
+
+/* ---------- structure ---------- */
+section{page-break-inside:auto}
+h2.sec{font-size:16pt;font-weight:600;letter-spacing:-.014em;margin:0 0 4mm;padding-bottom:2mm;border-bottom:2px solid var(--ink);page-break-after:avoid}
+h2.sec .n{font-family:"IBM Plex Mono",monospace;font-size:9pt;color:var(--neeru);margin-right:4mm}
+h3{font-size:11pt;font-weight:700;margin:6mm 0 2mm;page-break-after:avoid}
+h4{font-family:"IBM Plex Sans",sans-serif;font-size:9.2pt;font-weight:700;margin:4.5mm 0 1.5mm;page-break-after:avoid}
+p{margin:0 0 2.6mm;max-width:none}
+ul,ol{margin:0 0 2.6mm;padding-left:5.5mm}
+li{margin-bottom:1.2mm}
+strong{font-weight:600}
+.lede{font-family:"Source Serif 4",serif;font-size:10.6pt;color:var(--ink-2);line-height:1.5;margin-bottom:4mm}
+.pb{page-break-before:always}
+.avoid{page-break-inside:avoid}
+
+code{background:var(--sunk);padding:0 1mm;border-radius:1px;font-size:8.4pt}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:3px solid var(--neeru);
+  padding:3mm 4mm;font-size:7.6pt;line-height:1.5;overflow:visible;white-space:pre-wrap;
+  margin:2.5mm 0 3.5mm;page-break-inside:avoid;border-radius:2px}
+pre .c{color:var(--ink-3)}
+pre .k{color:var(--neeru);font-weight:500}
+pre .s{color:var(--pass)}
+.caplbl{font-family:"IBM Plex Mono",monospace;font-size:7pt;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 1.5mm}
+
+table{border-collapse:collapse;width:100%;font-size:8.2pt;margin:2.5mm 0 4mm;page-break-inside:avoid}
+th,td{text-align:left;padding:1.8mm 2.4mm;border-bottom:.6px solid var(--rule);vertical-align:top}
+th{font-size:6.8pt;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surface-2);border-bottom:1px solid var(--rule-strong)}
+tr:last-child td{border-bottom:.6px solid var(--rule-strong)}
+td.mono{font-size:7.6pt}
+
+.box{border:1px solid var(--rule);border-radius:2px;padding:4mm 4.5mm;margin:3mm 0;background:var(--surface-2);page-break-inside:avoid}
+.box .tag{font-family:"IBM Plex Mono",monospace;font-size:6.8pt;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--neeru);display:block;margin-bottom:1.5mm}
+.box p:last-child{margin-bottom:0}
+.box.ochre{background:var(--ochre-soft);border-color:#E6D2B4}
+.box.ochre .tag{color:var(--ochre)}
+
+figure{margin:3mm 0 5mm;page-break-inside:avoid}
+figure img{width:100%;display:block;border:1px solid var(--rule);border-radius:2px}
+figcaption{font-size:7.6pt;color:var(--ink-3);margin-top:1.8mm;line-height:1.45}
+figcaption b{color:var(--ink-2);font-weight:600}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm}
+.stat{border-top:2px solid var(--ink);padding-top:2mm}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-size:15pt;font-weight:500;line-height:1.1}
+.stat .v.red{color:var(--fail)}
+.stat .k{font-size:7.8pt;color:var(--ink-2);margin-top:1mm;line-height:1.35}
+.stat .src{font-size:6.6pt;color:var(--ink-3);margin-top:.8mm}
+
+.chip{display:inline-block;font-size:6.8pt;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.4mm 1.6mm;border-radius:1px;background:var(--neeru-soft);color:var(--neeru)}
+.chip.pass{background:var(--pass-bg);color:var(--pass)}
+.chip.fail{background:var(--fail-bg);color:var(--fail)}
+
+.flow{font-family:"IBM Plex Mono",monospace;font-size:7.4pt;line-height:1.62;background:var(--sunk);
+  border:1px solid var(--rule);border-radius:2px;padding:4mm;white-space:pre;margin:3mm 0 4mm;page-break-inside:avoid}
+
+.toc{border-top:1.5px solid var(--ink);padding-top:3mm}
+.toc a{display:flex;gap:3mm;text-decoration:none;color:var(--ink);padding:1.4mm 0;border-bottom:.6px solid var(--rule);font-size:9pt}
+.toc a .n{font-family:"IBM Plex Mono",monospace;color:var(--neeru);width:9mm;flex:none}
+.toc a .t{flex:1}
+.toc a .d{color:var(--ink-3);font-size:8pt;max-width:78mm;text-align:right}
+</style>
+
+<!-- ============================ COVER ============================ -->
+<div class="cover">
+  <div class="rail"></div>
+  <span class="kn">ನೀರುAI</span>
+  <h1>NeeruAI</h1>
+  <p class="sub">A closed-loop water and heat operating system for India's data centres — built on MongoDB.</p>
+
+  <div class="band">
+    <div><div class="k">Submission</div><div class="v">Project &amp; MongoDB architecture report</div></div>
+    <div><div class="k">Category</div><div class="v">Climate / water infrastructure · RegTech</div></div>
+    <div><div class="k">Date</div><div class="v">September 2026</div></div>
+  </div>
+
+  <div class="lead">
+    <p><strong>NeeruAI</strong> reduces a data centre's freshwater demand using closed liquid cooling, recovers water from its concentrated reject stream using the facility's own waste heat, and cryptographically verifies every recovered litre before it is reused or released.</p>
+  </div>
+
+  <p style="margin-top:9mm;max-width:150mm;font-size:9.6pt;color:var(--ink-2)">
+    India's data centres consume roughly <strong>150 billion litres of water a year</strong>, much of it drawn from
+    aquifers already past their sustainable limit. No regulation requires a facility to publish what it actually
+    withdraws or discharges, and no agency verifies that the water source named in a clearance matches what happens
+    on site. That unverifiable gap is the problem this project addresses — and MongoDB is the reason the solution
+    is buildable as a single coherent data layer rather than four separate systems stitched together.
+  </p>
+
+  <div class="foot">
+    <span><strong>Working prototype:</strong> six-page operations console with a live physical simulation of the plant.</span>
+    <span><strong>Contact:</strong> jyothirrr.444@gmail.com</span>
+  </div>
+</div>
+
+<!-- ============================ CONTENTS ============================ -->
+<section>
+  <h2 class="sec"><span class="n">§</span>Contents</h2>
+  <div class="toc">
+    <a href="#s1"><span class="n">01</span><span class="t">Executive summary</span><span class="d">What was built, and what is novel</span></a>
+    <a href="#s2"><span class="n">02</span><span class="t">The problem</span><span class="d">Water, heat, and an absent verification regime</span></a>
+    <a href="#s3"><span class="n">03</span><span class="t">The solution — reduce, recover, verify</span><span class="d">Three layers and the physical chain</span></a>
+    <a href="#s4"><span class="n">04</span><span class="t">System architecture</span><span class="d">Ingestion, forecast, dispatch, verification</span></a>
+    <a href="#s5"><span class="n">05</span><span class="t">MongoDB data architecture</span><span class="d">The core of this submission — 12 sub-sections</span></a>
+    <a href="#s6"><span class="n">06</span><span class="t">The prototype</span><span class="d">Six pages, annotated with figures</span></a>
+    <a href="#s7"><span class="n">07</span><span class="t">Engineering model</span><span class="d">The physics behind every number on screen</span></a>
+    <a href="#s8"><span class="n">08</span><span class="t">Roadmap to production</span><span class="d">What a real deployment needs next</span></a>
+    <a href="#s9"><span class="n">09</span><span class="t">Sources &amp; honest limitations</span><span class="d">What is modelled, what is measured</span></a>
+  </div>
+
+  <h3>At a glance</h3>
+  <div class="three">
+    <div class="stat"><div class="v red">169%</div><div class="k">Groundwater extraction at Devanahalli, against the sustainable limit</div><div class="src">CGWB</div></div>
+    <div class="stat"><div class="v">150 bn L</div><div class="k">Annual water use by Indian data centres</div><div class="src">CEEW 2026</div></div>
+    <div class="stat"><div class="v red">0</div><div class="k">Facilities required to publish actual consumption or discharge</div><div class="src">No rule exists</div></div>
+  </div>
+  <div class="three" style="margin-top:4mm">
+    <div class="stat"><div class="v">6</div><div class="k">MongoDB capabilities doing load-bearing work in the design</div><div class="src">§05</div></div>
+    <div class="stat"><div class="v">5</div><div class="k">Collections, one of them a native time-series collection</div><div class="src">§5.2</div></div>
+    <div class="stat"><div class="v">69 M</div><div class="k">Telemetry documents per day at a 100-facility deployment</div><div class="src">§5.11</div></div>
+  </div>
+</section>
+
+<!-- ============================ 01 ============================ -->
+<section class="pb" id="s1">
+  <h2 class="sec"><span class="n">01</span>Executive summary</h2>
+
+  <p class="lede">NeeruAI is a software layer — not a treatment plant. It makes water-recovery hardware that a data centre already owns, or could buy from any vendor, coordinated, forecastable and independently auditable.</p>
+
+  <h3>The three layers</h3>
+  <table>
+    <thead><tr><th style="width:26mm">Layer</th><th>What it does</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td><strong>01 REDUCE</strong></td><td>Cuts the freshwater draw at its source</td><td>Closed-loop liquid cooling — direct-to-chip or immersion — instead of open evaporative towers. The coolant recirculates; it is not consumed.</td></tr>
+      <tr><td><strong>02 RECOVER</strong></td><td>Takes back what is still lost</td><td>Waste heat drives membrane distillation on the blowdown / RO-reject stream: already concentrated, already contaminated, today simply drained.</td></tr>
+      <tr><td><strong>03 VERIFY</strong></td><td>Proves it happened</td><td>Inline probes → automated quality gate against BIS IS 10500 <em>drinking-water</em> limits → hash-chained, independently recomputable ledger.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Why this is a software problem</h3>
+  <p>Recoverable heat is a function of IT load, and IT load in India's mixed air- and liquid-cooled fleet is volatile and site-specific. A fixed hardware topology cannot absorb that variance. A forecasting and dispatch layer can — and it works with whatever treatment asset a facility already runs, whether that is a reverse-osmosis skid, an existing effluent treatment plant, a municipal ozonation unit, or a future membrane distillation module.</p>
+  <p>The nearest prior art, a 2018 patent covering waste-heat-driven low-temperature desalination, claims a <em>hardware method</em> on one steady liquid-cooled loop with a seawater feed. It claims nothing about monitoring, forecasting, dispatch or verification, and its assumptions do not survive contact with an inland Indian facility whose water source is undisclosed and whose heat availability swings with a training run.</p>
+
+  <h3>What was built</h3>
+  <ul>
+    <li>A <strong>six-page operations console</strong> that simulates the entire plant from one physics chain: IT load → heat → coolant temperature → membrane flux → permeate chemistry → pass/fail → dispatch → statutory report. Changing any control on one page moves every downstream page consistently, because there is exactly one model underneath.</li>
+    <li>A <strong>pore-scale membrane distillation simulation</strong> in which water vapour crosses hydrophobic pores while fluoride, nitrate and dissolved-salt particles are rejected — with flux computed from the Antoine vapour-pressure relation and corrected for temperature polarisation.</li>
+    <li>A <strong>hash-chained verification ledger</strong> with a working independent audit, plus a fault-injection control that breaches the membrane and demonstrates the quality gate quarantining a non-compliant batch in real time.</li>
+    <li>A <strong>MongoDB data architecture</strong> covering ingestion, forecasting, reactive dispatch, geospatial prioritisation, compliance reporting and ledger integrity — detailed in §05, which is the substance of this submission.</li>
+  </ul>
+
+  <div class="box"><span class="tag">The MongoDB thesis in one paragraph</span>
+    <p>This system is four workloads that normally live in four different databases: a high-frequency IoT stream, a polymorphic device-integration layer, a geospatial routing problem, and an append-only audit log with a regulatory reporting API on top. MongoDB collapses all four into one deployment — time-series collections for the stream, flexible documents for the polymorphism, <code>2dsphere</code> for the routing, and a hash-chained document field for the audit log, with change streams tying them together reactively and the aggregation framework producing the regulator's report. Removing any one of those capabilities does not degrade the product; it removes a specific feature.</p></div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="pb" id="s2">
+  <h2 class="sec"><span class="n">02</span>The problem</h2>
+
+  <h3>2.1 The aquifer is already past the line</h3>
+  <table>
+    <thead><tr><th style="width:26mm">Figure</th><th>Meaning</th><th style="width:32mm">Source</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><strong>169%</strong></td><td>Devanahalli's groundwater extraction as a share of its permissible limit — no headroom remains</td><td>CGWB</td></tr>
+      <tr><td class="mono"><strong>1,000 ft</strong></td><td>Typical borewell depth in that belt; natural recharge reaches only about 200 ft</td><td>Field reporting</td></tr>
+      <tr><td class="mono"><strong>60.47%</strong></td><td>India's national stage of groundwater extraction; 11.1% of assessment units over-exploited</td><td>CGWB 2024</td></tr>
+      <tr><td class="mono"><strong>104.79%</strong></td><td>Gautam Buddha Nagar (Noida) — evidence this is a national pattern, not a Bengaluru story</td><td>CGWB 2024</td></tr>
+      <tr><td class="mono"><strong>1.5 mg/L</strong></td><td>WHO fluoride limit for drinking water; hard-rock aquifers in this geology run well above it</td><td>WHO; Springer 2026</td></tr>
+      <tr><td class="mono"><strong>~150 bn L</strong></td><td>Annual water use by Indian data centres, on roughly 0.5% of national electricity</td><td>CEEW 2026</td></tr>
+      <tr><td class="mono"><strong>20% → 50%</strong></td><td>Mandatory wastewater reuse targets for large water users, 2027–28 rising to 2030–31</td><td>Liquid Waste Management Rules, 2024</td></tr>
+    </tbody>
+  </table>
+  <p>The water being drawn is not merely scarce; it is contaminated. <strong>Fluoride</strong> is geogenic, released from deep hard-rock aquifers, and causes skeletal fluorosis. <strong>Nitrate</strong> arrives from agricultural and sewage infiltration and exceeds the 45 mg/L limit across a large share of shallow Bengaluru wells. Both are non-volatile — which, as §3.3 explains, is precisely why the treatment technology chosen here works.</p>
+
+  <h3>2.2 The seawater question is a false binary</h3>
+  <p>Public debate frames this as "seawater cooling versus groundwater". That describes a choice that does not yet exist. Seawater cooling in India is <strong>proposed, not deployed</strong>: Andhra Pradesh's data centre policy floats it for the Tarluvada hyperscale park, but the environmental clearance for that project <em>names no water source at all</em>, and monitoring groups cannot establish whether it will draw desalinated, surface or ground water.</p>
+  <p>The real, present contest is between <strong>groundwater, municipal supply, treated non-potable water, and recycled blowdown</strong> — and almost no operator transparently discloses which they use:</p>
+  <ul>
+    <li>Nxtra by Airtel's 2025 ESG report: 216,357 KL total consumption — 9,876 KL groundwater, 191,152 KL purchased third-party, zero surface water.</li>
+    <li>A Greater Noida operator in a notified over-exploited zone claims it uses neither groundwater nor municipal drinking water, while officials would not confirm whether it holds extraction permission at all.</li>
+    <li>A second Greater Noida facility runs entirely on the industrial authority's treated non-potable network — the correct model, and one worth evidencing publicly so others copy it.</li>
+  </ul>
+  <p>Nor is seawater automatically benign: thermal discharge, intake entrainment, seabed disturbance from pipe runs, biofouling chemistry and desalination brine are all live impacts. The defensible position is that <strong>seawater can reduce freshwater demand, but moving the cooling problem from an aquifer to the ocean does not by itself create a closed loop.</strong></p>
+
+  <h3>2.3 The regulatory gap that defines the product</h3>
+  <p>Groundwater extraction requires a No Objection Certificate specifying a withdrawal cap. Beyond that:</p>
+  <ul>
+    <li>Companies are <strong>not required to publish</strong> actual consumption or discharge figures. The EU mandates disclosure; India does not.</li>
+    <li><strong>Once a clearance is granted, no agency verifies</strong> that the declared water source matches on-site practice.</li>
+    <li>Karnataka's 2022 Data Centre Policy required no water sustainability report whatsoever.</li>
+  </ul>
+  <p>The consequence is that corporate "water-neutral" claims are unfalsifiable. Without independent verification they are indistinguishable from greenwashing — and that is the hole a verification layer fills.</p>
+
+  <h3>2.4 What actually happens to cooling water</h3>
+  <p>Cooling water splits into two fates, and the distinction matters because operators can report against the more flattering one.</p>
+  <ul>
+    <li><strong>Evaporative loss — true consumption.</strong> In an evaporative tower, water absorbs heat and partially evaporates. That fraction is permanently removed from the local watershed. This is why <em>withdrawal</em> and <em>consumption</em> are different numbers.</li>
+    <li><strong>Blowdown — the wastewater stream.</strong> As water cycles, dissolved solids concentrate until they would scale and corrode the plant, so a portion is drained. Blowdown is <em>more</em> concentrated than the intake — more fluoride, more nitrate, more TDS — plus biocides and corrosion inhibitors.</li>
+  </ul>
+  <p>From there a facility has three options: discharge it under permit (the wasteful default), recycle it into the cooling loop (a Greater Noida effluent treatment plant achieved over 95% water savings doing exactly this), or eliminate discharge entirely through Zero Liquid Discharge at high capital cost. NeeruAI's recovery stage targets this stream specifically, because it is the wastewater India's data centres <em>already produce today</em> — independent of whether they ever adopt new cooling hardware.</p>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="pb" id="s3">
+  <h2 class="sec"><span class="n">03</span>The solution — reduce, recover, verify</h2>
+
+  <h3>3.1 The physical chain</h3>
+  <div class="flow">SERVERS ──► COLD PLATE ──► CDU / COOLANT LOOP ──► HEAT EXCHANGER ──┬──► COOLING TOWER   (heat rejected)
+                                                                     │
+                                                                     └──► MD FEED HEATER
+                                                                              │
+COOLING TOWER ──► BLOWDOWN TANK ──► MD SKID ◄─────────────────────────────────┘
+                                       │
+                          ┌────────────┴────────────┐
+                          ▼                         ▼
+                  QUALITY GATE                ZLD CRYSTALLISER
+                (BIS IS 10500)                 (concentrate)
+                          │
+              ┌───────────┴───────────┐
+              ▼                       ▼
+      COOLING MAKEUP           WARD DISPATCH
+   (loop closed on site)   (borewell recharge / taps)</div>
+
+  <h3>3.2 Layer 1 — reduce, at the cold plate</h3>
+  <p>A processor die rejects heat through a thermal interface into a cold plate: a metal block with parallel microchannels. Coolant enters cold, absorbs heat along the channel, leaves hot — and <strong>returns</strong>. It is a sealed recirculating loop, not a consumable.</p>
+  <p>Contrast with air cooling, which produces low-grade diffuse heat and, with evaporative assist, consumes water continuously. Liquid cooling captures heat at the source, at a higher and more concentrated temperature. That single architectural change does two things at once: it collapses freshwater makeup demand, <em>and</em> it upgrades the waste heat into something thermally useful. Layer 1 is therefore not an efficiency footnote — it is what makes Layer 2 physically possible, because air-cooled waste heat is too low-grade to drive distillation.</p>
+
+  <h3>3.3 Layer 2 — recover, at the membrane</h3>
+  <p>A hydrophobic membrane, typically PTFE with pores around 0.2 µm, separates two channels. Hot concentrated blowdown flows on one side; cool permeate on the other. Because the membrane is hydrophobic, <strong>liquid water cannot pass the pores</strong> — surface tension holds it out. Water <em>vapour</em> can. The temperature difference creates a vapour-pressure difference; water evaporates at the hot surface, crosses the pore, and condenses on the cold side.</p>
+  <p><strong>Fluoride, nitrate and dissolved salts are non-volatile.</strong> They do not evaporate, so they physically cannot follow. Rejection here is a phase-change property, not a filtration efficiency being claimed.</p>
+
+  <div class="box"><span class="tag">Why membrane distillation and not reverse osmosis</span>
+    <p>Reverse osmosis is pressure-driven and runs on electricity — it cannot consume waste heat at all. Specifying RO would collapse the premise that the facility's own rejected heat is the energy input; the system would simply be buying more grid power. Membrane distillation is thermally driven, making it the only mainstream separation technology that actually consumes the byproduct being repurposed.</p></div>
+
+  <p><strong>Temperature polarisation</strong> is the detail that separates a working design from a paper one: the membrane surface is never as hot as the bulk feed, because thermal boundary layers form on each side and absorb part of the driving force. The polarisation coefficient τ is the ratio between the ΔT the membrane actually sees and the ΔT an operator measures. Ignoring it overstates flux by roughly 30%, and the prototype models and displays it explicitly.</p>
+  <p><strong>The concentrate is not hidden.</strong> Membrane distillation leaves behind a smaller but more concentrated brine than the blowdown it started from. The architecture names its disposal pathway — a ZLD crystalliser or licensed industrial reuse — because a recovery system that conceals its own residual stream is committing the greenwashing it claims to correct.</p>
+
+  <h3>3.4 Layer 3 — verify</h3>
+  <p>Inline probes (conductivity/TDS, fluoride ion-selective electrode, nitrate, pH, turbidity) log automatically rather than being self-reported. Every batch is gated against <strong>BIS IS 10500</strong>, the Indian drinking-water specification — deliberately stricter than the industrial-effluent limits a facility would otherwise be judged against. A batch failing any parameter is quarantined and re-treated; it is never released, and the failure remains on the record.</p>
+  <p>Each batch becomes a document storing the hash of the previous batch's document. Altering any historical record breaks every subsequent hash. This gives tamper-evidence with no blockchain infrastructure — a design that fits inside a hackathon and inside a regulator's audit procedure equally well.</p>
+
+  <h3>3.5 The coastal variant</h3>
+  <p>For coastal sites — Chennai, Mumbai, Visakhapatnam, Jamnagar — seawater never touches the servers. A closed secondary loop meets seawater only across a heat exchanger, with intake temperature, discharge temperature, ΔT and flow instrumented into the same ledger. The objective is a measured and bounded thermal footprint, not the pretence that none exists.</p>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="pb" id="s4">
+  <h2 class="sec"><span class="n">04</span>System architecture</h2>
+
+  <p class="lede">Four services sit on one MongoDB deployment. Each corresponds to a section of §05.</p>
+
+  <table>
+    <thead><tr><th style="width:38mm">Service</th><th>Responsibility</th><th style="width:46mm">MongoDB capability</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ingestion layer</strong><br><span style="color:var(--ink-3)">hardware-agnostic</span></td><td>Accepts telemetry from any vendor's CDU, RO skid, ETP or MD unit through one endpoint, preserving each device's native reading shape</td><td>Time-series collections; polymorphic documents; schema validation on the envelope only</td></tr>
+      <tr><td><strong>Forecast engine</strong></td><td>Predicts recoverable heat and treatable volume 30 minutes to 6 hours ahead from live utilisation, coolant temperatures, flow, historical load and weather</td><td><code>$setWindowFields</code> for feature generation directly on the time-series collection</td></tr>
+      <tr><td><strong>Dispatch engine</strong></td><td>Decides when to run the MD skid and where its output goes, prioritising by published groundwater stress</td><td>Change streams for reactive triggering; <code>$geoNear</code> for destination ranking</td></tr>
+      <tr><td><strong>Verification service</strong></td><td>Gates each batch against BIS IS 10500, writes the hash-chained ledger, and generates the statutory water balance</td><td>Transactions for chain integrity; aggregation pipeline with <code>$merge</code> for the compliance API</td></tr>
+    </tbody>
+  </table>
+
+  <div class="flow">   DEVICES                    MONGODB ATLAS                        CONSUMERS
+   ───────                    ─────────────                        ─────────
+   CDU / cold plates ─┐
+   RO skid            ├──►  sensor_readings  ──┬──► $setWindowFields ──► forecast engine
+   ETP                │     (time series)      │
+   MD skid            │                        └──► change stream ─────► dispatch engine
+   ISE probes        ─┘                                                       │
+                                                                              ▼
+                            facilities (2dsphere) ──► $geoNear ──────►  destination rank
+                                                                              │
+                            treatment_batches  ◄───── quality gate ◄──────────┘
+                            (hash-chained)            (BIS IS 10500)
+                                   │
+                                   ├──► $group / $merge ──► compliance_reports ──► KSPCB / BWSSB
+                                   └──► Atlas Trigger ─────► SMS to ward office</div>
+</section>
+
+<!-- ============================ 05 — THE BIG ONE ============================ -->
+<section class="pb" id="s5">
+  <h2 class="sec"><span class="n">05</span>MongoDB data architecture</h2>
+
+  <p class="lede">This section is the substance of the submission. Each capability below is load-bearing: remove it and a named feature of the product stops working. Nothing here is used decoratively.</p>
+
+  <h3>5.1 Why a document database at all</h3>
+  <p>NeeruAI is four workloads that conventionally live in four different systems:</p>
+  <ol>
+    <li>A <strong>high-frequency sensor stream</strong> — thousands of readings per facility per minute, written far more than read, queried almost always by time range.</li>
+    <li>A <strong>polymorphic device-integration layer</strong> — every treatment vendor emits a different reading shape, and the set of vendors grows with every customer.</li>
+    <li>A <strong>geospatial routing problem</strong> — which village, ward or borewell should receive surplus water, ranked by published stress data and distance.</li>
+    <li>An <strong>append-only audit log</strong> with a regulatory reporting API built on top of it.</li>
+  </ol>
+  <p>A relational stack would typically answer this with a time-series database, plus a relational core, plus a PostGIS extension or separate geo service, plus an application-managed audit table — four operational surfaces, four backup strategies, and joins across a network boundary every time the dispatch engine needs to combine a live reading with a facility's stress polygon.</p>
+  <p>MongoDB collapses all four into one deployment with one query language and one operational surface. The following sub-sections show each one concretely.</p>
+
+  <h3>5.2 Collection map</h3>
+  <table>
+    <thead><tr><th style="width:42mm">Collection</th><th style="width:26mm">Type</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">facilities</td><td>standard</td><td>Site register: NOC number and cap, declared source, cooling architecture, geometry, district</td></tr>
+      <tr><td class="mono">sensor_readings</td><td><strong>time series</strong></td><td>All device telemetry. <code>timeField: ts</code>, <code>metaField: source</code></td></tr>
+      <tr><td class="mono">treatment_batches</td><td>standard</td><td>The digital water passport and the hash chain. Append-only by role and validator</td></tr>
+      <tr><td class="mono">dispatch_decisions</td><td>standard</td><td>Every routing decision with a human-readable justification</td></tr>
+      <tr><td class="mono">dispatch_targets</td><td>standard</td><td>Wards, tap clusters and recharge points with CGWB stress indices and geometry</td></tr>
+      <tr><td class="mono">compliance_reports</td><td>materialised</td><td>Written by <code>$merge</code> from the aggregation pipeline; read by regulators</td></tr>
+      <tr><td class="mono">ledger_tips</td><td>standard</td><td>One document per facility holding the current chain head — see §5.9</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Time-series collections — the ingestion floor</h3>
+  <p>Telemetry is created as a native time-series collection rather than an ordinary one. MongoDB then stores readings in an internal bucketed, columnar format, which is materially better suited to this access pattern than row-per-reading storage: writes are append-heavy, reads are almost always "this facility, this device, this window", and the values within a bucket compress well because consecutive readings are similar.</p>
+  <pre><span class="c">// Telemetry is append-only, time-ordered, and queried by window.
+// A native time-series collection gives bucketing, columnar storage and
+// automatic expiry without any application-side partitioning logic.</span>
+db.createCollection(<span class="s">"sensor_readings"</span>, {
+  timeseries: {
+    timeField:   <span class="s">"ts"</span>,
+    metaField:   <span class="s">"source"</span>,        <span class="c">// {facility_id, device_id, device_type, vendor}</span>
+    granularity: <span class="s">"seconds"</span>
+  },
+  expireAfterSeconds: 60 * 60 * 24 * 400   <span class="c">// 400-day hot window; older data → Online Archive</span>
+})</pre>
+  <p>The <code>metaField</code> choice is deliberate. Everything that identifies <em>where a reading came from</em> and never changes within a stream goes into <code>source</code>; everything that varies reading to reading goes into <code>metrics</code>. That is what lets MongoDB group readings from one device into the same bucket and keep bucket counts low.</p>
+  <pre><span class="c">// One reading document as written by the ingestion layer</span>
+{
+  ts: ISODate(<span class="s">"2026-09-08T14:22:03.000Z"</span>),
+  source: {
+    facility_id: <span class="s">"DC-DVN-03"</span>,
+    device_id:   <span class="s">"CDU-01"</span>,
+    device_type: <span class="s">"cdu"</span>,
+    vendor:      <span class="s">"Vertiv XDU-450"</span>
+  },
+  metrics: {
+    coolant_supply_C: 32.0,
+    coolant_return_C: 45.4,
+    flow_L_min:       2184,
+    it_load_pct:      74.2,
+    heat_reject_kW:   1712,
+    junction_temp_C:  78.6
+  }
+}</pre>
+
+  <h3>5.4 Polymorphic documents — what "hardware-agnostic" actually means</h3>
+  <p>This is the single most important schema decision in the project, and the one that would be hardest to replicate in a relational store.</p>
+  <p>NeeruAI's commercial premise is that it plugs into whatever treatment hardware a facility already runs. But a Vertiv CDU, a domestic RO skid, a municipal ozonation plant and a research membrane distillation module emit <em>completely different</em> fields. A fluoride ion-selective electrode reports millivolts and a temperature-compensated concentration; a CDU reports flow, two temperatures and a pump duty; an ETP reports turbidity, BOD proxy and a dosing rate.</p>
+  <p>Under a rigid schema, onboarding the second vendor requires a migration; the tenth requires either forty mostly-null columns or an unqueryable JSON blob column. Under MongoDB, each device type writes its native shape into the same collection, and the reading is queryable on its own terms immediately:</p>
+  <pre><span class="c">// Three device types, one collection, no migration, all queryable</span>
+
+<span class="c">// Fluoride ion-selective electrode</span>
+{ ts: …, source: { device_type: <span class="s">"ise_probe"</span>, vendor: <span class="s">"Hanna HI4110"</span>, … },
+  metrics: { electrode_mV: -142.6, temp_C: 27.9, fluoride_mgL: 0.41,
+             slope_mV_decade: -57.2, last_cal: ISODate(<span class="s">"2026-09-01"</span>) } }
+
+<span class="c">// Reverse-osmosis skid</span>
+{ ts: …, source: { device_type: <span class="s">"ro_skid"</span>, vendor: <span class="s">"Ion Exchange INDION"</span>, … },
+  metrics: { feed_pressure_bar: 14.2, permeate_L_h: 810, reject_L_h: 390,
+             conductivity_feed_uS: 2740, conductivity_perm_uS: 41 } }
+
+<span class="c">// Membrane distillation module</span>
+{ ts: …, source: { device_type: <span class="s">"md_skid"</span>, vendor: <span class="s">"pilot-DCMD-40"</span>, … },
+  metrics: { feed_in_C: 52.4, feed_out_C: 46.1, perm_in_C: 28.0, perm_out_C: 33.7,
+             flux_LMH: 18.4, module_area_m2: 40, tmp_kPa: 3.1 } }</pre>
+  <p>Validation is applied to the <strong>envelope</strong> only — the fields every device must supply — leaving <code>metrics</code> open. This is the practical middle ground between "no schema" and "a schema that blocks the next integration":</p>
+  <pre>db.runCommand({
+  collMod: <span class="s">"sensor_readings"</span>,
+  validator: { $jsonSchema: {
+    bsonType: <span class="s">"object"</span>,
+    required: [<span class="s">"ts"</span>, <span class="s">"source"</span>, <span class="s">"metrics"</span>],
+    properties: {
+      ts:     { bsonType: <span class="s">"date"</span> },
+      source: { bsonType: <span class="s">"object"</span>,
+                required: [<span class="s">"facility_id"</span>, <span class="s">"device_id"</span>, <span class="s">"device_type"</span>],
+                properties: {
+                  facility_id: { bsonType: <span class="s">"string"</span> },
+                  device_type: { <span class="k">enum</span>: [<span class="s">"cdu"</span>,<span class="s">"tower"</span>,<span class="s">"ro_skid"</span>,<span class="s">"etp"</span>,
+                                        <span class="s">"md_skid"</span>,<span class="s">"ise_probe"</span>,<span class="s">"flow_meter"</span>] } } },
+      metrics: { bsonType: <span class="s">"object"</span> }   <span class="c">// intentionally open — this is the integration surface</span>
+    } } },
+  validationLevel: <span class="s">"moderate"</span>
+})</pre>
+
+  <h3>5.5 Change streams — reactive dispatch instead of polling</h3>
+  <p>The dispatch engine must respond to a falling coolant return temperature within seconds: below roughly 38 °C the vapour-pressure driving force collapses and continuing to run the MD skid wastes pump energy for negligible permeate. A polling loop either wastes queries or reacts late. A change stream makes the reading itself the trigger.</p>
+  <pre><span class="c">// The new reading PUSHES the scheduler. No cron, no polling interval to tune.</span>
+<span class="k">const</span> pipeline = [
+  { $match: {
+      operationType: <span class="s">"insert"</span>,
+      <span class="s">"fullDocument.source.device_type"</span>: { $in: [<span class="s">"cdu"</span>, <span class="s">"md_skid"</span>, <span class="s">"ise_probe"</span>] }
+  } },
+  { $project: { <span class="s">"fullDocument.ts"</span>: 1, <span class="s">"fullDocument.source"</span>: 1, <span class="s">"fullDocument.metrics"</span>: 1 } }
+];
+
+<span class="k">const</span> stream = db.collection(<span class="s">"sensor_readings"</span>)
+                  .watch(pipeline, { fullDocument: <span class="s">"updateLookup"</span> });
+
+<span class="k">for await</span> (<span class="k">const</span> change <span class="k">of</span> stream) {
+  <span class="k">const</span> r = change.fullDocument;
+
+  <span class="k">if</span> (r.source.device_type === <span class="s">"cdu"</span>) {
+    <span class="k">const</span> feedC = r.metrics.coolant_return_C - HX_LOSS_C;
+    <span class="k">await</span> dispatch.evaluateSkid(r.source.facility_id, feedC);   <span class="c">// ramp / hold / idle</span>
+  }
+
+  <span class="k">if</span> (r.source.device_type === <span class="s">"ise_probe"</span> && r.metrics.fluoride_mgL > BIS.F) {
+    <span class="k">await</span> dispatch.holdBatch(r.source.facility_id, {
+      reason: <span class="s">`fluoride </span>${r.metrics.fluoride_mgL}<span class="s"> mg/L exceeds BIS limit </span>${BIS.F}<span class="s">`</span>
+    });                                     <span class="c">// quarantine before a litre leaves the site</span>
+  }
+}</pre>
+  <p>Change streams are resumable: the consumer persists a <code>resumeToken</code>, so a restarted dispatch service continues from the last processed reading rather than replaying or skipping. For a system whose entire value proposition is a complete, gapless record, that guarantee is not a convenience — it is a correctness requirement.</p>
+  <p>The same mechanism drives community notification. An Atlas Trigger on <code>treatment_batches</code> fires a serverless function that sends an SMS or WhatsApp message to the ward office on each verified delivery — matching how information actually reaches a Devanahalli-type community, rather than assuming anyone there will open an enterprise dashboard.</p>
+
+  <h3>5.6 Window functions — the forecast engine's feature pipeline</h3>
+  <p>Forecasting recoverable heat needs rolling features: a moving average of rejected heat, its rate of change, and the same-hour value from previous days. These are computed <em>inside</em> the database with <code>$setWindowFields</code>, directly on the time-series collection, so the model service receives features rather than raw rows — which keeps a very large read off the network entirely.</p>
+  <pre>db.sensor_readings.aggregate([
+  { $match: {
+      <span class="s">"source.facility_id"</span>: <span class="s">"DC-DVN-03"</span>,
+      <span class="s">"source.device_type"</span>: <span class="s">"cdu"</span>,
+      ts: { $gte: <span class="k">new</span> Date(Date.now() - 7*24*3600*1000) }
+  } },
+  { $setWindowFields: {
+      partitionBy: <span class="s">"$source.facility_id"</span>,
+      sortBy: { ts: 1 },
+      output: {
+        heat_ma_30m: {
+          $avg: <span class="s">"$metrics.heat_reject_kW"</span>,
+          window: { range: [-1800, 0], unit: <span class="s">"second"</span> } },      <span class="c">// smoothing</span>
+        heat_slope_kW_h: {
+          $derivative: { input: <span class="s">"$metrics.heat_reject_kW"</span>, unit: <span class="s">"hour"</span> },
+          window: { documents: [-12, 0] } },                       <span class="c">// trend</span>
+        load_p95_6h: {
+          $percentile: { input: <span class="s">"$metrics.it_load_pct"</span>, p: [0.95],
+                         method: <span class="s">"approximate"</span> },
+          window: { range: [-21600, 0], unit: <span class="s">"second"</span> } }        <span class="c">// burst headroom</span>
+      } } },
+  { $project: { _id: 0, ts: 1, heat_ma_30m: 1, heat_slope_kW_h: 1, load_p95_6h: 1,
+                heat_now: <span class="s">"$metrics.heat_reject_kW"</span> } }
+])</pre>
+  <p><code>$derivative</code> is doing real work here: the sign and magnitude of the heat slope is what tells the dispatch engine whether to pre-ramp the skid ahead of an incoming training burst or begin winding it down. In the console, this is the dashed forecast segment that visibly moves <em>before</em> the measured line does.</p>
+
+  <h3>5.7 Geospatial dispatch — ranking who needs the water most</h3>
+  <p>Surplus verified permeate is not sent to whoever asks first. It is ranked against CGWB block-level assessment data, weighted by stress and tempered by haulage distance, with a <code>2dsphere</code> index on both facilities and destinations.</p>
+  <pre>db.dispatch_targets.createIndex({ geo: <span class="s">"2dsphere"</span> })
+
+db.dispatch_targets.aggregate([
+  { $geoNear: {
+      near: facility.geo,                 <span class="c">// GeoJSON Point from the facilities collection</span>
+      distanceField: <span class="s">"dist_m"</span>,
+      maxDistance: 12000,                 <span class="c">// 12 km tanker-viable radius</span>
+      query: { active: <span class="k">true</span>, type: { $in: [<span class="s">"ward_tap"</span>, <span class="s">"recharge_shaft"</span>] } },
+      spherical: <span class="k">true</span>
+  } },
+  { $addFields: {
+      <span class="c">// stress dominates; distance only breaks ties between comparably stressed blocks</span>
+      priority: { $divide: [
+        <span class="s">"$cgwb.stage_of_extraction_pct"</span>,
+        { $add: [1, { $divide: [<span class="s">"$dist_m"</span>, 4000] }] }
+      ] } } },
+  { $sort: { priority: -1 } },
+  { $limit: 3 }
+])</pre>
+  <p>Because facility geometry, destination geometry and the CGWB stress attribute live in the same database as the batch that is about to be dispatched, the entire decision — <em>is this water clean, how much is spare, and who needs it most</em> — resolves in one round trip. In a split stack that is a cross-service join on the hot path of every delivery.</p>
+
+  <h3>5.8 Aggregation — the compliance API a regulator can consume</h3>
+  <p>Karnataka's 2022 Data Centre Policy never required a water report. The Liquid Waste Management Rules, 2024 now impose a reuse floor of 20% by 2027–28 rising to 50% by 2030–31. NeeruAI generates that report from signed batches rather than operator declarations, as a single pipeline materialised with <code>$merge</code>:</p>
+  <pre>db.treatment_batches.aggregate([
+  { $match: { facility_id: facilityId, ts: { $gte: periodStart, $lt: periodEnd } } },
+
+  { $group: {
+      _id: { day: { $dateTrunc: { date: <span class="s">"$ts"</span>, unit: <span class="s">"day"</span>, timezone: <span class="s">"Asia/Kolkata"</span> } } },
+      reject_treated_L: { $sum: <span class="s">"$input_L"</span> },
+      recovered_L:      { $sum: { $cond: [ { $eq: [<span class="s">"$quality"</span>, <span class="s">"PASS"</span>] }, <span class="s">"$output_L"</span>, 0 ] } },
+      quarantined_L:    { $sum: { $cond: [ { $eq: [<span class="s">"$quality"</span>, <span class="s">"FAIL"</span>] }, <span class="s">"$output_L"</span>, 0 ] } },
+      to_makeup_L:      { $sum: { $cond: [ { $eq: [<span class="s">"$destination_type"</span>, <span class="s">"cooling_makeup"</span>] },
+                                          <span class="s">"$output_L"</span>, 0 ] } },
+      to_community_L:   { $sum: { $cond: [ { $eq: [<span class="s">"$destination_type"</span>, <span class="s">"community"</span>] },
+                                          <span class="s">"$output_L"</span>, 0 ] } },
+      heat_recovered_kWh: { $sum: <span class="s">"$heat_used_kWh"</span> },
+      batches:            { $sum: 1 },
+      fluoride_max_mgL:   { $max: <span class="s">"$fluoride_mgL"</span> },
+      fluoride_p95_mgL:   { $percentile: { input: <span class="s">"$fluoride_mgL"</span>, p: [0.95],
+                                           method: <span class="s">"approximate"</span> } }
+  } },
+
+  { $lookup: { from: <span class="s">"facilities"</span>, localField: <span class="s">"facility_id"</span>,
+               foreignField: <span class="s">"_id"</span>, as: <span class="s">"facility"</span> } },
+  { $set: { facility: { $first: <span class="s">"$facility"</span> } } },
+
+  { $set: {
+      <span class="c">// the number the 2024 Rules actually ask for</span>
+      reuse_fraction_pct: { $multiply: [
+        { $cond: [ { $gt: [<span class="s">"$reject_treated_L"</span>, 0] },
+                   { $divide: [<span class="s">"$recovered_L"</span>, <span class="s">"$reject_treated_L"</span>] }, 0 ] }, 100 ] },
+      lwm_2024_status: { $switch: { branches: [
+          { <span class="k">case</span>: { $gte: [<span class="s">"$reuse_fraction_pct"</span>, 50] }, then: <span class="s">"MEETS_2030_31_TARGET"</span> },
+          { <span class="k">case</span>: { $gte: [<span class="s">"$reuse_fraction_pct"</span>, 20] }, then: <span class="s">"MEETS_2027_28_TARGET"</span> } ],
+          default: <span class="s">"BELOW_FLOOR"</span> } },
+      noc_headroom_kld: { $subtract: [<span class="s">"$facility.noc_limit_kld"</span>,
+                                      { $divide: [<span class="s">"$freshwater_withdrawn_L"</span>, 1000] } ] }
+  } },
+
+  { $merge: { into: <span class="s">"compliance_reports"</span>,
+              on: [<span class="s">"facility_id"</span>, <span class="s">"_id.day"</span>],
+              whenMatched: <span class="s">"replace"</span>, whenNotMatched: <span class="s">"insert"</span> } }
+])</pre>
+  <p>Because the output is materialised into its own collection, a regulator's dashboard reads pre-computed daily rows rather than re-scanning the ledger. The same pipeline runs unchanged at district or state scope by widening the <code>$match</code> and adding a grouping key — which is what makes this a plausible <em>public</em> instrument rather than a single operator's report.</p>
+
+  <h3>5.9 The hash-chained ledger — tamper-evidence without a blockchain</h3>
+  <p>The verification claim is only as good as the log's integrity. Each batch document stores the hash of its predecessor, so modifying any historical record invalidates every hash after it.</p>
+  <p>The subtlety is concurrency: two batches minted simultaneously must not both claim the same predecessor, or the chain forks. A multi-document transaction against a per-facility <code>ledger_tips</code> document serialises the chain head:</p>
+  <pre><span class="k">const</span> session = client.startSession();
+<span class="k">await</span> session.withTransaction(<span class="k">async</span> () => {
+  <span class="c">// Atomically claim the next height and read the current head</span>
+  <span class="k">const</span> tip = <span class="k">await</span> tips.findOneAndUpdate(
+    { _id: facilityId },
+    { $inc: { height: 1 } },
+    { returnDocument: <span class="s">"before"</span>, upsert: <span class="k">true</span>, session }
+  );
+
+  <span class="k">const</span> doc = {
+    ...batch,                                   <span class="c">// litres, chemistry, verdict, destination</span>
+    facility_id: facilityId,
+    height:    (tip?.height ?? 0) + 1,
+    prev_hash:  tip?.hash ?? GENESIS
+  };
+  doc.hash = sha256(canonicalJSON(doc));        <span class="c">// deterministic field ordering</span>
+
+  <span class="k">await</span> batches.insertOne(doc, { session });
+  <span class="k">await</span> tips.updateOne({ _id: facilityId },
+                       { $set: { hash: doc.hash } }, { session });
+});</pre>
+  <p>Append-only behaviour is enforced at two levels rather than trusted to the application. A unique index on <code>{facility_id, height}</code> makes a fork impossible to persist, and the writing role is granted <code>insert</code> and <code>find</code> but not <code>update</code> or <code>remove</code>:</p>
+  <pre>db.treatment_batches.createIndex({ facility_id: 1, height: 1 }, { unique: <span class="k">true</span> })
+db.treatment_batches.createIndex({ batch_id: 1 }, { unique: <span class="k">true</span> })
+
+db.createRole({
+  role: <span class="s">"ledgerWriter"</span>,
+  privileges: [ { resource: { db: <span class="s">"neeruai"</span>, collection: <span class="s">"treatment_batches"</span> },
+                  actions: [<span class="s">"insert"</span>, <span class="s">"find"</span>] } ],   <span class="c">// no update, no remove</span>
+  roles: []
+})</pre>
+  <p>Verification is a single pass any third party can run — the console implements exactly this, and the audit button in the prototype executes it live:</p>
+  <pre>db.treatment_batches.aggregate([
+  { $match: { facility_id: facilityId } },
+  { $sort:  { height: 1 } },
+  { $setWindowFields: {
+      partitionBy: <span class="s">"$facility_id"</span>, sortBy: { height: 1 },
+      output: { expected_prev: { $shift: { output: <span class="s">"$hash"</span>, by: -1,
+                                           default: GENESIS } } } } },
+  { $match: { $expr: { $ne: [<span class="s">"$prev_hash"</span>, <span class="s">"$expected_prev"</span>] } } }   <span class="c">// empty result = chain intact</span>
+])</pre>
+  <div class="box"><span class="tag">Why this beats an actual blockchain here</span>
+    <p>The property a regulator needs is <em>tamper-evidence</em>, not decentralised consensus — there is no adversarial multi-party write problem to solve, because the operator is the only writer and the regulator is the auditor. A hash chain in a document field delivers the needed property with no consensus overhead, no token, no separate infrastructure to operate, and a verification procedure a state pollution control board's IT team can run in one query.</p></div>
+
+  <h3>5.10 Index strategy</h3>
+  <table>
+    <thead><tr><th style="width:44mm">Collection</th><th style="width:56mm">Index</th><th>Serves</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">facilities</td><td class="mono">{ geo: "2dsphere" }</td><td>Dispatch radius search from a facility</td></tr>
+      <tr><td class="mono">facilities</td><td class="mono">{ district: 1, stage: -1 }</td><td>Regulator's district-level fleet view</td></tr>
+      <tr><td class="mono">dispatch_targets</td><td class="mono">{ geo: "2dsphere" }</td><td><code>$geoNear</code> destination ranking (§5.7)</td></tr>
+      <tr><td class="mono">sensor_readings</td><td class="mono">implicit ts + source</td><td>Created automatically by the time-series collection</td></tr>
+      <tr><td class="mono">sensor_readings</td><td class="mono">{ "source.device_type": 1, ts: -1 }</td><td>Per-device-class windows for the forecast pipeline</td></tr>
+      <tr><td class="mono">treatment_batches</td><td class="mono">{ facility_id: 1, height: 1 } <span class="chip">unique</span></td><td>Chain integrity — makes a fork unpersistable</td></tr>
+      <tr><td class="mono">treatment_batches</td><td class="mono">{ facility_id: 1, ts: -1 }</td><td>Ledger view and compliance <code>$match</code></td></tr>
+      <tr><td class="mono">treatment_batches</td><td class="mono">{ quality: 1, ts: -1 }</td><td>Quarantine audit — "show me every failed batch this quarter"</td></tr>
+      <tr><td class="mono">dispatch_decisions</td><td class="mono">{ facility_id: 1, ts: -1 }</td><td>Decision replay when a routing choice is challenged</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.11 Scale, retention and cost shape</h3>
+  <p>The arithmetic that sizes the deployment:</p>
+  <table>
+    <thead><tr><th style="width:56mm">Quantity</th><th style="width:34mm">Value</th><th>Derivation</th></tr></thead>
+    <tbody>
+      <tr><td>Probes per facility</td><td class="mono">~8</td><td>CDU pair, tower, flow meter, conductivity, fluoride ISE, nitrate, pH</td></tr>
+      <tr><td>Readings per facility per day</td><td class="mono">691,200</td><td>8 × 1 Hz × 86,400 s</td></tr>
+      <tr><td>Readings at 100 facilities</td><td class="mono">69.1 M / day</td><td>Roughly 800 writes per second sustained</td></tr>
+      <tr><td>Batch documents</td><td class="mono">~12 / facility / day</td><td>One per two-hour treatment cycle</td></tr>
+      <tr><td>Dispatch decisions</td><td class="mono">~12 / facility / day</td><td>One per batch</td></tr>
+      <tr><td>Compliance rows</td><td class="mono">1 / facility / day</td><td>Materialised by <code>$merge</code></td></tr>
+    </tbody>
+  </table>
+  <p>The shape that matters is the ratio: telemetry outnumbers ledger documents by roughly <strong>five orders of magnitude</strong>. Those two workloads have opposite requirements — telemetry is write-heavy, compressible, and expendable after its retention window; the ledger is tiny, immutable, and must be preserved indefinitely. Putting them in one deployment but different collection <em>types</em> lets each get the treatment it needs:</p>
+  <ul>
+    <li><strong>Telemetry</strong> — time-series collection with bucketing and columnar compression, a 400-day <code>expireAfterSeconds</code> hot window, and Atlas Online Archive beyond that for the cold tail a regulator might subpoena years later.</li>
+    <li><strong>Ledger</strong> — a standard collection, never expired, with the unique index and restricted role from §5.9.</li>
+    <li><strong>Reports</strong> — materialised daily rows, so the regulator-facing read path never touches the ledger scan.</li>
+  </ul>
+
+  <h3>5.12 Atlas platform services used</h3>
+  <table>
+    <thead><tr><th style="width:44mm">Service</th><th>Use in NeeruAI</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Atlas Triggers / Functions</strong></td><td>Fired from change streams to push SMS/WhatsApp delivery notices to ward offices, and to run the nightly compliance <code>$merge</code>. Serverless, so there is no scheduler to operate at a site with no IT staff.</td></tr>
+      <tr><td><strong>Atlas Charts</strong></td><td>The regulator-facing view — a KSPCB or BWSSB officer gets a dashboard over <code>compliance_reports</code> without NeeruAI building or hosting a separate frontend for each board.</td></tr>
+      <tr><td><strong>Atlas Online Archive</strong></td><td>Automatic tiering of telemetry past the hot window, keeping the queryable surface intact for historical audit at archive cost.</td></tr>
+      <tr><td><strong>Atlas Vector Search</strong> <span class="chip">planned</span></td><td>Semantic retrieval over environmental clearances, NOC conditions and CGWB reports, so an inspector can ask: <em>"which facilities declared municipal supply but show groundwater-consistent conductivity signatures?"</em> — joining unstructured regulatory text to structured telemetry in one system.</td></tr>
+      <tr><td><strong>Queryable Encryption</strong> <span class="chip">planned</span></td><td>NOC numbers and commercially sensitive consumption figures encrypted in use, so a facility can participate in a shared regulator view without exposing competitive data to other operators on the platform.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.13 Why not a relational stack — direct comparison</h3>
+  <table>
+    <thead><tr><th style="width:40mm">Requirement</th><th style="width:56mm">Relational approach</th><th>MongoDB approach</th></tr></thead>
+    <tbody>
+      <tr><td>Ingest 69 M readings/day</td><td>Separate time-series database, or manual partitioning and a rollup job</td><td>Native time-series collection with automatic bucketing and expiry</td></tr>
+      <tr><td>Onboard vendor #11</td><td>Schema migration, or 40 nullable columns, or an opaque JSON column</td><td>Write the device's native shape; it is queryable immediately</td></tr>
+      <tr><td>React to a temperature drop</td><td>Polling loop, or a trigger plus a message broker</td><td>Change stream with a resume token</td></tr>
+      <tr><td>Rolling forecast features</td><td>Window functions, but on rows shipped from a second system</td><td><code>$setWindowFields</code> on the same collection, in place</td></tr>
+      <tr><td>Rank destinations by stress</td><td>PostGIS extension or an external geo service; cross-system join</td><td><code>$geoNear</code> in the same query as the batch data</td></tr>
+      <tr><td>Statutory report</td><td>ETL into a warehouse; a third system to operate</td><td>One pipeline with <code>$merge</code> into a materialised collection</td></tr>
+      <tr><td>Tamper-evident log</td><td>Application-enforced audit table, or a blockchain deployment</td><td>Hash chain in a document field, unique index, restricted role</td></tr>
+    </tbody>
+  </table>
+  <p>The count that matters: <strong>four operational surfaces reduced to one</strong>. For a product whose customers include a municipal water board and a state pollution control board — organisations with limited platform engineering capacity — that reduction is not developer convenience. It is whether the system can be operated at all after handover.</p>
+</section>
+
+<!-- ============================ 06 ============================ -->
+<section class="pb" id="s6">
+  <h2 class="sec"><span class="n">06</span>The prototype</h2>
+  <p class="lede">A six-page operations console. Every figure below is a screenshot of the running simulation, not a mockup — and every number in every panel derives from one shared physics chain, so a control changed on one page moves every downstream page consistently.</p>
+
+  <figure>
+    <img src="fig/hero.png" alt="NeeruAI console overview page">
+    <figcaption><b>Figure 1 — Overview.</b> The thesis page: the three layers, the five figures that establish the problem, and a live loop diagram whose values come from the running simulation. The final figure — zero facilities required to publish what they use — is the business case.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/coldplate.png" alt="Cold plate cross-section simulation">
+    <figcaption><b>Figure 2 — Stage 01, cold plate cross-section.</b> Coolant particles travel the microchannels; their colour is the real fluid temperature at that point, interpolated between the live supply and return values, and their speed is the real flow rate. Junction temperature is computed from coolant inlet plus loop rise, and nodes throttle above 85 °C.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/waterbal.png" alt="Open tower versus closed loop water balance">
+    <figcaption><b>Figure 3 — Stage 01, architecture comparison.</b> Water leaving the site per hour at the current heat load, split into evaporation and blowdown, for open evaporative tower against closed liquid loop. Toggling the architecture live is the demonstration of Layer 1: roughly 87% less water leaves the site before any recovery has occurred.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/schematic.png" alt="Plant schematic">
+    <figcaption><b>Figure 4 — Stage 02, plant schematic.</b> The whole plant on one sheet, banded by layer. Every pipe animates at a speed proportional to its actual flow and fades when a stream goes idle; hot coolant lines shift colour with return temperature. The long return path at the bottom is the closed loop — makeup served from verified permeate before any borewell top-up.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/cascade.png" alt="Heat cascade and forecast chart">
+    <figcaption><b>Figure 5 — Stage 02, heat cascade and dispatch forecast.</b> Left: temperature bands with the current coolant return highlighted — below 38 °C the driving force collapses and the dispatch engine idles the skid. Right: heat rejected against heat consumed by the MD skid, with the dashed +30 minute forecast the dispatch engine is acting on. The gap between the two lines is the addressable opportunity, live.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/mdmodule.png" alt="Membrane distillation pore-scale simulation">
+    <figcaption><b>Figure 6 — Stage 03, membrane distillation at pore scale.</b> Feed channel with hot concentrated blowdown above, hydrophobic PTFE membrane with 0.2 µm pores, permeate channel and condenser plate below. Dashed vertical transits are water molecules crossing as vapour; coloured particles bouncing off the membrane are fluoride, nitrate and salt rejection events. Shown here <span class="chip fail">during a wetting fault</span> — three pores breached, ions convecting through, rejection collapsed from 99.4% to 84.8%.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/mdcharts.png" alt="Flux model, temperature polarisation, permeate quality">
+    <figcaption><b>Figure 7 — Stage 03, the model behind the animation.</b> Left: flux against feed temperature from the Antoine relation, with the live operating point and the shaded region below 38 °C where the skid idles. Centre: the temperature profile across both boundary layers, separating measured ΔT from the effective ΔT the membrane actually sees. Right: permeate chemistry against BIS IS 10500, with fluoride in breach during the injected fault.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fig/mongo.png" alt="MongoDB pipeline inspector">
+    <figcaption><b>Figure 8 — Stage 04, MongoDB pipeline inspector.</b> The actual documents being written, with a running write count and the change-stream event feed beneath. Four tabs: the time-series reading with its vendor-specific payload, the hash-chained batch, the change-stream-written dispatch decision with its human-readable justification, and the <code>$group</code> rollup that produces the compliance report.</figcaption>
+  </figure>
+
+  <div class="two">
+    <figure>
+      <img src="fig/ledger.png" alt="Hash-chained batch ledger">
+      <figcaption><b>Figure 9 — The ledger.</b> Each row shows litres in and out, recovery, heat used, fluoride, destination, and the <code>prev_hash ▸ hash</code> link. Failed batches are shaded and routed to quarantine — and they stay on the record. A log that only records successes is not a verification system.</figcaption>
+    </figure>
+    <figure>
+      <img src="fig/passport.png" alt="Quality gate and digital water passport">
+      <figcaption><b>Figure 10 — Quality gate and water passport.</b> The full record for one batch: source, feed temperature, litres, heat used, all three contaminants against their limits, verdict, destination, and both hashes. It answers five questions checkably that no Indian regulator can answer about any facility today.</figcaption>
+    </figure>
+  </div>
+
+  <figure>
+    <img src="fig/compliance.png" alt="Dispatch ranking and statutory water balance">
+    <figcaption><b>Figure 11 — Stage 05, dispatch and statutory compliance.</b> Left: destinations ranked by CGWB stage of extraction, with cooling makeup served first so the loop closes before anything leaves the fence. Right: the water balance in the shape KSPCB or BWSSB would consume, with the reuse fraction scored against the Liquid Waste Management Rules 2024 targets. Note that <em>withdrawn</em> and <em>consumed</em> are separate rows — the distinction most corporate reporting blurs.</figcaption>
+  </figure>
+
+  <h3>Interactive demonstrations built into the console</h3>
+  <table>
+    <thead><tr><th style="width:52mm">Control</th><th>What it demonstrates</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cooling architecture toggle</strong></td><td>Layer 1 in one click — evaporation factor, cycles of concentration and supply temperature all change, and the water balance collapses</td></tr>
+      <tr><td><strong>Inject AI training burst</strong></td><td>Load jumps 30 points; the forecast on the chart moves before the measured line does, showing why a dispatch layer is needed</td></tr>
+      <tr><td><strong>Inject membrane wetting fault</strong></td><td>Three pores breach, ions break through, fluoride crosses 1.0 mg/L, and the gate quarantines the batch rather than delivering it</td></tr>
+      <tr><td><strong>Re-verify hash chain</strong></td><td>Recomputes every hash and every <code>prev_hash</code> link independently — the audit a regulator would run</td></tr>
+      <tr><td><strong>Facility selector</strong></td><td>Four sites, each making a different argument: the base case, a declared-source mismatch, a well-run counterexample, and a clearance that names no water source at all</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 07 ============================ -->
+<section class="pb" id="s7">
+  <h2 class="sec"><span class="n">07</span>Engineering model</h2>
+  <p class="lede">Nothing in the console is a canned animation. One physics chain drives all six pages — which is why changing a control on one page moves every other page consistently.</p>
+  <table>
+    <thead><tr><th style="width:42mm">Quantity</th><th style="width:56mm">Model</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>IT power</td><td class="mono">P = MW_IT × load</td><td>Load follows a diurnal curve or manual override, smoothed so it ramps</td></tr>
+      <tr><td>Heat rejected</td><td class="mono">Q = 0.96 × P</td><td>Essentially all IT power becomes heat</td></tr>
+      <tr><td>Coolant flow</td><td class="mono">620 + 2100 × load L/min</td><td>Pump scales with demand</td></tr>
+      <tr><td>Loop ΔT</td><td class="mono">ΔT = Q·60 / (ṁ·c_p)</td><td>c_p = 4.18 kJ/kg·K; return = supply + ΔT</td></tr>
+      <tr><td>Junction temperature</td><td class="mono">T_j = T_supply + ΔT + 38·load + 5</td><td>Throttles above 85 °C</td></tr>
+      <tr><td>Evaporation</td><td class="mono">1.593 × Q × f L/h</td><td>From latent heat ≈ 2260 kJ/kg. f = 1.0 open tower, 0.14 closed loop</td></tr>
+      <tr><td>Blowdown</td><td class="mono">evaporation / (CoC − 1)</td><td>CoC = 4.2 tower, 6.5 closed loop</td></tr>
+      <tr><td>MD feed temperature</td><td class="mono">T_f = T_return − 2.5 °C</td><td>Heat exchanger loss; permeate side held at 28 °C</td></tr>
+      <tr><td>Polarisation coefficient</td><td class="mono">τ = 0.78 − 0.004·(T_f − T_p)</td><td>Bounded 0.55–0.82; boundary layers worsen as ΔT grows</td></tr>
+      <tr><td>Membrane surface temps</td><td class="mono">T_fm = T_f − (1−τ)/2·ΔT<br>T_pm = T_p + (1−τ)/2·ΔT</td><td>What the membrane actually sees</td></tr>
+      <tr><td>Vapour pressure</td><td class="mono">Antoine equation</td><td>log₁₀P = 8.07131 − 1730.63/(233.426+T), mmHg → Pa</td></tr>
+      <tr><td>Flux</td><td class="mono">J = B·(P_w(T_fm)·a_w − P_w(T_pm))</td><td>B = 2.2×10⁻³ L/(m²·h·Pa), area 40 m²; a_w reduced by feed TDS</td></tr>
+      <tr><td>Thermal demand</td><td class="mono">150 kWh per m³ permeate</td><td>Typical MD specific energy</td></tr>
+      <tr><td>Rejection</td><td class="mono">99.42% nominal / 84.8% wetted</td><td>Degrades slightly above 52 °C feed</td></tr>
+      <tr><td>Permeate quality</td><td class="mono">C_perm = C_intake × CoC × (1 − R)</td><td>Concentration first, then rejection — this is why fluoride breaks first</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 08 ============================ -->
+<section id="s8">
+  <h2 class="sec"><span class="n">08</span>Roadmap to production</h2>
+  <table>
+    <thead><tr><th style="width:30mm">Phase</th><th style="width:44mm">Deliverable</th><th>MongoDB work</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Now</strong><br>prototype</td><td>Six-page console, full physics simulation, in-browser ledger and audit</td><td>Schema and pipeline design validated against the simulated workload</td></tr>
+      <tr><td><strong>Phase 1</strong><br>single site</td><td>Live ingestion from one facility's CDU and existing ETP; read-only regulator view</td><td>Atlas cluster; time-series collection; change-stream dispatch service; Atlas Charts view for the board</td></tr>
+      <tr><td><strong>Phase 2</strong><br>verification pilot</td><td>Inline fluoride and conductivity probes on the permeate line; first signed batches; SMS to one ward office</td><td>Ledger transactions and unique index; restricted <code>ledgerWriter</code> role; Atlas Trigger for notifications</td></tr>
+      <tr><td><strong>Phase 3</strong><br>fleet</td><td>Multi-facility, multi-vendor onboarding; district-level regulator dashboard</td><td>Polymorphic ingestion proven across vendors; <code>$merge</code> compliance pipeline at district scope; Online Archive tiering</td></tr>
+      <tr><td><strong>Phase 4</strong><br>regulatory product</td><td>Natural-language regulatory query over clearances and telemetry; encrypted multi-tenant regulator view</td><td>Atlas Vector Search over clearance documents; Queryable Encryption on commercially sensitive fields</td></tr>
+    </tbody>
+  </table>
+
+  <h3>What a real deployment must validate</h3>
+  <ul>
+    <li><strong>Membrane rejection</strong> is feed- and membrane-specific. The model uses literature values; a deployment must measure actual rejection against its own blowdown chemistry rather than quoting a brochure figure.</li>
+    <li><strong>Flux coefficient B</strong> and module area must be characterised for the specific membrane and module geometry procured.</li>
+    <li><strong>Probe calibration drift</strong> — a fluoride ion-selective electrode needs scheduled recalibration, and the ledger should record calibration state alongside each reading so a batch's provenance includes the instrument's condition. The schema already carries <code>last_cal</code> on ISE readings for exactly this.</li>
+    <li><strong>Concentrate disposal</strong> must be contracted before commissioning, not after.</li>
+  </ul>
+</section>
+
+<!-- ============================ 09 ============================ -->
+<section id="s9">
+  <h2 class="sec"><span class="n">09</span>Sources &amp; honest limitations</h2>
+
+  <div class="box ochre"><span class="tag">What is modelled, what is measured</span>
+    <p><strong>Modelled from first principles and standards:</strong> the heat balance, loop ΔT, evaporation from latent heat, cycles of concentration, the Antoine vapour-pressure relation, temperature polarisation, the flux model, and the concentration-then-rejection chain producing permeate chemistry. The regulatory limits, extraction figures and reuse targets are as published. The hash chain is genuinely computed and genuinely re-verifiable.</p>
+    <p><strong>Simulated:</strong> the telemetry itself is synthetic, generated by the model rather than read from a facility. The four facilities are composites assembled from published reporting, not live customers. Membrane coefficients are typical literature values, not measurements from a specific procured module. The prototype states this in its own footer.</p>
+    <p>The plant is simulated, but it is not faked — every number on screen is computed from a physical model, which is why a control changed on one page moves every other page consistently. What a real deployment requires is calibration, not redesign.</p></div>
+
+  <h3>Sources</h3>
+  <p style="font-size:8.4pt;line-height:1.55;color:var(--ink-2)">
+    Central Ground Water Board — Annual Groundwater Quality Report and Dynamic Groundwater Resource Assessment, 2024 ·
+    Council on Energy, Environment and Water (CEEW) — data centre water and electricity analysis, 2026 ·
+    Down To Earth — <em>India's Digital Thirst</em> (two parts, November 2025) and <em>Thirsty Data Centres, Thin Regulation</em> (August 2026) ·
+    Mongabay India — <em>India Bets on Data Centres Even as Water, Energy-Use Concerns Mount</em> (May 2026) ·
+    Scroll.in (May 2026) · Newslaundry (April 2026) · OpenCity (May 2026) ·
+    The Better India — Devanahalli water reuse project (October 2024) ·
+    Nxtra by Airtel — ESG Report 2025 ·
+    Telangana Today / Domain-b — Andhra Pradesh ministerial statements on Visakhapatnam data centre water sourcing (August 2026) ·
+    Springer, <em>Environmental Geochemistry and Health</em> — Global Groundwater Contamination by Geogenic Fluoride (2026) ·
+    Springer, <em>Applied Water Science</em> — fluoride contamination in hard-rock aquifers, Siddipet, Telangana ·
+    ScienceDirect — <em>Fluoride Removal from Brackish Groundwater by Direct Contact Membrane Distillation</em> ·
+    ScienceDirect / PubMed — <em>Removal of Fluoride in Membrane-Based Water and Wastewater Treatment Technologies: Performance Review</em> ·
+    Government of India — Liquid Waste Management Rules, 2024 ·
+    Envirotech Online — India 2025 Water Pollution Consent Guidelines ·
+    Susbio — Zero Liquid Discharge Implementation in India ·
+    Government of Karnataka — Data Centre Policy 2022 ·
+    Bureau of Indian Standards — IS 10500 Drinking Water Specification ·
+    World Health Organization — Guidelines for Drinking-water Quality.
+  </p>
+
+  <div class="box" style="margin-top:6mm">
+    <span class="tag">Closing</span>
+    <p>India is about to build a great deal of data centre capacity in places that cannot spare the water. The engineering to use less of it, and to recover most of what is still lost, largely exists. What does not exist is any mechanism to establish whether a facility is actually doing it. NeeruAI is that mechanism — and MongoDB is what makes it one system instead of four.</p>
+  </div>
+</section>
