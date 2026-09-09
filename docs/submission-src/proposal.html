@@ -1,0 +1,1139 @@
+<meta charset="utf-8">
+<title>NeeruAI — Project Proposal (Mechanical)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+@page { size: A4; margin: 18mm 16mm 15mm 16mm; }
+:root{
+  --ink:#14201C; --ink-2:#47574F; --ink-3:#78877F;
+  --rule:#D2DAD4; --rule-strong:#B2BDB5;
+  --acc:#0D5361; --acc-soft:#E3EFF1; --acc-line:#98C0C6;
+  --warm:#96590F; --warm-soft:#F7E9D5;
+  --ok:#1F6446; --ok-bg:#DEEDE4;
+  --bad:#95311F; --bad-bg:#F8E1DC;
+  --surf:#FFFFFF; --surf2:#F5F8F6; --sunk:#EDF1EE;
+  --cold:#2F6E96; --hot:#B84D22; --stream:#7C5E28;
+}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink)}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:9.3pt;line-height:1.55}
+h1,h2,h3,h4,.serif{font-family:"Source Serif 4",Georgia,serif;margin:0}
+.mono,code,pre,.eq{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+sub,sup{font-size:.72em;line-height:0}
+
+/* ---------- title page ---------- */
+.title{height:252mm;display:flex;flex-direction:column;page-break-after:always}
+.title .rule-top{height:1.2mm;background:var(--acc);margin-bottom:4mm}
+.title .inst{font-size:8.4pt;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);line-height:1.9}
+.title .kind{margin-top:22mm;font-family:"IBM Plex Mono",monospace;font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--acc)}
+.title h1{font-size:27pt;line-height:1.16;font-weight:600;letter-spacing:-.018em;margin-top:5mm;max-width:150mm}
+.title .subt{font-family:"Source Serif 4",serif;font-size:12.5pt;color:var(--ink-2);margin-top:6mm;max-width:140mm;line-height:1.45}
+.title .kn{font-family:"Noto Sans Kannada",sans-serif;color:var(--acc);font-size:11pt}
+.title .meta{margin-top:auto;border-top:1px solid var(--ink);padding-top:5mm;
+  display:grid;grid-template-columns:1fr 1fr;gap:6mm 10mm;font-size:9pt}
+.title .meta .k{font-size:7pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.title .meta .v{margin-top:1mm;font-weight:600}
+.title .abs{margin-top:11mm;border-left:2.5px solid var(--acc);padding:4mm 0 4mm 6mm;max-width:152mm}
+.title .abs h4{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-family:"IBM Plex Sans",sans-serif;margin-bottom:2mm}
+.title .abs p{font-size:9.1pt;line-height:1.56;margin:0 0 2.2mm}
+
+/* ---------- structure ---------- */
+h2.sec{font-size:14.5pt;font-weight:600;letter-spacing:-.012em;margin:0 0 3.5mm;padding-bottom:1.8mm;
+  border-bottom:1.6px solid var(--ink);page-break-after:avoid}
+h2.sec .n{font-family:"IBM Plex Mono",monospace;font-size:9pt;color:var(--acc);margin-right:4mm}
+h3{font-size:10.6pt;font-weight:700;margin:5.5mm 0 1.8mm;page-break-after:avoid}
+h3 .n{font-family:"IBM Plex Mono",monospace;font-size:8.6pt;color:var(--acc);margin-right:2.5mm}
+h4{font-family:"IBM Plex Sans",sans-serif;font-size:9pt;font-weight:700;margin:4mm 0 1.4mm;page-break-after:avoid}
+p{margin:0 0 2.4mm}
+ul,ol{margin:0 0 2.4mm;padding-left:5.5mm}
+li{margin-bottom:1.1mm}
+.pb{page-break-before:always}
+.avoid{page-break-inside:avoid}
+.lede{font-family:"Source Serif 4",serif;font-size:10.2pt;color:var(--ink-2);line-height:1.5;margin-bottom:3.5mm}
+code{background:var(--sunk);padding:0 1mm;border-radius:1px;font-size:8.3pt}
+
+/* equations */
+.eq{background:var(--sunk);border-left:2.5px solid var(--acc-line);padding:2.6mm 4mm;margin:2.6mm 0 3mm;
+  font-size:9.4pt;page-break-inside:avoid;display:flex;align-items:baseline;gap:6mm}
+.eq .body{flex:1}
+.eq .num{color:var(--ink-3);font-size:8pt;flex:none}
+.eqwhere{font-size:8.4pt;color:var(--ink-2);margin:-1.4mm 0 3mm;padding-left:4mm}
+
+table{border-collapse:collapse;width:100%;font-size:8.2pt;margin:2.4mm 0 4mm;page-break-inside:avoid}
+th,td{text-align:left;padding:1.6mm 2.2mm;border-bottom:.55px solid var(--rule);vertical-align:top}
+th{font-size:6.7pt;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surf2);border-bottom:1px solid var(--rule-strong)}
+tr:last-child td{border-bottom:.9px solid var(--rule-strong)}
+td.num,th.num{text-align:right;font-family:"IBM Plex Mono",monospace}
+td.mono{font-family:"IBM Plex Mono",monospace;font-size:7.7pt}
+caption{caption-side:top;text-align:left;font-size:8pt;color:var(--ink-2);padding-bottom:1.6mm}
+caption b{color:var(--ink)}
+tbody tr.hl td{background:var(--acc-soft);font-weight:600}
+
+.box{border:1px solid var(--rule);border-left:2.5px solid var(--acc);border-radius:1px;
+  padding:3.4mm 4mm;margin:3mm 0;background:var(--surf2);page-break-inside:avoid}
+.box .tag{font-family:"IBM Plex Mono",monospace;font-size:6.8pt;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--acc);display:block;margin-bottom:1.6mm}
+.box p:last-child{margin-bottom:0}
+.box.warm{border-left-color:var(--warm);background:var(--warm-soft)}
+.box.warm .tag{color:var(--warm)}
+
+figure{margin:3mm 0 5mm;page-break-inside:avoid}
+figure svg{width:100%;height:auto;display:block}
+figure img{width:100%;display:block;border:.7px solid var(--rule)}
+figcaption{font-size:7.8pt;color:var(--ink-2);margin-top:1.8mm;line-height:1.48}
+figcaption b{color:var(--ink)}
+.figbox{border:.7px solid var(--rule);background:var(--surf2);padding:2mm}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:3mm 0 4mm}
+.kpi > div{border-top:1.6px solid var(--ink);padding-top:1.6mm}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-size:13pt;font-weight:500;line-height:1.1}
+.kpi .k{font-size:7.4pt;color:var(--ink-2);margin-top:.8mm;line-height:1.35}
+
+.chip{display:inline-block;font-size:6.7pt;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.35mm 1.5mm;border-radius:1px;background:var(--acc-soft);color:var(--acc)}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
+
+.toc a{display:flex;gap:3mm;text-decoration:none;color:var(--ink);padding:1.3mm 0;
+  border-bottom:.55px solid var(--rule);font-size:8.8pt}
+.toc a .n{font-family:"IBM Plex Mono",monospace;color:var(--acc);width:8mm;flex:none}
+.toc a .d{margin-left:auto;color:var(--ink-3);font-size:7.8pt;text-align:right;max-width:74mm}
+
+.svgt{font-family:"IBM Plex Sans",sans-serif}
+.refs{font-size:8.2pt;line-height:1.55}
+.refs li{margin-bottom:1.6mm}
+</style>
+
+<!-- ===================== TITLE ===================== -->
+<div class="title">
+  <div class="rule-top"></div>
+  <div class="inst">
+    Department of Mechanical Engineering<br>
+    Project Proposal · Thermal &amp; Fluid Systems
+  </div>
+
+  <div class="kind">Undergraduate project proposal</div>
+  <h1>Waste-Heat-Driven Water Recovery from Data Centre Cooling Systems</h1>
+  <p class="subt">Thermal integration of a hybrid RO–membrane distillation island with a warm-water liquid-cooled data centre, with model-based dispatch and permeate quality verification.</p>
+  <p style="margin-top:5mm"><span class="kn">ನೀರುAI</span> <span style="color:var(--ink-3);font-size:9pt">— working title of the integrated system</span></p>
+
+  <div class="abs">
+    <h4>Abstract</h4>
+    <p>Indian data centres reject heat to atmosphere through evaporative cooling towers while drawing make-up water from aquifers that are, in the case of the Devanahalli block near Bengaluru, already being extracted at 169&nbsp;% of the sustainable limit. The rejected heat is discarded at 40–55&nbsp;°C and the concentrated tower blowdown is discharged to drain. This proposal treats both as recoverable streams.</p>
+    <p>The work develops a thermal design for a hybrid reverse-osmosis / membrane-distillation (RO–MD) recovery island driven by the facility's own cooling-loop return heat, integrated with an elevated-temperature (ASHRAE W4) direct-to-chip liquid cooling architecture. Membrane distillation is selected specifically for the high-salinity RO reject, where osmotic pressure makes further pressure-driven recovery uneconomic but vapour-pressure-driven transport is essentially unaffected.</p>
+    <p>A first-principles system model has been implemented and validated qualitatively against a real-time simulation console; the proposal now seeks to construct a bench-scale direct-contact MD rig to determine the membrane distillation coefficient <em>B</em> and the ion rejection achieved on synthetic Devanahalli-chemistry blowdown, and to calibrate the polarisation model. Expected outcome: a validated design method sizing an MD island against any facility's measured heat-rejection profile and blowdown chemistry.</p>
+  </div>
+
+  <div class="meta">
+    <div><div class="k">Design case</div><div class="v">2.4 MW IT load · Bengaluru Rural</div></div>
+    <div><div class="k">Duration</div><div class="v">8 months</div></div>
+    <div><div class="k">Discipline focus</div><div class="v">Heat transfer · mass transfer · thermal systems</div></div>
+    <div><div class="k">Estimated budget</div><div class="v">₹9.45 lakh</div></div>
+  </div>
+</div>
+
+<!-- ===================== CONTENTS ===================== -->
+<section>
+  <h2 class="sec">Contents</h2>
+  <div class="toc">
+    <a href="#s1"><span class="n">1</span><span>Introduction and motivation</span><span class="d">Thermal loads, water demand, the Indian context</span></a>
+    <a href="#s2"><span class="n">2</span><span>Problem statement and research gap</span><span class="d">Why the blowdown stream, and why thermally driven</span></a>
+    <a href="#s3"><span class="n">3</span><span>Aim, objectives and scope</span><span class="d">Deliverables and explicit exclusions</span></a>
+    <a href="#s4"><span class="n">4</span><span>State of the art</span><span class="d">Cooling architectures, MD configurations, prior art</span></a>
+    <a href="#s5"><span class="n">5</span><span>System description</span><span class="d">Process flow diagram and stream table</span></a>
+    <a href="#s6"><span class="n">6</span><span>Thermal analysis</span><span class="d">Energy balance, cold plate, water balance, heat exchanger</span></a>
+    <a href="#s7"><span class="n">7</span><span>Membrane distillation module design</span><span class="d">Transport model, sizing, sensitivity</span></a>
+    <a href="#s8"><span class="n">8</span><span>Integrated design case</span><span class="d">Worked 2.4 MW facility, three water-balance cases</span></a>
+    <a href="#s9"><span class="n">9</span><span>Instrumentation and control</span><span class="d">Sensor schedule, control philosophy</span></a>
+    <a href="#s10"><span class="n">10</span><span>System simulation software</span><span class="d">Real-time model, prototype console</span></a>
+    <a href="#s11"><span class="n">11</span><span>Experimental validation plan</span><span class="d">Bench rig, test matrix, uncertainty</span></a>
+    <a href="#s12"><span class="n">12</span><span>Deliverables, timeline and budget</span><span class="d">Gantt chart and bill of materials</span></a>
+    <a href="#s13"><span class="n">13</span><span>Risk register</span><span class="d">Technical risks and mitigations</span></a>
+    <a href="#s14"><span class="n">14</span><span>References and nomenclature</span><span class="d"></span></a>
+  </div>
+
+  <h3>Headline design figures</h3>
+  <div class="kpi">
+    <div><div class="v">2 304 kW</div><div class="k">Heat rejected at design IT load</div></div>
+    <div><div class="v">52 °C</div><div class="k">Coolant return, ASHRAE W4</div></div>
+    <div><div class="v">92.5 %</div><div class="k">Blowdown recovery, hybrid RO–MD</div></div>
+    <div><div class="v">89 %</div><div class="k">Reduction in make-up water, full scheme</div></div>
+  </div>
+</section>
+
+<!-- ===================== 1 ===================== -->
+<section class="pb" id="s1">
+  <h2 class="sec"><span class="n">1</span>Introduction and motivation</h2>
+
+  <h3><span class="n">1.1</span>Thermal loads in a modern data centre</h3>
+  <p>Essentially all electrical power delivered to information-technology (IT) equipment in a data centre is converted to heat. For a facility with an IT load of 2.4&nbsp;MW, the heat that must be removed continuously is approximately 2.30&nbsp;MW — comparable to the thermal duty of a small process plant, but rejected at a very low temperature and therefore of low thermodynamic value.</p>
+  <p>Two features distinguish this heat source from conventional industrial waste heat:</p>
+  <ul>
+    <li><strong>It is low-grade but extremely steady.</strong> Unlike a batch furnace, a data centre rejects heat 8 760 hours a year, with diurnal modulation of roughly ±30&nbsp;% about the mean.</li>
+    <li><strong>Its grade is a design choice, not a given.</strong> The coolant supply temperature is set by the operator. Raising it from a conventional 18&nbsp;°C chilled-water regime to an ASHRAE W4 warm-water regime at 40&nbsp;°C simultaneously eliminates mechanical chilling and raises the return temperature into a range where the heat can actually do useful work. This is the single most important thermodynamic decision in the whole scheme.</li>
+  </ul>
+
+  <h3><span class="n">1.2</span>Water consumption in evaporative cooling</h3>
+  <p>Where heat is rejected through an open evaporative cooling tower, the rejection mechanism is predominantly latent. Water is consumed — permanently removed from the local catchment as vapour — and a second, smaller stream (blowdown) must be bled continuously to prevent the dissolved-solids concentration from rising to the point of scaling and corrosion.</p>
+  <p>The distinction between <em>withdrawal</em> and <em>consumption</em> matters and is frequently blurred in industry reporting. For the design case developed in §6.3, evaporation accounts for 75&nbsp;% of make-up and is genuinely consumed; blowdown accounts for the remaining 25&nbsp;% and is, in principle, entirely recoverable.</p>
+
+  <h3><span class="n">1.3</span>The Indian hydrological context</h3>
+  <table>
+    <caption><b>Table 1.1</b> — Context figures for the design location and national comparison.</caption>
+    <thead><tr><th style="width:26mm">Quantity</th><th>Significance</th><th style="width:30mm">Source</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">169 %</td><td>Stage of groundwater extraction, Devanahalli block — the design location. Extraction exceeds annual recharge.</td><td>CGWB</td></tr>
+      <tr><td class="mono">≈ 300 m</td><td>Typical borewell depth in the block; natural recharge penetrates to roughly 60 m.</td><td>Field reporting</td></tr>
+      <tr><td class="mono">60.47 %</td><td>National stage of extraction; 11.1 % of assessment units classified over-exploited.</td><td>CGWB 2024</td></tr>
+      <tr><td class="mono">&gt; 1.5 mg/L</td><td>Fluoride concentration in deep hard-rock aquifers of this geology, against the WHO drinking-water limit.</td><td>WHO; Springer 2026</td></tr>
+      <tr><td class="mono">20 → 50 %</td><td>Statutory wastewater reuse floor for large water users, 2027–28 rising to 2030–31.</td><td>LWM Rules 2024</td></tr>
+    </tbody>
+  </table>
+  <p>The regulatory trajectory is therefore toward mandated reuse fractions that an evaporative facility cannot meet by improving tower efficiency alone. Recovery of the blowdown stream, and reduction of evaporation through architectural change, are both required.</p>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section id="s2">
+  <h2 class="sec"><span class="n">2</span>Problem statement and research gap</h2>
+
+  <h3><span class="n">2.1</span>Statement</h3>
+  <div class="box"><span class="tag">Problem</span>
+    <p>A liquid-cooled data centre simultaneously rejects 2.3&nbsp;MW of low-grade heat to atmosphere and discharges approximately 1&nbsp;m<sup>3</sup>/h of concentrated, contaminated blowdown to drain, while drawing make-up water from a stressed aquifer. No thermal integration exists between the two streams, although the rejected heat is at a temperature that can drive a thermally-activated separation and the blowdown is precisely the stream such a separation is suited to.</p>
+  </div>
+
+  <h3><span class="n">2.2</span>Why the blowdown stream rather than raw groundwater</h3>
+  <p>Treating the intake would require a plant sized for the full make-up flow (3.9&nbsp;m<sup>3</sup>/h) and would not reduce discharge. Treating the blowdown addresses a stream one quarter the size that is <em>already</em> concentrated — improving separation economics, because the driving force for any concentration-based recovery scales with feed concentration — and simultaneously eliminates a permitted discharge. It also requires no additional groundwater abstraction consent, which materially simplifies deployment.</p>
+
+  <h3><span class="n">2.3</span>Why a thermally-driven separation</h3>
+  <p>Reverse osmosis is the default choice for brackish recovery and is retained in this design for the bulk duty. However, RO is pressure-driven: the applied pressure must exceed the osmotic pressure of the concentrate, which rises linearly with concentration. Waste heat is of no use to an RO unit whatsoever.</p>
+  <p>Membrane distillation (MD) is driven by the partial-pressure difference of water vapour across a hydrophobic microporous membrane. Its driving force depends on temperature and only weakly on concentration, through water activity. The two technologies therefore fail in opposite regimes, which is what makes the hybrid the correct configuration rather than a compromise:</p>
+
+  <table>
+    <caption><b>Table 2.1</b> — Osmotic pressure and water activity along the concentration train (design case, §8).</caption>
+    <thead><tr><th>Stream</th><th class="num">TDS<br>mg/L</th><th class="num">Osmotic pressure<br>bar</th><th class="num">Water activity<br>a<sub>w</sub></th><th>Practical consequence</th></tr></thead>
+    <tbody>
+      <tr><td>Tower blowdown</td><td class="num">1 680</td><td class="num">1.3</td><td class="num">0.999</td><td>Well within RO capability</td></tr>
+      <tr><td>RO reject</td><td class="num">6 720</td><td class="num">5.2</td><td class="num">0.996</td><td>RO recovery limited by LSI / scaling, not pressure</td></tr>
+      <tr class="hl"><td>MD concentrate</td><td class="num">22 400</td><td class="num">17.5</td><td class="num">0.992</td><td>RO would need &gt; 30 bar feed; MD flux penalty is 0.8 %</td></tr>
+    </tbody>
+  </table>
+  <p>The osmotic pressure rises by a factor of 13 across the train; the MD driving force falls by 0.8&nbsp;%. This is the technical justification for the architecture and the central argument of the proposal.</p>
+
+  <h3><span class="n">2.4</span>Gap addressed</h3>
+  <ul>
+    <li>Published MD work is dominated by seawater desalination at feed temperatures of 60–80&nbsp;°C supplied by solar or dedicated boilers. Data-centre return heat is available at 45–55&nbsp;°C, where flux is roughly a quarter of the seawater-desalination case. <strong>Design methods for this grade of heat are not established.</strong></li>
+    <li>Prior art for waste-heat-driven desalination in data centres (see §4.4) assumes a single steady liquid loop with a seawater feed. Indian facilities are inland, mixed air- and liquid-cooled, and thermally variable with IT load. <strong>The transient behaviour is unaddressed.</strong></li>
+    <li>Rejection performance of MD against <strong>fluoride</strong> at the concentrations characteristic of Karnataka hard-rock aquifers has limited published data at these operating temperatures.</li>
+  </ul>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section id="s3">
+  <h2 class="sec"><span class="n">3</span>Aim, objectives and scope</h2>
+  <h3><span class="n">3.1</span>Aim</h3>
+  <p>To develop and experimentally validate a thermal design method for a waste-heat-driven hybrid RO–MD water recovery island integrated with a warm-water liquid-cooled data centre.</p>
+
+  <h3><span class="n">3.2</span>Objectives</h3>
+  <ol>
+    <li>Establish the energy and mass balance for a 2.4&nbsp;MW liquid-cooled facility under three cooling architectures, and quantify the make-up water demand of each.</li>
+    <li>Develop a resistance-in-series transport model for direct-contact MD incorporating temperature polarisation, and size the module against the available heat grade.</li>
+    <li>Design the heat-recovery exchanger linking the cooling loop to the MD feed circuit, including ε–NTU verification and pinch analysis.</li>
+    <li>Construct a bench-scale DCMD rig and determine the membrane distillation coefficient <em>B</em> and ion rejection for synthetic blowdown matching Devanahalli groundwater chemistry.</li>
+    <li>Calibrate the system model against the rig and quantify the sensitivity of module area to feed temperature.</li>
+    <li>Specify the instrumentation and control philosophy, including the permeate-conductivity interlock for membrane wetting detection.</li>
+  </ol>
+
+  <h3><span class="n">3.3</span>Scope and exclusions</h3>
+  <table>
+    <thead><tr><th style="width:52mm">In scope</th><th>Explicitly excluded</th></tr></thead>
+    <tbody>
+      <tr><td>Thermal and mass-transfer design of the recovery island</td><td>Detailed structural or seismic design of the skid</td></tr>
+      <tr><td>Heat exchanger sizing and integration with the cooling loop</td><td>Data centre IT architecture, server selection, network design</td></tr>
+      <tr><td>Bench-scale determination of <em>B</em> and rejection</td><td>Pilot-scale or field trial (proposed as follow-on work)</td></tr>
+      <tr><td>Instrumentation schedule and control philosophy</td><td>Full control-system implementation and commissioning</td></tr>
+      <tr><td>Concentrate routing and ZLD interface definition</td><td>Design of the crystalliser itself</td></tr>
+      <tr><td>System-level simulation and model calibration</td><td>Certification of permeate for potable supply</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 4 ===================== -->
+<section class="pb" id="s4">
+  <h2 class="sec"><span class="n">4</span>State of the art</h2>
+
+  <h3><span class="n">4.1</span>Data centre cooling architectures</h3>
+  <table>
+    <caption><b>Table 4.1</b> — Comparison of cooling architectures. Heat capture fraction is the proportion of IT heat delivered to the liquid loop; the balance is handled by the air path.</caption>
+    <thead><tr><th>Architecture</th><th class="num">Liquid capture</th><th class="num">Return temp.</th><th>Water consumption</th><th>Suitability for heat recovery</th></tr></thead>
+    <tbody>
+      <tr><td>Air cooling + CRAH, chilled water</td><td class="num">0 %</td><td class="num">12–18 °C</td><td>High (evaporative tower)</td><td>None — heat is diffuse and below any useful grade</td></tr>
+      <tr><td>Air cooling + evaporative assist</td><td class="num">0 %</td><td class="num">25–35 °C</td><td>Very high</td><td>Marginal</td></tr>
+      <tr><td>Direct-to-chip, ASHRAE W3</td><td class="num">70–80 %</td><td class="num">40–45 °C</td><td>Moderate</td><td>Feasible at low flux</td></tr>
+      <tr class="hl"><td>Direct-to-chip, ASHRAE W4 <span class="chip">selected</span></td><td class="num">85 %</td><td class="num">50–55 °C</td><td>Low (dry cooler feasible)</td><td>Good — this proposal's baseline</td></tr>
+      <tr><td>Single-phase immersion</td><td class="num">95–100 %</td><td class="num">45–60 °C</td><td>Very low</td><td>Best, but retrofit is not practical</td></tr>
+    </tbody>
+  </table>
+  <p>W4 direct-to-chip is selected as the baseline because it achieves a return temperature high enough for thermally-activated separation while remaining a <em>retrofittable</em> architecture — cold plates can replace heatsinks in an existing rack, whereas immersion requires a new hall.</p>
+
+  <h3><span class="n">4.2</span>Membrane distillation configurations</h3>
+  <table>
+    <thead><tr><th>Configuration</th><th>Principle</th><th class="num">Typical GOR</th><th>Assessment for this duty</th></tr></thead>
+    <tbody>
+      <tr><td>DCMD — direct contact</td><td>Cold permeate in contact with membrane</td><td class="num">&lt; 1</td><td>Simplest; high conduction loss. Used for the <em>bench rig</em> because it isolates <em>B</em> cleanly.</td></tr>
+      <tr><td>AGMD — air gap</td><td>Stagnant air gap before condensing surface</td><td class="num">2–4</td><td>Lower conduction loss; internal latent heat recovery.</td></tr>
+      <tr class="hl"><td>V-MEMD — multi-effect <span class="chip">selected</span></td><td>Latent heat of each effect drives the next</td><td class="num">3–6</td><td>Selected for the <em>plant</em> design. GOR 4 assumed, giving 165 kWh/m<sup>3</sup>.</td></tr>
+      <tr><td>SGMD / VMD</td><td>Sweep gas / vacuum on permeate side</td><td class="num">varies</td><td>Additional blower or vacuum plant; rejected on parasitic power.</td></tr>
+    </tbody>
+  </table>
+  <div class="box warm"><span class="tag">Assumption to be stated openly</span>
+    <p>The specific thermal energy of 165 kWh/m<sup>3</sup> assumes internal latent-heat recovery at GOR&nbsp;4. Single-pass DCMD without recovery requires 600–900 kWh/m<sup>3</sup> and would demand roughly four times the heat duty. The distinction is material and is carried explicitly through §7.5.</p></div>
+
+  <h3><span class="n">4.3</span>Membrane materials</h3>
+  <p>Hydrophobic microporous membranes of PTFE, PVDF or PP are used. The relevant properties are pore size (0.2–0.45 µm), porosity (70–85 %), thickness (50–200 µm), and liquid entry pressure (LEP), which sets the hydraulic margin before liquid intrusion — <em>wetting</em> — destroys selectivity. PTFE is selected for its higher LEP and chemical resistance to the biocides present in cooling-tower blowdown.</p>
+
+  <h3><span class="n">4.4</span>Prior art</h3>
+  <p>A 2018 patent describes waste-heat-driven low-temperature desalination integrated with data centre cooling. It claims a fixed hardware topology on a single steady liquid loop with a seawater feed. It does not address a mixed air/liquid-cooled fleet, an inland blowdown feed, transient heat availability tracking IT load, or a hybrid pressure-driven/thermally-driven train. The present work is distinguished on all four counts, and in particular on the transient thermal integration, which is where the engineering difficulty actually lies.</p>
+</section>
+
+<!-- ===================== 5 ===================== -->
+<section class="pb" id="s5">
+  <h2 class="sec"><span class="n">5</span>System description</h2>
+
+  <figure>
+    <svg viewBox="0 0 1000 560" role="img" aria-label="Process flow diagram of the integrated cooling and water recovery system">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#47574F"/></marker>
+      </defs>
+      <style>
+        .bx{fill:#fff;stroke:#14201C;stroke-width:1.6}
+        .bxa{fill:#E3EFF1;stroke:#0D5361;stroke-width:1.8}
+        .bt{font-family:"IBM Plex Sans";font-size:14px;font-weight:700;fill:#14201C}
+        .bs{font-family:"IBM Plex Sans";font-size:11.5px;fill:#78877F}
+        .ln{stroke:#47574F;stroke-width:1.5;fill:none;marker-end:url(#ar)}
+        .lnh{stroke:#B84D22;stroke-width:2;fill:none;marker-end:url(#ar)}
+        .lnc{stroke:#2F6E96;stroke-width:2;fill:none;marker-end:url(#ar)}
+        .lnw{stroke:#7C5E28;stroke-width:2;fill:none;marker-end:url(#ar)}
+        .st{font-family:"IBM Plex Mono";font-size:11px;fill:#14201C;font-weight:600}
+        .zt{font-family:"Source Serif 4";font-size:12px;font-weight:700;fill:#78877F;letter-spacing:1.4px}
+        .zbx{fill:none;stroke:#D2DAD4;stroke-width:1;stroke-dasharray:5 4}
+      </style>
+
+      <!-- zones -->
+      <rect class="zbx" x="14" y="34" width="470" height="200" rx="4"/>
+      <text class="zt" x="24" y="52">TECHNOLOGY COOLING SYSTEM (TCS)</text>
+      <rect class="zbx" x="500" y="34" width="486" height="200" rx="4"/>
+      <text class="zt" x="510" y="52">HEAT REJECTION</text>
+      <rect class="zbx" x="14" y="266" width="972" height="280" rx="4"/>
+      <text class="zt" x="24" y="284">WATER RECOVERY ISLAND</text>
+
+      <!-- TCS -->
+      <rect class="bx" x="30" y="96" width="150" height="66" rx="3"/>
+      <text class="bt" x="42" y="122">IT EQUIPMENT</text>
+      <text class="bs" x="42" y="140">cold plates, 2.4 MW</text>
+      <text class="bs" x="42" y="155">85 % liquid capture</text>
+
+      <rect class="bx" x="240" y="96" width="120" height="66" rx="3"/>
+      <text class="bt" x="252" y="122">CDU</text>
+      <text class="bs" x="252" y="140">pump + filtration</text>
+      <text class="bs" x="252" y="155">2 481 L/min</text>
+
+      <rect class="bx" x="530" y="96" width="140" height="66" rx="3"/>
+      <text class="bt" x="542" y="122">PLATE HX</text>
+      <text class="bs" x="542" y="140">TCS ⇄ FWS</text>
+
+      <rect class="bx" x="800" y="96" width="160" height="66" rx="3"/>
+      <text class="bt" x="812" y="122">COOLING TOWER</text>
+      <text class="bs" x="812" y="140">open evaporative</text>
+      <text class="bs" x="812" y="155">2 304 kW rejected</text>
+
+      <!-- recovery island -->
+      <rect class="bx" x="30" y="330" width="140" height="62" rx="3"/>
+      <text class="bt" x="42" y="356">BLOWDOWN TANK</text>
+      <text class="bs" x="42" y="374">buffer, 2 h hold-up</text>
+
+      <rect class="bx" x="228" y="330" width="140" height="62" rx="3"/>
+      <text class="bt" x="240" y="356">RO SKID</text>
+      <text class="bs" x="240" y="374">75 % recovery</text>
+
+      <rect class="bxa" x="426" y="330" width="150" height="62" rx="3"/>
+      <text class="bt" x="438" y="356">MD MODULE</text>
+      <text class="bs" x="438" y="374">V-MEMD, 13 m²</text>
+
+      <rect class="bxa" x="426" y="430" width="150" height="56" rx="3"/>
+      <text class="bt" x="438" y="454">FEED HEATER</text>
+      <text class="bs" x="438" y="471">PHE, 28 kW</text>
+
+      <rect class="bx" x="640" y="330" width="140" height="62" rx="3"/>
+      <text class="bt" x="652" y="356">DRY COOLER</text>
+      <text class="bs" x="652" y="374">condenser loop</text>
+
+      <rect class="bx" x="640" y="430" width="140" height="56" rx="3"/>
+      <text class="bt" x="652" y="454">QUALITY GATE</text>
+      <text class="bs" x="652" y="471">IS 10500 check</text>
+
+      <rect class="bx" x="836" y="330" width="130" height="62" rx="3"/>
+      <text class="bt" x="848" y="356">ZLD / DISPOSAL</text>
+      <text class="bs" x="848" y="374">73 L/h concentrate</text>
+
+      <rect class="bx" x="836" y="430" width="130" height="56" rx="3"/>
+      <text class="bt" x="848" y="454">MAKE-UP</text>
+      <text class="bs" x="848" y="471">to tower basin</text>
+
+      <!-- lines TCS -->
+      <path class="lnh" d="M180 116 H240"/>
+      <text class="st" x="188" y="110">②</text>
+      <path class="lnc" d="M240 148 H180"/>
+      <text class="st" x="188" y="166">①</text>
+      <path class="lnh" d="M360 116 H530"/>
+      <text class="st" x="432" y="110">②</text>
+      <path class="lnc" d="M530 148 H360"/>
+      <text class="st" x="432" y="166">①</text>
+      <path class="lnh" d="M670 129 H800"/>
+      <text class="st" x="726" y="122">③</text>
+
+      <!-- tower down to blowdown -->
+      <path class="lnw" d="M880 162 V250 H100 V330"/>
+      <text class="st" x="106" y="268">⑤</text>
+      <text class="bs" x="120" y="268">blowdown 971 L/h, TDS 1 680 mg/L</text>
+      <path class="ln" d="M900 96 V60"/>
+      <text class="bs" x="908" y="72">④ evaporation 2 913 L/h</text>
+
+      <!-- island lines -->
+      <path class="lnw" d="M170 361 H228"/><text class="st" x="184" y="354">⑤</text>
+      <path class="lnw" d="M368 361 H426"/><text class="st" x="382" y="354">⑦</text>
+      <path class="lnc" d="M298 392 V510 H836 V486"/>
+      <text class="st" x="306" y="504">⑥</text>
+      <text class="bs" x="322" y="504">RO permeate 728 L/h</text>
+      <path class="lnc" d="M576 361 H640"/><text class="st" x="592" y="354">⑨</text>
+      <path class="ln" d="M710 392 V430"/>
+      <path class="lnc" d="M780 458 H836"/><text class="st" x="796" y="450">⑨</text>
+      <path class="lnw" d="M576 345 H836"/><text class="st" x="700" y="338">⑩</text>
+      <path class="lnh" d="M501 234 V330"/>
+      <text class="st" x="508" y="262">⑧</text>
+      <text class="bs" x="520" y="262">slipstream 3.7 m³/h, 52 → 45 °C</text>
+      <path class="lnh" d="M501 430 V392"/>
+    </svg>
+    <figcaption><b>Figure 5.1 — Process flow diagram.</b> Red: hot coolant / recovered heat. Blue: cooled coolant and recovered water. Brown: concentrated aqueous streams. Circled numbers are stream tags referenced in Table 5.1. The MD module and its feed heater (shaded) are the elements this proposal designs; everything else is either existing plant or standard equipment.</figcaption>
+  </figure>
+
+  <table>
+    <caption><b>Table 5.1</b> — Stream table at design conditions (2.4 MW IT load, open-tower retrofit case).</caption>
+    <thead><tr><th class="num">No.</th><th>Stream</th><th class="num">Flow</th><th class="num">Temp.<br>°C</th><th class="num">TDS<br>mg/L</th><th class="num">F<sup>−</sup><br>mg/L</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>TCS coolant supply</td><td class="num">2 481 L/min</td><td class="num">40.0</td><td class="num">—</td><td class="num">—</td><td>PG25, closed loop</td></tr>
+      <tr><td class="num">2</td><td>TCS coolant return</td><td class="num">2 481 L/min</td><td class="num">52.0</td><td class="num">—</td><td class="num">—</td><td>ΔT = 12 K</td></tr>
+      <tr><td class="num">3</td><td>FWS to cooling tower</td><td class="num">—</td><td class="num">48 / 38</td><td class="num">1 680</td><td class="num">7.2</td><td>2 304 kW rejected</td></tr>
+      <tr><td class="num">4</td><td>Evaporation to atmosphere</td><td class="num">2 913 L/h</td><td class="num">—</td><td class="num">0</td><td class="num">0</td><td>Consumptive loss</td></tr>
+      <tr><td class="num">5</td><td>Tower blowdown</td><td class="num">971 L/h</td><td class="num">35</td><td class="num">1 680</td><td class="num">7.2</td><td>CoC = 4</td></tr>
+      <tr><td class="num">6</td><td>RO permeate</td><td class="num">728 L/h</td><td class="num">32</td><td class="num">&lt; 60</td><td class="num">&lt; 0.3</td><td>Returned to basin</td></tr>
+      <tr><td class="num">7</td><td>RO reject → MD feed</td><td class="num">243 L/h</td><td class="num">32</td><td class="num">6 720</td><td class="num">28.8</td><td>π = 5.2 bar</td></tr>
+      <tr><td class="num">8</td><td>Heat slipstream</td><td class="num">3.7 m³/h</td><td class="num">52 → 45</td><td class="num">—</td><td class="num">—</td><td>2.5 % of TCS flow, 28 kW</td></tr>
+      <tr><td class="num">9</td><td>MD permeate</td><td class="num">170 L/h</td><td class="num">31</td><td class="num">&lt; 40</td><td class="num">&lt; 0.2</td><td>Gated against IS 10500</td></tr>
+      <tr><td class="num">10</td><td>MD concentrate</td><td class="num">73 L/h</td><td class="num">42</td><td class="num">22 400</td><td class="num">96</td><td>To ZLD, π = 17.5 bar</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 6 ===================== -->
+<section class="pb" id="s6">
+  <h2 class="sec"><span class="n">6</span>Thermal analysis</h2>
+
+  <h3><span class="n">6.1</span>Energy balance</h3>
+  <p>Taking the IT hall as the control volume, and neglecting the small fraction of electrical energy leaving as radiation and acoustic work:</p>
+  <div class="eq"><span class="body">Q̇<sub>total</sub> = η<sub>heat</sub> · P<sub>IT</sub> = 0.96 × 2 400 = 2 304 kW</span><span class="num">(6.1)</span></div>
+  <div class="eq"><span class="body">Q̇<sub>liq</sub> = f<sub>cap</sub> · Q̇<sub>total</sub> = 0.85 × 2 304 = 1 958 kW &nbsp;;&nbsp; Q̇<sub>air</sub> = 346 kW</span><span class="num">(6.2)</span></div>
+  <p class="eqwhere">where <em>f</em><sub>cap</sub> is the liquid capture fraction of the cold-plate architecture (Table 4.1). The air-borne balance serves memory, drives and power supplies and is handled by the existing CRAH path.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Sankey diagram of energy flows">
+      <style>
+        .sk{font-family:"IBM Plex Sans";font-size:13px;fill:#14201C}
+        .skb{font-family:"IBM Plex Sans";font-size:13px;font-weight:700;fill:#14201C}
+        .sks{font-family:"IBM Plex Mono";font-size:12px;fill:#47574F}
+      </style>
+      <rect x="20" y="70" width="46" height="170" fill="#14201C"/>
+      <text class="skb" x="20" y="60">P_IT</text><text class="sks" x="20" y="256">2 400 kW</text>
+
+      <path d="M66 74 C160 74 160 74 250 74 L250 214 C160 214 160 214 66 236 Z" fill="#B84D22" opacity=".82"/>
+      <path d="M66 240 C160 240 160 250 250 250 L250 272 C160 272 160 262 66 254 Z" fill="#78877F" opacity=".5"/>
+      <text class="sks" x="132" y="290">losses / air path 442 kW</text>
+
+      <rect x="250" y="74" width="30" height="140" fill="#B84D22" opacity=".82"/>
+      <text class="skb" x="250" y="64">Liquid loop</text><text class="sks" x="250" y="232">1 958 kW</text>
+
+      <path d="M280 78 C400 78 400 96 520 96 L520 108 C400 108 400 92 280 92 Z" fill="#96590F" opacity=".9"/>
+      <rect x="520" y="90" width="26" height="20" fill="#96590F" opacity=".9"/>
+      <text class="skb" x="556" y="98">MD feed heater</text>
+      <text class="sks" x="556" y="114">28 kW  (1.2 % of rejected heat)</text>
+
+      <path d="M280 96 C400 96 400 150 520 150 L520 268 C400 268 400 210 280 210 Z" fill="#B84D22" opacity=".55"/>
+      <rect x="520" y="150" width="26" height="118" fill="#B84D22" opacity=".55"/>
+      <text class="skb" x="556" y="200">Rejected to atmosphere</text>
+      <text class="sks" x="556" y="216">2 276 kW — available for further cascade use</text>
+      <text class="sks" x="556" y="234">(absorption chilling, adiabatic pre-cooling, service water)</text>
+
+      <line x1="520" y1="70" x2="520" y2="285" stroke="#D2DAD4" stroke-width="1" stroke-dasharray="4 4"/>
+    </svg>
+    <figcaption><b>Figure 6.1 — Energy flow.</b> The MD duty is a very small fraction of the rejected heat. The binding constraint is not the <em>quantity</em> of waste heat but its <em>grade</em> — which is why §6.5 treats the cascade explicitly and why the architecture selection in §4.1 dominates the design.</figcaption>
+  </figure>
+
+  <h3><span class="n">6.2</span>Cold plate thermal resistance and junction temperature</h3>
+  <p>The die-to-fluid path is modelled as resistances in series. The junction temperature is the sum of the local coolant temperature and the product of device dissipation and total resistance:</p>
+  <div class="eq"><span class="body">T<sub>j</sub> = T<sub>c,local</sub> + Q̇<sub>die</sub> ( R<sub>jc</sub> + R<sub>TIM</sub> + R<sub>sp</sub> + R<sub>conv</sub> )</span><span class="num">(6.3)</span></div>
+  <div class="eq"><span class="body">R<sub>conv</sub> = 1 / ( h · A<sub>eff</sub> ) &nbsp;;&nbsp; Nu = f (Re, Pr) for the microchannel</span><span class="num">(6.4)</span></div>
+
+  <figure>
+    <svg viewBox="0 0 1000 210" role="img" aria-label="Thermal resistance network from junction to coolant">
+      <style>
+        .rb{fill:#fff;stroke:#14201C;stroke-width:1.5}
+        .rl{font-family:"IBM Plex Sans";font-size:12.5px;font-weight:700;fill:#14201C}
+        .rv{font-family:"IBM Plex Mono";font-size:12px;fill:#0D5361}
+        .rs{font-family:"IBM Plex Sans";font-size:11px;fill:#78877F}
+        .rw{stroke:#47574F;stroke-width:1.6;fill:none}
+      </style>
+      <circle cx="52" cy="86" r="7" fill="#B84D22"/>
+      <text class="rl" x="26" y="118">T_j</text><text class="rs" x="20" y="134">83.5 °C</text>
+
+      <path class="rw" d="M59 86 H120"/>
+      <rect class="rb" x="120" y="62" width="122" height="48" rx="2"/>
+      <text class="rl" x="132" y="82">R_jc</text><text class="rv" x="132" y="100">0.012 K/W</text>
+      <text class="rs" x="120" y="128">junction → case</text>
+
+      <path class="rw" d="M242 86 H300"/>
+      <rect class="rb" x="300" y="62" width="122" height="48" rx="2"/>
+      <text class="rl" x="312" y="82">R_TIM</text><text class="rv" x="312" y="100">0.008 K/W</text>
+      <text class="rs" x="300" y="128">interface material</text>
+
+      <path class="rw" d="M422 86 H480"/>
+      <rect class="rb" x="480" y="62" width="122" height="48" rx="2"/>
+      <text class="rl" x="492" y="82">R_sp</text><text class="rv" x="492" y="100">0.007 K/W</text>
+      <text class="rs" x="480" y="128">plate spreading</text>
+
+      <path class="rw" d="M602 86 H660"/>
+      <rect class="rb" x="660" y="62" width="122" height="48" rx="2"/>
+      <text class="rl" x="672" y="82">R_conv</text><text class="rv" x="672" y="100">0.018 K/W</text>
+      <text class="rs" x="660" y="128">microchannel</text>
+
+      <path class="rw" d="M782 86 H846"/>
+      <circle cx="853" cy="86" r="7" fill="#2F6E96"/>
+      <text class="rl" x="820" y="118">T_c,local</text><text class="rs" x="820" y="134">52 °C at rack outlet</text>
+
+      <line x1="120" y1="168" x2="782" y2="168" stroke="#0D5361" stroke-width="1.2"/>
+      <text class="rv" x="330" y="188">ΣR = 0.045 K/W  ·  Q̇_die = 700 W  ·  ΔT = 31.5 K</text>
+    </svg>
+    <figcaption><b>Figure 6.2 — Die-to-coolant resistance network.</b> With the rack-outlet coolant at 52 °C, T<sub>j,max</sub> = 83.5 °C against a device limit of 90 °C — a margin of 6.5 K. This margin is the price paid for the elevated return temperature and is the principal constraint on the W4 architecture.</figcaption>
+  </figure>
+
+  <div class="box warm"><span class="tag">Design tension to be resolved</span>
+    <p>Raising the coolant supply temperature raises the MD flux (§7.5) but erodes junction-temperature margin. The margin of 6.5 K is workable but not generous; the sensitivity study in §7.5 quantifies exactly what is bought thermally for each kelvin of margin surrendered. Falling back to W3 (supply 32 °C, return 44 °C) restores 8 K of margin at the cost of roughly 45 % of the MD flux.</p></div>
+
+  <h3><span class="n">6.3</span>Cooling tower water balance</h3>
+  <p>Heat rejection in an open tower is predominantly latent. Taking the latent fraction <em>f</em><sub>lat</sub> and the enthalpy of vaporisation at the operating wet-bulb:</p>
+  <div class="eq"><span class="body">ṁ<sub>evap</sub> = f<sub>lat</sub> · Q̇<sub>total</sub> / h<sub>fg</sub> = 0.85 × 2 304 / 2 420 = 0.809 kg/s = 2 913 L/h</span><span class="num">(6.5)</span></div>
+  <p>Dissolved solids concentrate in the circulating water. The cycles of concentration relate blowdown to evaporation by a solids balance:</p>
+  <div class="eq"><span class="body">CoC = c<sub>circ</sub> / c<sub>makeup</sub> = ( ṁ<sub>evap</sub> + ṁ<sub>bd</sub> ) / ṁ<sub>bd</sub> &nbsp;⟹&nbsp; ṁ<sub>bd</sub> = ṁ<sub>evap</sub> / ( CoC − 1 )</span><span class="num">(6.6)</span></div>
+  <div class="eq"><span class="body">ṁ<sub>bd</sub> = 2 913 / 3 = 971 L/h &nbsp;;&nbsp; ṁ<sub>makeup</sub> = 3 884 L/h = 93.2 m<sup>3</sup>/d</span><span class="num">(6.7)</span></div>
+  <p class="eqwhere">Drift loss is taken at 0.005 % of circulating flow and is neglected in the balance. CoC = 4 is set by the Langelier saturation index of the make-up water; raising it reduces blowdown but increases scaling risk.</p>
+
+  <h3><span class="n">6.4</span>Heat recovery exchanger</h3>
+  <p>A plate heat exchanger transfers the MD duty from a slipstream of the TCS return to the MD feed circuit. Sizing by the log-mean temperature difference:</p>
+  <div class="eq"><span class="body">ΔT<sub>lm</sub> = ( ΔT<sub>1</sub> − ΔT<sub>2</sub> ) / ln( ΔT<sub>1</sub> / ΔT<sub>2</sub> ) = ( 4 − 3 ) / ln( 4/3 ) = 3.48 K</span><span class="num">(6.8)</span></div>
+  <div class="eq"><span class="body">UA = Q̇ / ΔT<sub>lm</sub> = 28.1 / 3.48 = 8.1 kW/K &nbsp;⟹&nbsp; A = UA / U = 2.0 m<sup>2</sup> at U = 4 kW/m<sup>2</sup>K</span><span class="num">(6.9)</span></div>
+  <p>Verified by the effectiveness–NTU method for a counter-flow arrangement:</p>
+  <div class="eq"><span class="body">ε = ( 1 − e<sup>−NTU(1−C<sub>r</sub>)</sup> ) / ( 1 − C<sub>r</sub> e<sup>−NTU(1−C<sub>r</sub>)</sup> ) = 0.70 &nbsp; at NTU = 2.01, C<sub>r</sub> = 0.86</span><span class="num">(6.10)</span></div>
+  <p>which agrees with ε = Q̇ / [ C<sub>min</sub> ( T<sub>h,in</sub> − T<sub>c,in</sub> ) ] = 28.1 / [ 17.7 × 10 ] = 0.70, confirming the sizing.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Counter-flow temperature profile in the feed heater">
+      <style>
+        .ax{stroke:#B2BDB5;stroke-width:1.2}
+        .gr{stroke:#EDF1EE;stroke-width:1}
+        .tl{font-family:"IBM Plex Mono";font-size:12px;fill:#78877F}
+        .tb{font-family:"IBM Plex Sans";font-size:13px;font-weight:600}
+      </style>
+      <line class="ax" x1="90" y1="40" x2="90" y2="272"/>
+      <line class="ax" x1="90" y1="272" x2="700" y2="272"/>
+      <g class="tl">
+        <line class="gr" x1="90" y1="60" x2="700" y2="60"/><text x="82" y="64" text-anchor="end">54</text>
+        <line class="gr" x1="90" y1="113" x2="700" y2="113"/><text x="82" y="117" text-anchor="end">50</text>
+        <line class="gr" x1="90" y1="166" x2="700" y2="166"/><text x="82" y="170" text-anchor="end">46</text>
+        <line class="gr" x1="90" y1="219" x2="700" y2="219"/><text x="82" y="223" text-anchor="end">42</text>
+        <text x="82" y="276" text-anchor="end">38</text>
+      </g>
+      <text class="tl" x="30" y="160" transform="rotate(-90 30 160)" text-anchor="middle">temperature, °C</text>
+      <text class="tl" x="395" y="298" text-anchor="middle">position along exchanger →</text>
+
+      <path d="M110 86 C260 100 420 128 680 153" stroke="#B84D22" stroke-width="3.2" fill="none"/>
+      <text class="tb" x="112" y="76" fill="#B84D22">52 °C</text>
+      <text class="tb" x="614" y="146" fill="#B84D22">45 °C</text>
+      <text class="tl" x="300" y="104" fill="#B84D22">hot — TCS slipstream, 3.7 m³/h</text>
+
+      <path d="M110 219 C260 210 420 190 680 126" stroke="#2F6E96" stroke-width="3.2" fill="none"/>
+      <text class="tb" x="112" y="240" fill="#2F6E96">42 °C</text>
+      <text class="tb" x="614" y="118" fill="#2F6E96">48 °C</text>
+      <text class="tl" x="300" y="228" fill="#2F6E96">cold — MD feed circuit, 4.0 m³/h</text>
+
+      <line x1="120" y1="88" x2="120" y2="217" stroke="#47574F" stroke-width="1" stroke-dasharray="3 3"/>
+      <text class="tl" x="128" y="160">ΔT₂ = 3 K</text>
+      <line x1="672" y1="128" x2="672" y2="152" stroke="#47574F" stroke-width="1" stroke-dasharray="3 3"/>
+      <text class="tl" x="600" y="176">ΔT₁ = 4 K</text>
+
+      <rect x="740" y="60" width="238" height="150" fill="#F5F8F6" stroke="#D2DAD4"/>
+      <text class="tb" x="756" y="84">Design summary</text>
+      <g class="tl" font-size="12.5">
+        <text x="756" y="106">Duty            28.1 kW</text>
+        <text x="756" y="126">LMTD            3.48 K</text>
+        <text x="756" y="146">UA              8.1 kW/K</text>
+        <text x="756" y="166">Area (U = 4)    2.0 m²</text>
+        <text x="756" y="186">Effectiveness   0.70</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 6.3 — Counter-flow temperature profile in the MD feed heater.</b> The small approach temperatures are characteristic of low-grade recovery: a 3.5 K LMTD demands a large surface area per kilowatt. Counter-flow is essential — a parallel-flow arrangement at these temperatures produces a temperature cross and is infeasible.</figcaption>
+  </figure>
+
+  <h3><span class="n">6.5</span>Heat grade cascade</h3>
+  <p>The rejected heat is a single stream but not a single resource: its usefulness is set by temperature, not quantity. Matching each application to the lowest grade that will serve it — a cascade — maximises the total work extracted before the remainder is rejected.</p>
+  <table>
+    <caption><b>Table 6.1</b> — Heat grade cascade for the design facility.</caption>
+    <thead><tr><th class="num" style="width:22mm">Grade</th><th>Application</th><th>Comment</th></tr></thead>
+    <tbody>
+      <tr><td class="num">65–95 °C</td><td>Membrane distillation at high flux; absorption chilling (double effect)</td><td>Not available from W4; would require a heat pump lift or W5 operation</td></tr>
+      <tr class="hl"><td class="num">45–65 °C</td><td><strong>Membrane distillation feed</strong>; single-effect absorption chilling; service hot water</td><td>The W4 return sits here. Design point of this proposal.</td></tr>
+      <tr><td class="num">38–45 °C</td><td>Marginal MD; adiabatic pre-cooling of the dry cooler; space heating</td><td>Driving force collapses below ≈ 38 °C</td></tr>
+      <tr><td class="num">&lt; 38 °C</td><td>Rejection to tower or dry cooler</td><td>No further extraction practicable</td></tr>
+    </tbody>
+  </table>
+  <p>The MD duty is only 1.2 % of the rejected heat (Fig. 6.1), so cascading is not required to satisfy it. The cascade is included because it establishes the correct framing for the follow-on question — <em>what else should the remaining 2 276 kW do?</em> — and because it explains why the architecture decision (which sets grade) matters more than the recovery equipment (which sets quantity).</p>
+</section>
+
+<!-- ===================== 7 ===================== -->
+<section class="pb" id="s7">
+  <h2 class="sec"><span class="n">7</span>Membrane distillation module design</h2>
+
+  <h3><span class="n">7.1</span>Transport mechanism</h3>
+  <p>A hydrophobic microporous membrane separates the hot feed from the cold permeate. Surface tension prevents the aqueous phase from entering the pores provided the transmembrane hydraulic pressure remains below the liquid entry pressure. Water evaporates at the feed-side pore mouth, the vapour is transported across the pore, and condenses on the permeate side.</p>
+  <p>Because transport occurs entirely in the vapour phase, non-volatile species — Na<sup>+</sup>, Ca<sup>2+</sup>, Cl<sup>−</sup>, SO<sub>4</sub><sup>2−</sup>, <strong>F<sup>−</sup></strong> and NO<sub>3</sub><sup>−</sup> — are excluded by the phase change itself rather than by size exclusion. This is the property the proposal seeks to quantify experimentally.</p>
+  <p>Vapour transport through the pore is described by a combined Knudsen–molecular diffusion model. The controlling regime is set by the Knudsen number, Kn = λ / d<sub>p</sub>; for d<sub>p</sub> = 0.2 µm and a mean free path of ≈ 0.11 µm at operating conditions, Kn ≈ 0.55, placing the module in the transition regime where both mechanisms contribute. For design purposes the transport is lumped into a single membrane distillation coefficient:</p>
+  <div class="eq"><span class="body">J = B ( p<sub>w</sub>(T<sub>fm</sub>) · a<sub>w</sub> − p<sub>w</sub>(T<sub>pm</sub>) )</span><span class="num">(7.1)</span></div>
+  <p class="eqwhere">where <em>J</em> is permeate flux (L m<sup>−2</sup> h<sup>−1</sup>), <em>B</em> the membrane distillation coefficient (L m<sup>−2</sup> h<sup>−1</sup> Pa<sup>−1</sup>), <em>p</em><sub>w</sub> the saturation vapour pressure and <em>a</em><sub>w</sub> the water activity of the feed. Determining <em>B</em> for the selected membrane at this grade of heat is <strong>Objective 4</strong> of the proposal.</p>
+
+  <h3><span class="n">7.2</span>Driving force</h3>
+  <p>Saturation vapour pressure is evaluated from the Antoine correlation:</p>
+  <div class="eq"><span class="body">log<sub>10</sub> p<sub>w</sub> = 8.07131 − 1730.63 / ( 233.426 + T ) &nbsp;&nbsp;[ p<sub>w</sub> in mmHg, T in °C ]</span><span class="num">(7.2)</span></div>
+  <p>Water activity is reduced by the dissolved solids. Even at the MD concentrate condition of 22 400 mg/L, <em>a</em><sub>w</sub> ≈ 0.992 — a flux penalty of 0.8 %, against a thirteen-fold rise in osmotic pressure over the same range (Table 2.1). The exponential temperature dependence of <em>p</em><sub>w</sub> therefore dominates the design entirely.</p>
+
+  <h3><span class="n">7.3</span>Temperature polarisation</h3>
+  <p>Thermal boundary layers form on both sides of the membrane. The temperatures that matter are the <em>membrane surface</em> temperatures, not the bulk values an operator measures. Defining the temperature polarisation coefficient:</p>
+  <div class="eq"><span class="body">τ = ( T<sub>fm</sub> − T<sub>pm</sub> ) / ( T<sub>f</sub> − T<sub>p</sub> ) &nbsp;;&nbsp; T<sub>fm</sub> = T<sub>f</sub> − ½(1−τ)( T<sub>f</sub> − T<sub>p</sub> )</span><span class="num">(7.3)</span></div>
+  <p>A value of τ = 0.75 is assumed for design, consistent with spacer-filled channels at moderate Reynolds number. Neglecting polarisation entirely (τ = 1) would overstate the flux by approximately 30 % — an error that propagates directly into an undersized module.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 400" role="img" aria-label="Temperature and vapour pressure profiles across the membrane">
+      <style>
+        .mm{font-family:"IBM Plex Sans";font-size:12.5px;fill:#14201C}
+        .ms{font-family:"IBM Plex Mono";font-size:11.5px;fill:#47574F}
+        .mt{font-family:"IBM Plex Sans";font-size:13px;font-weight:700;fill:#14201C}
+      </style>
+      <!-- channel geometry -->
+      <rect x="60" y="46" width="380" height="76" fill="#F8ECE6" stroke="#B84D22" stroke-width="1.4"/>
+      <text class="mt" x="72" y="68" fill="#B84D22">FEED CHANNEL</text>
+      <text class="ms" x="72" y="86">RO reject, 48 °C in</text>
+      <text class="ms" x="72" y="104">243 L/h, 6 720 mg/L</text>
+
+      <text class="mt" x="60" y="140">HYDROPHOBIC MEMBRANE — PTFE, 0.2 µm pores</text>
+      <rect x="60" y="148" width="380" height="42" fill="#E5E9E6" stroke="#14201C" stroke-width="1.6"/>
+      <g fill="#fff" stroke="#B2BDB5">
+        <rect x="96" y="150" width="12" height="38"/><rect x="150" y="150" width="12" height="38"/>
+        <rect x="204" y="150" width="12" height="38"/><rect x="258" y="150" width="12" height="38"/>
+        <rect x="312" y="150" width="12" height="38"/><rect x="366" y="150" width="12" height="38"/>
+      </g>
+      <g stroke="#47574F" stroke-width="1.6" stroke-dasharray="3 3" marker-end="url(#ar)">
+        <path d="M102 148 V212"/><path d="M156 148 V212"/><path d="M210 148 V212"/>
+        <path d="M264 148 V212"/><path d="M318 148 V212"/><path d="M372 148 V212"/>
+      </g>
+
+      <rect x="60" y="220" width="380" height="76" fill="#E3EFF1" stroke="#0D5361" stroke-width="1.4"/>
+      <text class="mt" x="72" y="244" fill="#0D5361">PERMEATE CHANNEL</text>
+      <text class="ms" x="72" y="262">condensate, 25 → 31 °C</text>
+      <text class="ms" x="72" y="280">170 L/h recovered</text>
+      <text class="ms" x="60" y="316">H₂O vapour only — dissolved ions cannot enter the vapour phase</text>
+
+      <!-- temperature profile -->
+      <g transform="translate(520,0)">
+        <line x1="40" y1="40" x2="40" y2="290" stroke="#B2BDB5"/>
+        <line x1="40" y1="290" x2="420" y2="290" stroke="#B2BDB5"/>
+        <rect x="196" y="40" width="66" height="250" fill="#E5E9E6" opacity=".8"/>
+        <text class="ms" x="229" y="308" text-anchor="middle">membrane</text>
+        <text class="ms" x="118" y="308" text-anchor="middle">feed film</text>
+        <text class="ms" x="340" y="308" text-anchor="middle">permeate film</text>
+
+        <path d="M46 72 H140 L196 108 L262 200 L330 240 H414" stroke="#B84D22" stroke-width="3" fill="none"/>
+        <circle cx="140" cy="72" r="4.6" fill="#B84D22"/>
+        <circle cx="196" cy="108" r="4.6" fill="#96590F"/>
+        <circle cx="262" cy="200" r="4.6" fill="#0D5361"/>
+        <circle cx="330" cy="240" r="4.6" fill="#2F6E96"/>
+
+        <text class="ms" x="52" y="62">T_f  45.0 °C</text>
+        <text class="ms" x="90" y="126">T_fm  42.9 °C</text>
+        <text class="ms" x="268" y="192">T_pm  30.1 °C</text>
+        <text class="ms" x="330" y="264">T_p  28.0 °C</text>
+
+        <line x1="440" y1="72" x2="440" y2="240" stroke="#47574F" stroke-width="1" stroke-dasharray="3 3"/>
+        <text class="ms" x="40" y="26">measured ΔT = 17.0 K</text>
+        <text class="ms" x="240" y="26" fill="#95311F">effective ΔT = 12.8 K  (τ = 0.75)</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 7.1 — Module cross-section and temperature profile.</b> Left: the direct-contact arrangement, with vapour crossing the pores while dissolved species remain in the feed. Right: the temperature profile across both boundary layers. The driving force available to the membrane is 12.8 K, not the 17.0 K measured between the bulk streams.</figcaption>
+  </figure>
+
+  <h3><span class="n">7.4</span>Concentration polarisation, scaling and wetting</h3>
+  <ul>
+    <li><strong>Concentration polarisation</strong> raises the feed-side wall concentration above the bulk. Its effect on flux through <em>a</em><sub>w</sub> is small (§7.2) but it governs the local saturation index and therefore the scaling risk, which is the practical limit on recovery.</li>
+    <li><strong>Scaling.</strong> CaCO<sub>3</sub> and CaSO<sub>4</sub> are the controlling species; silica becomes limiting above roughly 150 mg/L SiO<sub>2</sub>. Mitigation: antiscalant dosing to the RO feed, Langelier index monitoring, and periodic acid clean-in-place.</li>
+    <li><strong>Wetting</strong> is the dominant failure mode. Liquid intrusion into the pores destroys the vapour barrier and ions convect through directly. It is detected as a step rise in permeate conductivity — this is the basis for the interlock specified in §9.2 and the failure condition modelled in the simulation (§10).</li>
+  </ul>
+
+  <h3><span class="n">7.5</span>Module sizing and sensitivity to feed temperature</h3>
+  <p>Required area follows from the target permeate rate and the flux at the design point:</p>
+  <div class="eq"><span class="body">A<sub>m</sub> = V̇<sub>perm</sub> / J = 170 / 12.9 = 13.2 m<sup>2</sup> &nbsp;⟹&nbsp; specify 15 m<sup>2</sup> installed</span><span class="num">(7.4)</span></div>
+
+  <table>
+    <caption><b>Table 7.1</b> — Flux and required membrane area against MD feed inlet temperature. B = 3.0 × 10<sup>−3</sup> L m<sup>−2</sup> h<sup>−1</sup> Pa<sup>−1</sup>, τ = 0.75, permeate bulk mean 28 °C, permeate target 170 L/h.</caption>
+    <thead><tr><th class="num">T<sub>f,in</sub><br>°C</th><th class="num">T<sub>fm</sub><br>°C</th><th class="num">T<sub>pm</sub><br>°C</th><th class="num">Δp<br>kPa</th><th class="num">J<br>L m<sup>−2</sup> h<sup>−1</sup></th><th class="num">A<sub>m</sub><br>m<sup>2</sup></th><th>Source of heat</th></tr></thead>
+    <tbody>
+      <tr><td class="num">40</td><td class="num">35.9</td><td class="num">29.1</td><td class="num">1.86</td><td class="num">5.6</td><td class="num">30.4</td><td>W3 return, marginal</td></tr>
+      <tr><td class="num">45</td><td class="num">40.3</td><td class="num">29.8</td><td class="num">3.29</td><td class="num">9.9</td><td class="num">17.2</td><td>W3 return</td></tr>
+      <tr class="hl"><td class="num">48</td><td class="num">42.9</td><td class="num">30.1</td><td class="num">4.30</td><td class="num">12.9</td><td class="num">13.2</td><td><strong>Design point — W4 return</strong></td></tr>
+      <tr><td class="num">52</td><td class="num">46.4</td><td class="num">30.6</td><td class="num">5.87</td><td class="num">17.6</td><td class="num">9.6</td><td>W4, smaller HX approach</td></tr>
+      <tr><td class="num">55</td><td class="num">49.0</td><td class="num">31.0</td><td class="num">7.23</td><td class="num">21.7</td><td class="num">7.8</td><td>W5 return</td></tr>
+      <tr><td class="num">60</td><td class="num">53.4</td><td class="num">31.6</td><td class="num">9.88</td><td class="num">29.6</td><td class="num">5.7</td><td>Requires heat pump lift</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <svg viewBox="0 0 1000 340" role="img" aria-label="Flux against feed inlet temperature">
+      <style>
+        .fx{font-family:"IBM Plex Mono";font-size:12px;fill:#78877F}
+        .fl{font-family:"IBM Plex Sans";font-size:12.5px;fill:#47574F}
+      </style>
+      <line x1="96" y1="30" x2="96" y2="278" stroke="#B2BDB5"/>
+      <line x1="96" y1="278" x2="860" y2="278" stroke="#B2BDB5"/>
+      <g class="fx">
+        <line x1="96" y1="278" x2="860" y2="278" stroke="#EDF1EE"/><text x="88" y="282" text-anchor="end">0</text>
+        <line x1="96" y1="216" x2="860" y2="216" stroke="#EDF1EE"/><text x="88" y="220" text-anchor="end">8</text>
+        <line x1="96" y1="154" x2="860" y2="154" stroke="#EDF1EE"/><text x="88" y="158" text-anchor="end">16</text>
+        <line x1="96" y1="92"  x2="860" y2="92"  stroke="#EDF1EE"/><text x="88" y="96"  text-anchor="end">24</text>
+        <line x1="96" y1="30"  x2="860" y2="30"  stroke="#EDF1EE"/><text x="88" y="34"  text-anchor="end">32</text>
+        <text x="96"  y="300" text-anchor="middle">40</text>
+        <text x="248" y="300" text-anchor="middle">45</text>
+        <text x="400" y="300" text-anchor="middle">50</text>
+        <text x="552" y="300" text-anchor="middle">55</text>
+        <text x="704" y="300" text-anchor="middle">60</text>
+      </g>
+      <text class="fl" x="470" y="322" text-anchor="middle">MD feed inlet temperature, °C</text>
+      <text class="fl" x="34" y="150" transform="rotate(-90 34 150)" text-anchor="middle">flux J, L m⁻² h⁻¹</text>
+
+      <rect x="96" y="30" width="60" height="248" fill="#F7E9D5" opacity=".85"/>
+      <text class="fx" x="128" y="266" text-anchor="middle" transform="rotate(-90 128 266)" fill="#96590F">below 38 °C: skid idled</text>
+
+      <path d="M96 235 C170 216 210 202 248 202 C320 190 360 172 400 158 C470 132 520 110 552 110 C620 84 680 48 704 48"
+            stroke="#0D5361" stroke-width="3.4" fill="none"/>
+      <g fill="#0D5361">
+        <circle cx="96" cy="235" r="5"/><circle cx="248" cy="201" r="5"/>
+        <circle cx="400" cy="157" r="5"/><circle cx="552" cy="110" r="5"/><circle cx="704" cy="48" r="5"/>
+      </g>
+      <circle cx="339" cy="178" r="8" fill="none" stroke="#B84D22" stroke-width="2.6"/>
+      <circle cx="339" cy="178" r="3.6" fill="#B84D22"/>
+      <line x1="339" y1="178" x2="339" y2="278" stroke="#B84D22" stroke-width="1" stroke-dasharray="3 3"/>
+      <text class="fl" x="352" y="172" fill="#B84D22">design point — 48 °C, 12.9 L m⁻² h⁻¹</text>
+
+      <rect x="640" y="150" width="300" height="112" fill="#F5F8F6" stroke="#D2DAD4"/>
+      <text class="fl" x="656" y="174" font-weight="700">Design consequence</text>
+      <text class="fl" x="656" y="196" font-size="11.5">Flux rises roughly fivefold between 40 °C</text>
+      <text class="fl" x="656" y="214" font-size="11.5">and 60 °C. Membrane area — and therefore</text>
+      <text class="fl" x="656" y="232" font-size="11.5">capital cost — is set almost entirely by the</text>
+      <text class="fl" x="656" y="250" font-size="11.5">cooling architecture, not by the MD skid.</text>
+    </svg>
+    <figcaption><b>Figure 7.2 — Flux against feed temperature.</b> The strong non-linearity follows from the Clausius–Clapeyron behaviour embedded in Eq. (7.2). It is the quantitative basis for selecting a W4 rather than W3 cooling architecture, and for the design tension identified in §6.2.</figcaption>
+  </figure>
+
+  <h3><span class="n">7.6</span>Concentrate management</h3>
+  <p>The MD concentrate — 73 L/h at approximately 22 400 mg/L — is a smaller but more concentrated stream than the blowdown it originated from. It is routed to a crystalliser for zero liquid discharge, or to licensed industrial reuse. Its design is outside the scope of this project (§3.3), but the interface conditions are specified so that the recovery island can be tendered against a defined concentrate duty. A recovery scheme that does not account for its own residual stream is not a closed design.</p>
+</section>
+
+<!-- ===================== 8 ===================== -->
+<section class="pb" id="s8">
+  <h2 class="sec"><span class="n">8</span>Integrated design case</h2>
+
+  <h3><span class="n">8.1</span>Summary of the design point</h3>
+  <table>
+    <caption><b>Table 8.1</b> — Consolidated design summary, 2.4 MW IT facility, open-tower retrofit.</caption>
+    <thead><tr><th style="width:56mm">Parameter</th><th class="num" style="width:26mm">Value</th><th>Basis</th></tr></thead>
+    <tbody>
+      <tr><td>IT load</td><td class="num">2 400 kW</td><td>Design assumption</td></tr>
+      <tr><td>Total heat rejected</td><td class="num">2 304 kW</td><td>Eq. (6.1)</td></tr>
+      <tr><td>Liquid-captured heat</td><td class="num">1 958 kW</td><td>Eq. (6.2), f<sub>cap</sub> = 0.85</td></tr>
+      <tr><td>Coolant supply / return</td><td class="num">40 / 52 °C</td><td>ASHRAE W4</td></tr>
+      <tr><td>Coolant flow rate</td><td class="num">2 481 L/min</td><td>Q̇ = ṁ c<sub>p</sub> ΔT, PG25</td></tr>
+      <tr><td>Maximum junction temperature</td><td class="num">83.5 °C</td><td>Eq. (6.3); 6.5 K margin</td></tr>
+      <tr><td>Tower evaporation</td><td class="num">2 913 L/h</td><td>Eq. (6.5)</td></tr>
+      <tr><td>Tower blowdown, CoC = 4</td><td class="num">971 L/h</td><td>Eq. (6.6)</td></tr>
+      <tr><td>RO permeate / reject</td><td class="num">728 / 243 L/h</td><td>75 % recovery</td></tr>
+      <tr><td>MD permeate / concentrate</td><td class="num">170 / 73 L/h</td><td>70 % recovery</td></tr>
+      <tr class="hl"><td>Overall blowdown recovery</td><td class="num">92.5 %</td><td>898 of 971 L/h</td></tr>
+      <tr><td>MD thermal duty</td><td class="num">28.1 kW</td><td>165 kWh/m<sup>3</sup> at GOR 4</td></tr>
+      <tr><td>Membrane area installed</td><td class="num">15 m<sup>2</sup></td><td>Eq. (7.4) + margin</td></tr>
+      <tr><td>Feed heater area</td><td class="num">2.0 m<sup>2</sup></td><td>Eq. (6.9)</td></tr>
+      <tr><td>Parasitic electrical load</td><td class="num">1.7 kW</td><td>Pumps + dry cooler fan</td></tr>
+      <tr><td>Specific electrical energy</td><td class="num">10.3 kWh/m<sup>3</sup></td><td>Of MD permeate</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="n">8.2</span>Water balance under three architectures</h3>
+  <p>The recovery island addresses the blowdown; the cooling architecture addresses the evaporation. Because evaporation is three quarters of the make-up demand, the two measures are not alternatives — the architectural change dominates, and recovery closes the remainder.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Water balance under three cooling and recovery cases">
+      <style>
+        .wl{font-family:"IBM Plex Sans";font-size:13px;fill:#14201C}
+        .wm{font-family:"IBM Plex Mono";font-size:13px;fill:#14201C}
+        .wn{font-family:"IBM Plex Sans";font-size:11.5px;fill:#78877F}
+      </style>
+      <text class="wn" x="300" y="26">make-up water demand, m³/day  (evaporation ▮ + net blowdown ▮)</text>
+
+      <text class="wl" x="286" y="76" text-anchor="end" font-weight="600">A · Open tower, no recovery</text>
+      <rect x="300" y="58" width="524" height="26" fill="#B84D22" opacity=".78"/>
+      <rect x="824" y="58" width="118" height="26" fill="#7C5E28" opacity=".8"/>
+      <text class="wm" x="300" y="102">93.2</text>
+      <text class="wn" x="352" y="102">evaporation 69.9 · blowdown 23.3 — today's Indian fleet</text>
+
+      <text class="wl" x="286" y="152" text-anchor="end" font-weight="600">B · Open tower + RO–MD recovery</text>
+      <rect x="300" y="134" width="524" height="26" fill="#B84D22" opacity=".78"/>
+      <rect x="824" y="134" width="9" height="26" fill="#7C5E28" opacity=".8"/>
+      <text class="wm" x="300" y="178">71.7</text>
+      <text class="wn" x="352" y="178">−23 % — blowdown almost eliminated, evaporation untouched</text>
+
+      <text class="wl" x="286" y="228" text-anchor="end" font-weight="600">C · Closed loop + recovery</text>
+      <rect x="300" y="210" width="73" height="26" fill="#B84D22" opacity=".78"/>
+      <rect x="373" y="210" width="2" height="26" fill="#7C5E28" opacity=".8"/>
+      <text class="wm" x="300" y="254">9.9</text>
+      <text class="wn" x="352" y="254">−89 % — dry cooler with adiabatic assist; this is the greenfield target</text>
+
+      <line x1="300" y1="44" x2="300" y2="270" stroke="#B2BDB5" stroke-width="1"/>
+    </svg>
+    <figcaption><b>Figure 8.1 — Make-up water demand under three cases.</b> Recovery alone (B) removes 23 % of demand because it can only address the blowdown. Architectural change plus recovery (C) removes 89 %. The engineering conclusion is that <em>the recovery island is a retrofit measure for the existing evaporative fleet</em>, while new-build facilities should adopt closed-loop rejection and use the recovered heat elsewhere in the cascade.</figcaption>
+  </figure>
+
+  <h3><span class="n">8.3</span>Alternative configuration: MD without RO</h3>
+  <p>An MD-only train treating the full blowdown was evaluated as an alternative. At 75 % recovery it yields 728 L/h of permeate, requires 120 kW of heat and 56 m<sup>2</sup> of membrane — roughly four times the area and duty of the hybrid for the same total water recovery, because MD is applied to a dilute stream where RO is far cheaper. It is retained only as a fallback for sites where the blowdown chemistry (high silica, high hardness) makes RO pretreatment uneconomic.</p>
+</section>
+
+<!-- ===================== 9 ===================== -->
+<section class="pb" id="s9">
+  <h2 class="sec"><span class="n">9</span>Instrumentation and control</h2>
+
+  <h3><span class="n">9.1</span>Instrumentation schedule</h3>
+  <table>
+    <caption><b>Table 9.1</b> — Instrumentation for the recovery island and bench rig.</caption>
+    <thead><tr><th>Tag</th><th>Measurement</th><th>Type</th><th class="num">Range</th><th class="num">Accuracy</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">TT-01/02</td><td>Coolant supply / return</td><td>RTD Pt100 Class A</td><td class="num">0–100 °C</td><td class="num">± 0.15 K</td><td>Heat duty, cascade band</td></tr>
+      <tr><td class="mono">TT-03/04</td><td>MD feed in / out</td><td>RTD Pt100 Class A</td><td class="num">0–100 °C</td><td class="num">± 0.15 K</td><td>Driving force, Eq. (7.1)</td></tr>
+      <tr><td class="mono">TT-05/06</td><td>Permeate in / out</td><td>RTD Pt100 Class A</td><td class="num">0–100 °C</td><td class="num">± 0.15 K</td><td>Condenser duty</td></tr>
+      <tr><td class="mono">FT-01</td><td>Coolant flow</td><td>Electromagnetic</td><td class="num">0–3 000 L/min</td><td class="num">± 0.5 % rdg</td><td>Energy balance closure</td></tr>
+      <tr><td class="mono">FT-02/03</td><td>Blowdown, permeate</td><td>Electromagnetic</td><td class="num">0–2 000 L/h</td><td class="num">± 0.5 % rdg</td><td>Flux, mass balance</td></tr>
+      <tr class="hl"><td class="mono">CT-01/02</td><td>Feed / permeate conductivity</td><td>Toroidal, 4-electrode</td><td class="num">0–50 mS/cm</td><td class="num">± 1 % rdg</td><td><strong>Wetting detection interlock</strong></td></tr>
+      <tr><td class="mono">AT-01</td><td>Fluoride</td><td>Ion-selective electrode</td><td class="num">0.02–100 mg/L</td><td class="num">± 5 %</td><td>IS 10500 compliance</td></tr>
+      <tr><td class="mono">AT-02</td><td>Nitrate</td><td>Ion-selective electrode</td><td class="num">0.1–1 000 mg/L</td><td class="num">± 5 %</td><td>IS 10500 compliance</td></tr>
+      <tr><td class="mono">AT-03</td><td>pH</td><td>Glass electrode</td><td class="num">0–14</td><td class="num">± 0.1</td><td>Scaling index, compliance</td></tr>
+      <tr><td class="mono">PDT-01</td><td>Transmembrane Δp</td><td>Differential pressure</td><td class="num">0–1 bar</td><td class="num">± 0.25 % FS</td><td>LEP margin, fouling trend</td></tr>
+      <tr><td class="mono">JT-01/03</td><td>Pump / fan power</td><td>3-phase power meter</td><td class="num">0–5 kW</td><td class="num">± 1 %</td><td>Parasitic load, SEC</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box"><span class="tag">Key measurement</span>
+    <p>Permeate conductivity (CT-02) is the primary integrity measurement. Intact membrane operation yields a permeate conductivity two to three orders of magnitude below the feed. A step increase is the unambiguous signature of pore wetting, and it precedes any detectable rise in fluoride at the ISE. It is therefore used as the interlock rather than the fluoride probe, which is slower and requires more frequent calibration.</p>
+  </div>
+
+  <h3><span class="n">9.2</span>Control philosophy</h3>
+  <figure>
+    <svg viewBox="0 0 1000 260" role="img" aria-label="Control block diagram">
+      <style>
+        .cb{fill:#fff;stroke:#14201C;stroke-width:1.5}
+        .cba{fill:#E3EFF1;stroke:#0D5361;stroke-width:1.7}
+        .ct{font-family:"IBM Plex Sans";font-size:12.5px;font-weight:700;fill:#14201C}
+        .cs{font-family:"IBM Plex Sans";font-size:11px;fill:#78877F}
+        .cl{stroke:#47574F;stroke-width:1.5;fill:none;marker-end:url(#ar)}
+        .cd{stroke:#0D5361;stroke-width:1.4;fill:none;stroke-dasharray:5 4;marker-end:url(#ar)}
+      </style>
+      <rect class="cb" x="20" y="72" width="146" height="58" rx="3"/>
+      <text class="ct" x="32" y="96">IT LOAD FORECAST</text><text class="cs" x="32" y="114">30 min horizon</text>
+
+      <rect class="cba" x="212" y="72" width="152" height="58" rx="3"/>
+      <text class="ct" x="224" y="96">SUPERVISORY</text><text class="cs" x="224" y="114">run / hold / ramp</text>
+
+      <rect class="cb" x="410" y="72" width="152" height="58" rx="3"/>
+      <text class="ct" x="422" y="96">TIC — feed temp.</text><text class="cs" x="422" y="114">slipstream valve</text>
+
+      <rect class="cb" x="608" y="72" width="152" height="58" rx="3"/>
+      <text class="ct" x="620" y="96">FIC — circulation</text><text class="cs" x="620" y="114">VFD on feed pump</text>
+
+      <rect class="cb" x="806" y="72" width="160" height="58" rx="3"/>
+      <text class="ct" x="818" y="96">MD MODULE</text><text class="cs" x="818" y="114">plant</text>
+
+      <rect class="cb" x="608" y="186" width="152" height="52" rx="3"/>
+      <text class="ct" x="620" y="208">QUALITY GATE</text><text class="cs" x="620" y="226">CT-02 / AT-01 interlock</text>
+
+      <path class="cl" d="M166 101 H212"/>
+      <path class="cl" d="M364 101 H410"/>
+      <path class="cl" d="M562 101 H608"/>
+      <path class="cl" d="M760 101 H806"/>
+      <path class="cd" d="M886 130 V212 H760"/>
+      <text class="cs" x="782" y="150">permeate quality</text>
+      <path class="cd" d="M608 212 H288 V130"/>
+      <text class="cs" x="330" y="206">divert to quarantine on high conductivity</text>
+      <path class="cd" d="M846 130 V162 H288"/>
+      <text class="cs" x="470" y="158">measured feed temperature, flux</text>
+    </svg>
+    <figcaption><b>Figure 9.1 — Control block diagram.</b> Feedback control on feed temperature and circulation rate; feed-forward from the IT load forecast so the skid ramps ahead of a change in heat availability rather than chasing it. The quality gate is an interlock, not a controller: it removes product from the delivery path rather than adjusting a setpoint.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Regulatory layer.</strong> TIC-01 modulates the slipstream control valve to hold MD feed inlet at setpoint; FIC-01 sets feed circulation to maintain channel Reynolds number and hence τ.</li>
+    <li><strong>Supervisory layer.</strong> Run/hold decision on available return temperature and buffer tank level. Below 38 °C feed the driving force does not justify parasitic power and the skid is idled.</li>
+    <li><strong>Feed-forward.</strong> A short-horizon IT load forecast anticipates heat availability, allowing the skid to pre-ramp. This is where the software layer described in §10 sits.</li>
+    <li><strong>Interlocks.</strong> High permeate conductivity → divert to quarantine; low LEP margin on PDT-01 → reduce feed pressure; high LSI → increase blowdown or dose antiscalant.</li>
+  </ul>
+</section>
+
+<!-- ===================== 10 ===================== -->
+<section class="pb" id="s10">
+  <h2 class="sec"><span class="n">10</span>System simulation software</h2>
+  <p class="lede">A real-time system model has been implemented as a working console. Its purpose is engineering: it propagates a change at any point in the chain through every downstream calculation, so the coupling between architecture, heat grade, flux and permeate chemistry can be examined interactively rather than through static spreadsheets.</p>
+  <p>The model implements the equations of §6 and §7 directly — Eq. (6.1) through (6.7) for the thermal and water balance, Eq. (7.1) to (7.3) for the membrane, and the concentration-then-rejection chain for permeate chemistry. It is not an animation; every displayed quantity is computed.</p>
+
+  <figure><div class="figbox"><img src="fig/coldplate.png" alt="Cold plate simulation"></div>
+    <figcaption><b>Figure 10.1 — Cold plate module.</b> Coolant elements are coloured by the local fluid temperature interpolated between supply and return, and advected at the true volumetric flow rate. Junction temperature is evaluated from Eq. (6.3); the throttle condition is flagged when T<sub>j</sub> exceeds 85 °C.</figcaption>
+  </figure>
+
+  <figure><div class="figbox"><img src="fig/waterbal.png" alt="Water balance comparison"></div>
+    <figcaption><b>Figure 10.2 — Architecture water balance.</b> Evaporation and blowdown per hour at the current heat load, computed from Eq. (6.5) and (6.6), for open tower against closed loop. Switching architecture in the model reproduces the Case A → Case C comparison of Fig. 8.1.</figcaption>
+  </figure>
+
+  <figure><div class="figbox"><img src="fig/mdmodule.png" alt="Membrane distillation module simulation"></div>
+    <figcaption><b>Figure 10.3 — Membrane module.</b> Vapour transits across the pores occur at a rate proportional to the computed flux; dissolved species are rejected at the membrane face. Shown here <span class="chip bad">during an injected wetting fault</span>: three pores breached, ion breakthrough visible, rejection fallen from 99.4 % to 84.8 %. This is the failure mode the CT-02 interlock (§9.1) is specified to detect.</figcaption>
+  </figure>
+
+  <figure><div class="figbox"><img src="fig/mdcharts.png" alt="Flux model and polarisation"></div>
+    <figcaption><b>Figure 10.4 — Transport model outputs.</b> Left: the flux curve of Fig. 7.2 with the live operating point. Centre: the temperature profile of Fig. 7.1, distinguishing measured from effective ΔT. Right: permeate chemistry against IS 10500, with fluoride in breach under the injected fault.</figcaption>
+  </figure>
+
+  <figure><div class="figbox"><img src="fig/cascade.png" alt="Heat cascade and dispatch"></div>
+    <figcaption><b>Figure 10.5 — Heat cascade and dispatch.</b> Left: the grade bands of Table 6.1, with the current coolant return highlighted. Right: heat rejected against heat consumed by the recovery island, with a 30-minute forecast — the feed-forward signal of Fig. 9.1.</figcaption>
+  </figure>
+</section>
+
+<!-- ===================== 11 ===================== -->
+<section class="pb" id="s11">
+  <h2 class="sec"><span class="n">11</span>Experimental validation plan</h2>
+
+  <h3><span class="n">11.1</span>Objective of the experimental work</h3>
+  <p>Two quantities in the design are taken from literature and must be measured for the specific membrane and feed: the membrane distillation coefficient <em>B</em> in Eq. (7.1), and the ion rejection — particularly for fluoride — at the operating temperatures of interest. A third, the polarisation coefficient τ, is inferred from the difference between measured flux and the flux predicted from bulk temperatures.</p>
+
+  <h3><span class="n">11.2</span>Bench rig</h3>
+  <p>A flat-sheet direct-contact MD cell of 0.5–1.0 m<sup>2</sup> effective area, with counter-current feed and permeate channels separated by the test membrane. DCMD is selected for the rig rather than the multi-effect configuration of the plant because it isolates the single membrane transport step cleanly, which is what <em>B</em> describes.</p>
+  <ul>
+    <li>Two thermostatic circulators, ± 0.1 K stability, setting feed and permeate bulk temperatures.</li>
+    <li>Gear pumps with VFD for independent channel velocity control.</li>
+    <li>Permeate collected on a balance; flux by gravimetric rate, cross-checked against FT-03.</li>
+    <li>Instrumentation per Table 9.1, logged at 1 Hz.</li>
+    <li>Synthetic feed made up to Devanahalli blowdown chemistry: TDS 1 680 mg/L, F<sup>−</sup> 7.2 mg/L, NO<sub>3</sub><sup>−</sup> 152 mg/L, hardness as CaCO<sub>3</sub> 480 mg/L; and a concentrated variant at 6 720 mg/L representing the RO reject.</li>
+  </ul>
+
+  <h3><span class="n">11.3</span>Test matrix</h3>
+  <table>
+    <thead><tr><th>Series</th><th>Variable</th><th class="num">Levels</th><th>Held constant</th><th>Measured response</th></tr></thead>
+    <tbody>
+      <tr><td>A — driving force</td><td>Feed bulk temperature</td><td class="num">40, 45, 50, 55, 60 °C</td><td>T<sub>p</sub> = 25 °C, v = 0.15 m/s</td><td>Flux → regression for <em>B</em></td></tr>
+      <tr><td>B — polarisation</td><td>Channel velocity</td><td class="num">0.05, 0.10, 0.15, 0.25 m/s</td><td>T<sub>f</sub> = 50 °C</td><td>Flux → inferred τ</td></tr>
+      <tr><td>C — concentration</td><td>Concentration factor</td><td class="num">1×, 2×, 4×, 8×, 10×</td><td>T<sub>f</sub> = 50 °C</td><td>Flux decline, scaling onset</td></tr>
+      <tr><td>D — rejection</td><td>Feed chemistry</td><td class="num">2 variants</td><td>T<sub>f</sub> = 50 °C</td><td>Permeate F<sup>−</sup>, NO<sub>3</sub><sup>−</sup>, conductivity</td></tr>
+      <tr><td>E — endurance</td><td>Time</td><td class="num">100 h continuous</td><td>Design point</td><td>Flux decline, wetting onset</td></tr>
+      <tr><td>F — membrane</td><td>Material / pore size</td><td class="num">PTFE 0.2, PTFE 0.45, PVDF 0.22</td><td>T<sub>f</sub> = 50 °C</td><td><em>B</em>, LEP, contact angle</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="n">11.4</span>Uncertainty analysis</h3>
+  <p>Flux is determined gravimetrically, J = m / (ρ A<sub>m</sub> t). Propagating the component uncertainties by the root-sum-square method:</p>
+  <div class="eq"><span class="body">( u<sub>J</sub>/J )<sup>2</sup> = ( u<sub>m</sub>/m )<sup>2</sup> + ( u<sub>A</sub>/A )<sup>2</sup> + ( u<sub>t</sub>/t )<sup>2</sup> &nbsp;⟹&nbsp; u<sub>J</sub>/J ≈ ± 2.6 %</span><span class="num">(11.1)</span></div>
+  <p>The driving force carries the temperature uncertainty through the Antoine derivative, ∂p<sub>w</sub>/∂T ≈ 0.30 kPa/K at 45 °C. With u<sub>T</sub> = ± 0.15 K on each of four RTDs, the propagated uncertainty in Δp is approximately ± 2.4 %, giving a combined uncertainty in <em>B</em> of about ± 3.6 %. Repeatability across three runs is to be reported separately.</p>
+
+  <h3><span class="n">11.5</span>Acceptance criteria</h3>
+  <table>
+    <thead><tr><th>Criterion</th><th class="num">Target</th><th>Consequence if not met</th></tr></thead>
+    <tbody>
+      <tr><td>Measured <em>B</em> against assumed 3.0 × 10<sup>−3</sup></td><td class="num">within ± 20 %</td><td>Re-size module area per Eq. (7.4); design method unaffected</td></tr>
+      <tr><td>Fluoride rejection at design point</td><td class="num">&gt; 99 %</td><td>Additional polishing stage required before reuse</td></tr>
+      <tr><td>Flux decline over 100 h</td><td class="num">&lt; 15 %</td><td>Revise antiscalant regime and CIP interval</td></tr>
+      <tr><td>Energy balance closure on the rig</td><td class="num">± 5 %</td><td>Instrumentation or insulation fault; re-commission</td></tr>
+      <tr><td>Inferred τ against assumed 0.75</td><td class="num">within ± 0.08</td><td>Revise spacer geometry or channel velocity</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 12 ===================== -->
+<section class="pb" id="s12">
+  <h2 class="sec"><span class="n">12</span>Deliverables, timeline and budget</h2>
+
+  <h3><span class="n">12.1</span>Deliverables</h3>
+  <ol>
+    <li>Validated thermal design method and sizing procedure for a waste-heat-driven MD island, applicable to any facility given its heat-rejection profile and blowdown chemistry.</li>
+    <li>Experimentally determined <em>B</em>, τ and ion rejection for the selected membrane on Devanahalli-chemistry feed.</li>
+    <li>Calibrated system simulation model with a documented equation set.</li>
+    <li>Process flow diagram, stream table, equipment datasheets and instrumentation schedule at design-basis level.</li>
+    <li>Project report and a conference-standard paper on low-grade MD design.</li>
+  </ol>
+
+  <h3><span class="n">12.2</span>Timeline</h3>
+  <figure>
+    <svg viewBox="0 0 1000 250" role="img" aria-label="Project Gantt chart over eight months">
+      <style>
+        .gl{font-family:"IBM Plex Sans";font-size:12px;fill:#14201C}
+        .gm{font-family:"IBM Plex Mono";font-size:11px;fill:#78877F}
+        .gb{fill:#0D5361;opacity:.85}
+        .gb2{fill:#96590F;opacity:.85}
+      </style>
+      <g class="gm">
+        <text x="316" y="26" text-anchor="middle">M1</text><text x="392" y="26" text-anchor="middle">M2</text>
+        <text x="468" y="26" text-anchor="middle">M3</text><text x="544" y="26" text-anchor="middle">M4</text>
+        <text x="620" y="26" text-anchor="middle">M5</text><text x="696" y="26" text-anchor="middle">M6</text>
+        <text x="772" y="26" text-anchor="middle">M7</text><text x="848" y="26" text-anchor="middle">M8</text>
+      </g>
+      <g stroke="#EDF1EE"><line x1="278" y1="34" x2="278" y2="228"/><line x1="354" y1="34" x2="354" y2="228"/>
+        <line x1="430" y1="34" x2="430" y2="228"/><line x1="506" y1="34" x2="506" y2="228"/>
+        <line x1="582" y1="34" x2="582" y2="228"/><line x1="658" y1="34" x2="658" y2="228"/>
+        <line x1="734" y1="34" x2="734" y2="228"/><line x1="810" y1="34" x2="810" y2="228"/>
+        <line x1="886" y1="34" x2="886" y2="228"/></g>
+
+      <text class="gl" x="266" y="52" text-anchor="end">Literature review, design basis</text>
+      <rect class="gb" x="278" y="40" width="152" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="80" text-anchor="end">Thermal &amp; transport modelling</text>
+      <rect class="gb" x="278" y="68" width="228" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="108" text-anchor="end">Rig design &amp; procurement</text>
+      <rect class="gb2" x="354" y="96" width="152" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="136" text-anchor="end">Fabrication &amp; commissioning</text>
+      <rect class="gb2" x="506" y="124" width="76" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="164" text-anchor="end">Test campaign, series A–F</text>
+      <rect class="gb" x="582" y="152" width="152" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="192" text-anchor="end">Model calibration &amp; sizing method</text>
+      <rect class="gb" x="658" y="180" width="152" height="16" rx="2"/>
+
+      <text class="gl" x="266" y="220" text-anchor="end">Report &amp; paper</text>
+      <rect class="gb" x="772" y="208" width="114" height="16" rx="2"/>
+    </svg>
+    <figcaption><b>Figure 12.1 — Project schedule.</b> Blue: analytical and modelling work. Amber: hardware. The critical path runs through rig procurement; long-lead items are the membranes and the thermostatic circulators, ordered in M2.</figcaption>
+  </figure>
+
+  <h3><span class="n">12.3</span>Bill of materials and budget</h3>
+  <table>
+    <caption><b>Table 12.1</b> — Indicative budget.</caption>
+    <thead><tr><th>Item</th><th>Specification</th><th class="num">Cost (₹)</th></tr></thead>
+    <tbody>
+      <tr><td>Flat-sheet MD test cell</td><td>Stainless, spacer-filled channels, 0.5–1.0 m<sup>2</sup></td><td class="num">1,80,000</td></tr>
+      <tr><td>Membrane coupons</td><td>PTFE 0.2 / 0.45 µm, PVDF 0.22 µm</td><td class="num">45,000</td></tr>
+      <tr><td>Thermostatic circulators (2)</td><td>± 0.1 K stability, 2 kW heating</td><td class="num">2,20,000</td></tr>
+      <tr><td>Gear pumps with VFD (2)</td><td>0–10 L/min, chemically resistant</td><td class="num">60,000</td></tr>
+      <tr><td>RTDs, flow meters, DAQ</td><td>Per Table 9.1; 16-channel logger</td><td class="num">2,40,000</td></tr>
+      <tr><td>Fluoride / nitrate ISE and meter</td><td>With calibration standards</td><td class="num">95,000</td></tr>
+      <tr><td>Analytical balance, chemicals</td><td>0.01 g, reagent-grade salts, antiscalant</td><td class="num">70,000</td></tr>
+      <tr><td>Fabrication, piping, insulation</td><td>Workshop time, fittings, lagging</td><td class="num">80,000</td></tr>
+      <tr><td>Contingency</td><td>≈ 6 %</td><td class="num">55,000</td></tr>
+      <tr class="hl"><td colspan="2"><strong>Total</strong></td><td class="num"><strong>9,45,000</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 13 ===================== -->
+<section id="s13">
+  <h2 class="sec"><span class="n">13</span>Risk register</h2>
+  <table>
+    <thead><tr><th style="width:44mm">Risk</th><th class="num" style="width:14mm">Likel.</th><th class="num" style="width:14mm">Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Membrane wetting during endurance testing</td><td class="num">Medium</td><td class="num">High</td><td>LEP-verified membranes; feed degassing; permeate conductivity interlock; spare coupons budgeted</td></tr>
+      <tr><td>Scaling at high concentration factor (Series C)</td><td class="num">High</td><td class="num">Medium</td><td>Antiscalant dosing; LSI monitoring; acid CIP between runs; accept a lower recovery limit as a result</td></tr>
+      <tr><td>Measured <em>B</em> substantially below literature</td><td class="num">Medium</td><td class="num">Medium</td><td>Module area is a linear function of <em>B</em> (Eq. 7.4); the design method is unaffected, only the sizing</td></tr>
+      <tr><td>τ substantially below 0.75</td><td class="num">Medium</td><td class="num">Medium</td><td>Series B quantifies it directly; mitigate with spacer redesign or higher channel velocity, at a pumping-power cost</td></tr>
+      <tr><td>Junction temperature margin unacceptable to an operator at W4</td><td class="num">Medium</td><td class="num">High</td><td>W3 fallback quantified in Table 7.1: 45 % flux penalty, 17.2 m<sup>2</sup> area. Design remains feasible</td></tr>
+      <tr><td>Long-lead procurement delay</td><td class="num">Medium</td><td class="num">Medium</td><td>Order membranes and circulators in M2; modelling work (M1–M4) is off the critical path</td></tr>
+      <tr><td>Concentrate disposal route unavailable at a host site</td><td class="num">Low</td><td class="num">High</td><td>Interface conditions specified in §7.6 so the duty can be tendered separately; out of project scope</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 14 ===================== -->
+<section id="s14">
+  <h2 class="sec"><span class="n">14</span>Nomenclature and references</h2>
+
+  <h3><span class="n">14.1</span>Nomenclature</h3>
+  <div class="two">
+    <table>
+      <tbody>
+        <tr><td class="mono">A<sub>m</sub></td><td>Membrane area, m<sup>2</sup></td></tr>
+        <tr><td class="mono">a<sub>w</sub></td><td>Water activity, –</td></tr>
+        <tr><td class="mono">B</td><td>Membrane distillation coefficient, L m<sup>−2</sup> h<sup>−1</sup> Pa<sup>−1</sup></td></tr>
+        <tr><td class="mono">C<sub>r</sub></td><td>Heat capacity rate ratio, –</td></tr>
+        <tr><td class="mono">c<sub>p</sub></td><td>Specific heat capacity, kJ kg<sup>−1</sup> K<sup>−1</sup></td></tr>
+        <tr><td class="mono">CoC</td><td>Cycles of concentration, –</td></tr>
+        <tr><td class="mono">GOR</td><td>Gained output ratio, –</td></tr>
+        <tr><td class="mono">h<sub>fg</sub></td><td>Enthalpy of vaporisation, kJ kg<sup>−1</sup></td></tr>
+        <tr><td class="mono">J</td><td>Permeate flux, L m<sup>−2</sup> h<sup>−1</sup></td></tr>
+        <tr><td class="mono">Kn</td><td>Knudsen number, –</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr><td class="mono">NTU</td><td>Number of transfer units, –</td></tr>
+        <tr><td class="mono">p<sub>w</sub></td><td>Saturation vapour pressure of water, Pa</td></tr>
+        <tr><td class="mono">Q̇</td><td>Heat transfer rate, kW</td></tr>
+        <tr><td class="mono">R</td><td>Thermal resistance, K W<sup>−1</sup></td></tr>
+        <tr><td class="mono">T<sub>fm</sub>, T<sub>pm</sub></td><td>Membrane surface temperatures, °C</td></tr>
+        <tr><td class="mono">T<sub>j</sub></td><td>Junction temperature, °C</td></tr>
+        <tr><td class="mono">U</td><td>Overall heat transfer coefficient, kW m<sup>−2</sup> K<sup>−1</sup></td></tr>
+        <tr><td class="mono">ΔT<sub>lm</sub></td><td>Log mean temperature difference, K</td></tr>
+        <tr><td class="mono">ε</td><td>Heat exchanger effectiveness, –</td></tr>
+        <tr><td class="mono">τ</td><td>Temperature polarisation coefficient, –</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="n">14.2</span>References</h3>
+  <ol class="refs">
+    <li>ASHRAE Technical Committee 9.9. <em>Thermal Guidelines for Data Processing Environments</em>, 5th ed. Liquid cooling classes W1–W5.</li>
+    <li>Bureau of Indian Standards. <em>IS 10500: Drinking Water — Specification.</em></li>
+    <li>Central Ground Water Board. <em>Dynamic Ground Water Resource Assessment of India</em>, 2024; and <em>Annual Ground Water Quality Report</em>, 2024.</li>
+    <li>Council on Energy, Environment and Water. Analysis of data centre water and electricity demand in India, 2026.</li>
+    <li>Alkhudhiri, A., Darwish, N., Hilal, N. Membrane distillation: a comprehensive review. <em>Desalination</em>, 287, 2–18.</li>
+    <li>Lawson, K. W., Lloyd, D. R. Membrane distillation. <em>Journal of Membrane Science</em>, 124(1), 1–25.</li>
+    <li>Khayet, M. Membranes and theoretical modeling of membrane distillation: a review. <em>Advances in Colloid and Interface Science</em>, 164(1–2), 56–88.</li>
+    <li>Removal of fluoride in membrane-based water and wastewater treatment technologies: performance review. <em>Journal of Environmental Management</em>.</li>
+    <li>Fluoride removal from brackish groundwater by direct contact membrane distillation. <em>Journal of Environmental Chemical Engineering</em>.</li>
+    <li>Global groundwater contamination by geogenic fluoride. <em>Environmental Geochemistry and Health</em>, Springer, 2026.</li>
+    <li>Incropera, F. P., DeWitt, D. P. <em>Fundamentals of Heat and Mass Transfer.</em> Wiley — ε–NTU method, Ch. 11.</li>
+    <li>Kays, W. M., London, A. L. <em>Compact Heat Exchangers.</em> McGraw-Hill.</li>
+    <li>Cooling Technology Institute. <em>ATC-105: Acceptance Test Code for Water Cooling Towers</em> — evaporation and blowdown relations.</li>
+    <li>Government of India. <em>Liquid Waste Management Rules</em>, 2024.</li>
+    <li>Government of Karnataka. <em>Karnataka Data Centre Policy 2022.</em></li>
+    <li>World Health Organization. <em>Guidelines for Drinking-water Quality</em>, 4th ed.</li>
+    <li>Zero liquid discharge implementation in Indian industry — technology and cost review.</li>
+  </ol>
+
+  <div class="box" style="margin-top:6mm"><span class="tag">Statement on the present state of the work</span>
+    <p>The thermal and mass-transfer model described in §6 and §7 is complete and implemented. All quantities reported in this proposal are computed from that model using property data and coefficients taken from the literature cited above. <strong>No experimental measurements have yet been taken.</strong> The purpose of the work proposed here is to replace the two assumed coefficients — <em>B</em> and τ — and the assumed ion rejection with measured values, and to establish the validity of the sizing method at the low heat grade characteristic of data centre waste heat.</p>
+  </div>
+</section>
