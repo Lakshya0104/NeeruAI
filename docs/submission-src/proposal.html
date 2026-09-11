@@ -913,23 +913,23 @@ figcaption b{color:var(--ink)}
   <p class="lede">A real-time system model has been implemented as a working console. Its purpose is engineering: it propagates a change at any point in the chain through every downstream calculation, so the coupling between architecture, heat grade, flux and permeate chemistry can be examined interactively rather than through static spreadsheets.</p>
   <p>The model implements the equations of §6 and §7 directly — Eq. (6.1) through (6.7) for the thermal and water balance, Eq. (7.1) to (7.3) for the membrane, and the concentration-then-rejection chain for permeate chemistry. It is not an animation; every displayed quantity is computed.</p>
 
-  <figure><div class="figbox"><img src="fig/coldplate.png" alt="Cold plate simulation"></div>
+  <figure><div class="figbox"><img src="../images/coldplate.png" alt="Cold plate simulation"></div>
     <figcaption><b>Figure 10.1 — Cold plate module.</b> Coolant elements are coloured by the local fluid temperature interpolated between supply and return, and advected at the true volumetric flow rate. Junction temperature is evaluated from Eq. (6.3); the throttle condition is flagged when T<sub>j</sub> exceeds 85 °C.</figcaption>
   </figure>
 
-  <figure><div class="figbox"><img src="fig/waterbal.png" alt="Water balance comparison"></div>
+  <figure><div class="figbox"><img src="../images/waterbal.png" alt="Water balance comparison"></div>
     <figcaption><b>Figure 10.2 — Architecture water balance.</b> Evaporation and blowdown per hour at the current heat load, computed from Eq. (6.5) and (6.6), for open tower against closed loop. Switching architecture in the model reproduces the Case A → Case C comparison of Fig. 8.1.</figcaption>
   </figure>
 
-  <figure><div class="figbox"><img src="fig/mdmodule.png" alt="Membrane distillation module simulation"></div>
+  <figure><div class="figbox"><img src="../images/mdmodule.png" alt="Membrane distillation module simulation"></div>
     <figcaption><b>Figure 10.3 — Membrane module.</b> Vapour transits across the pores occur at a rate proportional to the computed flux; dissolved species are rejected at the membrane face. Shown here <span class="chip bad">during an injected wetting fault</span>: three pores breached, ion breakthrough visible, rejection fallen from 99.4 % to 84.8 %. This is the failure mode the CT-02 interlock (§9.1) is specified to detect.</figcaption>
   </figure>
 
-  <figure><div class="figbox"><img src="fig/mdcharts.png" alt="Flux model and polarisation"></div>
+  <figure><div class="figbox"><img src="../images/mdcharts.png" alt="Flux model and polarisation"></div>
     <figcaption><b>Figure 10.4 — Transport model outputs.</b> Left: the flux curve of Fig. 7.2 with the live operating point. Centre: the temperature profile of Fig. 7.1, distinguishing measured from effective ΔT. Right: permeate chemistry against IS 10500, with fluoride in breach under the injected fault.</figcaption>
   </figure>
 
-  <figure><div class="figbox"><img src="fig/cascade.png" alt="Heat cascade and dispatch"></div>
+  <figure><div class="figbox"><img src="../images/cascade.png" alt="Heat cascade and dispatch"></div>
     <figcaption><b>Figure 10.5 — Heat cascade and dispatch.</b> Left: the grade bands of Table 6.1, with the current coolant return highlighted. Right: heat rejected against heat consumed by the recovery island, with a 30-minute forecast — the feed-forward signal of Fig. 9.1.</figcaption>
   </figure>
 </section>

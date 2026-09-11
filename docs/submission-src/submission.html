@@ -658,58 +658,58 @@ db.createRole({
   <p class="lede">A six-page operations console. Every figure below is a screenshot of the running simulation, not a mockup — and every number in every panel derives from one shared physics chain, so a control changed on one page moves every downstream page consistently.</p>
 
   <figure>
-    <img src="fig/hero.png" alt="NeeruAI console overview page">
+    <img src="../images/hero.png" alt="NeeruAI console overview page">
     <figcaption><b>Figure 1 — Overview.</b> The thesis page: the three layers, the five figures that establish the problem, and a live loop diagram whose values come from the running simulation. The final figure — zero facilities required to publish what they use — is the business case.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/coldplate.png" alt="Cold plate cross-section simulation">
+    <img src="../images/coldplate.png" alt="Cold plate cross-section simulation">
     <figcaption><b>Figure 2 — Stage 01, cold plate cross-section.</b> Coolant particles travel the microchannels; their colour is the real fluid temperature at that point, interpolated between the live supply and return values, and their speed is the real flow rate. Junction temperature is computed from coolant inlet plus loop rise, and nodes throttle above 85 °C.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/waterbal.png" alt="Open tower versus closed loop water balance">
+    <img src="../images/waterbal.png" alt="Open tower versus closed loop water balance">
     <figcaption><b>Figure 3 — Stage 01, architecture comparison.</b> Water leaving the site per hour at the current heat load, split into evaporation and blowdown, for open evaporative tower against closed liquid loop. Toggling the architecture live is the demonstration of Layer 1: roughly 87% less water leaves the site before any recovery has occurred.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/schematic.png" alt="Plant schematic">
+    <img src="../images/schematic.png" alt="Plant schematic">
     <figcaption><b>Figure 4 — Stage 02, plant schematic.</b> The whole plant on one sheet, banded by layer. Every pipe animates at a speed proportional to its actual flow and fades when a stream goes idle; hot coolant lines shift colour with return temperature. The long return path at the bottom is the closed loop — makeup served from verified permeate before any borewell top-up.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/cascade.png" alt="Heat cascade and forecast chart">
+    <img src="../images/cascade.png" alt="Heat cascade and forecast chart">
     <figcaption><b>Figure 5 — Stage 02, heat cascade and dispatch forecast.</b> Left: temperature bands with the current coolant return highlighted — below 38 °C the driving force collapses and the dispatch engine idles the skid. Right: heat rejected against heat consumed by the MD skid, with the dashed +30 minute forecast the dispatch engine is acting on. The gap between the two lines is the addressable opportunity, live.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/mdmodule.png" alt="Membrane distillation pore-scale simulation">
+    <img src="../images/mdmodule.png" alt="Membrane distillation pore-scale simulation">
     <figcaption><b>Figure 6 — Stage 03, membrane distillation at pore scale.</b> Feed channel with hot concentrated blowdown above, hydrophobic PTFE membrane with 0.2 µm pores, permeate channel and condenser plate below. Dashed vertical transits are water molecules crossing as vapour; coloured particles bouncing off the membrane are fluoride, nitrate and salt rejection events. Shown here <span class="chip fail">during a wetting fault</span> — three pores breached, ions convecting through, rejection collapsed from 99.4% to 84.8%.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/mdcharts.png" alt="Flux model, temperature polarisation, permeate quality">
+    <img src="../images/mdcharts.png" alt="Flux model, temperature polarisation, permeate quality">
     <figcaption><b>Figure 7 — Stage 03, the model behind the animation.</b> Left: flux against feed temperature from the Antoine relation, with the live operating point and the shaded region below 38 °C where the skid idles. Centre: the temperature profile across both boundary layers, separating measured ΔT from the effective ΔT the membrane actually sees. Right: permeate chemistry against BIS IS 10500, with fluoride in breach during the injected fault.</figcaption>
   </figure>
 
   <figure>
-    <img src="fig/mongo.png" alt="MongoDB pipeline inspector">
+    <img src="../images/mongo.png" alt="MongoDB pipeline inspector">
     <figcaption><b>Figure 8 — Stage 04, MongoDB pipeline inspector.</b> The actual documents being written, with a running write count and the change-stream event feed beneath. Four tabs: the time-series reading with its vendor-specific payload, the hash-chained batch, the change-stream-written dispatch decision with its human-readable justification, and the <code>$group</code> rollup that produces the compliance report.</figcaption>
   </figure>
 
   <div class="two">
     <figure>
-      <img src="fig/ledger.png" alt="Hash-chained batch ledger">
+      <img src="../images/ledger.png" alt="Hash-chained batch ledger">
       <figcaption><b>Figure 9 — The ledger.</b> Each row shows litres in and out, recovery, heat used, fluoride, destination, and the <code>prev_hash ▸ hash</code> link. Failed batches are shaded and routed to quarantine — and they stay on the record. A log that only records successes is not a verification system.</figcaption>
     </figure>
     <figure>
-      <img src="fig/passport.png" alt="Quality gate and digital water passport">
+      <img src="../images/passport.png" alt="Quality gate and digital water passport">
       <figcaption><b>Figure 10 — Quality gate and water passport.</b> The full record for one batch: source, feed temperature, litres, heat used, all three contaminants against their limits, verdict, destination, and both hashes. It answers five questions checkably that no Indian regulator can answer about any facility today.</figcaption>
     </figure>
   </div>
 
   <figure>
-    <img src="fig/compliance.png" alt="Dispatch ranking and statutory water balance">
+    <img src="../images/compliance.png" alt="Dispatch ranking and statutory water balance">
     <figcaption><b>Figure 11 — Stage 05, dispatch and statutory compliance.</b> Left: destinations ranked by CGWB stage of extraction, with cooling makeup served first so the loop closes before anything leaves the fence. Right: the water balance in the shape KSPCB or BWSSB would consume, with the reuse fraction scored against the Liquid Waste Management Rules 2024 targets. Note that <em>withdrawn</em> and <em>consumed</em> are separate rows — the distinction most corporate reporting blurs.</figcaption>
   </figure>
 
