@@ -34,6 +34,7 @@ This repository contains a working prototype of a system built for that gap.
 - [The idea in one minute](#the-idea-in-one-minute)
 - [Run it](#run-it)
 - [Inside the console](#inside-the-console)
+- [The digital twin](#the-digital-twin)
 - [Four things to try](#four-things-to-try)
 - [How the simulation works](#how-the-simulation-works)
 - [Data architecture](#data-architecture)
@@ -134,6 +135,80 @@ The quality gate, the digital water passport for the latest batch, the hash-chai
 <img src="docs/images/compliance.png" alt="Dispatch ranking and statutory water balance" width="100%">
 
 Destinations ranked by CGWB stage of extraction, with cooling makeup served first so the loop closes before anything leaves the fence. Then the statutory water balance in the shape KSPCB or BWSSB would actually consume — note that *withdrawn* and *consumed* are separate rows, the distinction most corporate reporting blurs.
+
+---
+
+## The digital twin
+
+<img src="docs/images/twin-hall.png" alt="NeeruAI digital twin — data hall" width="100%">
+
+A **live, physics-resolved 3D replica** of a data centre, driven by real meteorology. Open
+[`digital-twin/neeruai-digital-twin.html`](digital-twin/neeruai-digital-twin.html) — Three.js is vendored
+into the file, so the only thing it needs the network for is the live weather feed.
+
+### Where the data actually comes from
+
+There is no public live telemetry feed from a real data centre. There *is* a live feed of the variable that
+dominates a data centre's cooling behaviour — **the weather at the site.** Ambient wet-bulb sets the approach
+any evaporative device can reach, which sets evaporation, which sets water consumption and PUE. Every input is
+labelled in the UI with its class, and the raw API response is inspectable in the panel:
+
+| Class | Source | What it drives |
+|---|---|---|
+| <b>LIVE</b> | Open-Meteo Forecast API — keyless, CORS-enabled | Dry-bulb, RH, dew point, pressure, wind, cloud, shortwave radiation at the site's real coordinates |
+| <b>LIVE</b> | Open-Meteo hourly (72 h forward, 24 h past) | The 48-hour facility projection |
+| <b>LIVE</b> | Open-Meteo Air Quality API | PM2.5 / PM10 — dry-cooler fouling and filter loading |
+| <b>REPLAY</b> | Workload trace | Fleet utilisation. **Load a real trace** (Azure, Alibaba or Google cluster data) as CSV at runtime |
+| <b>REFERENCE</b> | SPECpower_ssj2008 curve form, ASHRAE TC 9.9, CGWB 2024, BIS IS 10500 | Power-vs-utilisation shape, thermal envelopes, extraction stage, water quality limits |
+
+If the live fetch fails the twin falls back to the **last successful real fetch** cached in `localStorage`,
+labelled as cached — it never silently substitutes invented numbers.
+
+### What is modelled
+
+Six rows, 48 racks. Rows A–C are air-cooled legacy; rows D–F are direct-to-chip liquid — a deliberately
+**mixed fleet**, because that is the Indian reality, and the two halves reject heat through completely
+different paths.
+
+- **Per rack** — SPECpower-shaped power curve, airflow from `ṁ = Q/(c_p·ΔT)`, inlet temperature raised by
+  recirculation (3 % contained, 20 % not), exhaust temperature, and junction temperature through a
+  0.045 K/W die-to-fluid resistance. Click any rack to inspect its nodes.
+- **Psychrometrics** — wet-bulb by Stull's relation from the live dry-bulb and RH, humidity ratio, enthalpy and
+  moist-air density, plotted live on a psychrometric chart against the ASHRAE A1 envelope.
+- **Heat rejection, decided every step from live ambient** — the 40 °C liquid loop dry-cools on fans alone
+  when ambient permits (**zero water**), falls back to adiabatic assist when it doesn't; the air loop runs a
+  water-side economiser only if wet-bulb allows, otherwise a chiller whose COP is derated from the live
+  condensing temperature.
+- **Water** — tower evaporation from the latent fraction of duty at the measured wet-bulb, blowdown from
+  cycles of concentration, then the RO + MD recovery island.
+- **Metrics** — PUE, pPUE and **WUE in L/kWh**, all computed rather than assumed.
+- **Sun** — the scene's lighting uses the real solar altitude and azimuth for the site's coordinates and the
+  current time.
+
+### The 48-hour projection
+
+Because the feed carries a real hourly forecast, the twin does genuine predictive work — projecting wet-bulb,
+cooling mode and water draw forward and naming the cheapest window to schedule deferrable compute.
+
+<p align="center">
+<img src="docs/images/twin-site.png" alt="Digital twin — site view" width="49%">
+<img src="docs/images/twin-plant.png" alt="Digital twin — cooling plant" width="49%">
+</p>
+
+### Running it
+
+```bash
+open digital-twin/neeruai-digital-twin.html
+```
+
+If your browser blocks the API call from a `file://` origin, serve the folder instead:
+
+```bash
+python3 -m http.server 8000    # then open http://localhost:8000/digital-twin/
+```
+
+Drag to orbit · scroll to zoom · click a rack to inspect it. Switch sites in the masthead — five real
+Indian locations with real coordinates, so each pulls genuinely different live weather.
 
 ---
 
