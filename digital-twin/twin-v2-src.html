@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeeruAI Digital Twin</title>
+<style>
+:root{
+  --paper:#EDF0EE; --surf:#FFF; --surf2:#F6F8F6; --sunk:#E6EBE7;
+  --ink:#131F1B; --ink2:#485851; --ink3:#77867F;
+  --rule:#D3DAD5; --rule2:#B5C0B8;
+  --acc:#0C505E; --acc-soft:#E0EDEF; --acc-line:#96BEC4;
+  --live:#19754A; --live-bg:#DCEEE3;
+  --replay:#1C5B82; --replay-bg:#DDE9F2;
+  --ref:#77867F; --ref-bg:#E8ECE9;
+  --warn:#96690A; --warn-bg:#F7EAD0;
+  --bad:#93301D; --bad-bg:#F7DFDA;
+  --cold:#2C6B93; --hot:#BB4C20;
+  --vp:#0A1214;
+  --sh:0 1px 0 rgba(19,31,27,.04),0 2px 12px rgba(19,31,27,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--paper);color:var(--ink);
+  font:13px/1.5 "IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;font-weight:600}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:5px}
+::-webkit-scrollbar-track{background:transparent}
+
+#app{display:grid;grid-template-rows:auto auto auto minmax(0,1fr);height:100%;overflow:hidden}
+.rail{height:3px;background:linear-gradient(90deg,#A8681C 0 16%,var(--acc) 16% 100%)}
+
+/* ── masthead ── */
+header{background:var(--surf);border-bottom:1px solid var(--rule);padding:8px 16px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.badge{width:33px;height:33px;border-radius:2px;border:1.5px solid var(--acc);background:var(--acc-soft);
+  display:grid;place-items:center;flex:none}
+.idb{margin-right:auto;min-width:0}
+.idb h1{font-size:15px;letter-spacing:-.01em}
+.idb .sub{font-size:10.5px;color:var(--ink2)}
+.hs{display:flex;flex-direction:column;line-height:1.3}
+.hs .k{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.hs .v{font-size:12.5px;font-weight:600}
+select.site{background:var(--surf);border:1px solid var(--rule2);border-radius:3px;padding:3px 6px;font-size:11.5px;max-width:210px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+.dot.ok{background:var(--live);box-shadow:0 0 0 3px var(--live-bg)}
+.dot.err{background:var(--bad);box-shadow:0 0 0 3px var(--bad-bg)}
+.dot.wait{background:var(--warn);box-shadow:0 0 0 3px var(--warn-bg)}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.32}}
+.dot.ok,.dot.wait{animation:pl 2.4s ease-in-out infinite}
+
+/* ── station nav ── */
+nav{background:var(--surf);border-bottom:1px solid var(--rule);display:flex;padding:0 16px;
+  overflow-x:auto;align-items:stretch;gap:0}
+nav button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 15px 7px;cursor:pointer;
+  display:flex;flex-direction:column;gap:1px;white-space:nowrap;color:var(--ink2);text-align:left}
+nav button .n{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--ink3);letter-spacing:.09em}
+nav button .t{font-size:12.5px}
+nav button[aria-current="page"]{border-bottom-color:var(--acc);color:var(--acc)}
+nav button[aria-current="page"] .t{font-weight:600}
+nav button[aria-current="page"] .n{color:var(--acc)}
+nav button:hover{color:var(--acc)}
+nav .spacer{margin-left:auto;display:flex;align-items:center;gap:7px;padding:5px 0}
+.btn{background:var(--surf);border:1px solid var(--rule2);border-radius:3px;padding:3px 10px;font-size:11.5px;cursor:pointer}
+.btn:hover{border-color:var(--acc);color:var(--acc)}
+.btn.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
+
+/* ── body ── */
+#main{display:grid;grid-template-columns:300px minmax(0,1fr) 320px;min-height:0;overflow:hidden}
+.col{overflow-y:auto;overflow-x:hidden;padding:10px;display:flex;flex-direction:column;gap:10px}
+.col.l{border-right:1px solid var(--rule)}
+.col.r{border-left:1px solid var(--rule)}
+#stage{position:relative;background:var(--vp);min-width:0;overflow:hidden}
+#vp{display:block;width:100%;height:100%}
+
+.card{background:var(--surf);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--sh)}
+.card>h3{padding:7px 11px;border-bottom:1px solid var(--rule);font-size:11.5px;display:flex;align-items:center;gap:7px}
+.card>h3 .tag{margin-left:auto;font-size:8px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);font-weight:400}
+.card .bd{padding:10px 11px}
+.card .bd.flush{padding:0}
+.card .bd.tight{padding:6px}
+
+.chip{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:1px 5px;border-radius:2px}
+.chip.live{background:var(--live-bg);color:var(--live)}
+.chip.replay{background:var(--replay-bg);color:var(--replay)}
+.chip.ref{background:var(--ref-bg);color:var(--ref)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
+.chip.acc{background:var(--acc-soft);color:var(--acc)}
+
+.kv{display:flex;flex-direction:column}
+.kv .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline;padding:4px 11px;border-bottom:1px solid var(--rule)}
+.kv .row:last-child{border-bottom:0}
+.kv .n{color:var(--ink2);font-size:11px}
+.kv .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:12px;font-weight:500;white-space:nowrap}
+.kv .v small{color:var(--ink3);font-weight:400;margin-left:2px;font-size:9.5px}
+.kv .bar{grid-column:1/-1;height:3px;background:var(--sunk);border-radius:2px;overflow:hidden;margin-top:2px}
+.kv .bar i{display:block;height:100%;background:var(--acc);transition:width .3s}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)}
+.kpi{background:var(--surf);padding:8px 11px}
+.kpi .k{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:18px;font-weight:500;line-height:1.25}
+.kpi .u{font-size:9.5px;color:var(--ink2);margin-left:3px;font-family:inherit}
+.kpi .n{font-size:9px;color:var(--ink3);margin-top:1px}
+.kpi.good .v{color:var(--live)} .kpi.bad .v{color:var(--bad)} .kpi.warn .v{color:var(--warn)}
+
+table{border-collapse:collapse;width:100%;font-size:10.5px}
+th,td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--rule)}
+th{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600;background:var(--surf2)}
+td.n{font-family:"IBM Plex Mono",monospace;text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+
+pre.json{margin:0;padding:8px 10px;background:var(--sunk);font-family:"IBM Plex Mono",monospace;font-size:9.5px;
+  line-height:1.5;max-height:190px;overflow:auto;white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--rule)}
+details>summary{cursor:pointer;padding:5px 11px;font-size:10px;color:var(--acc);border-top:1px solid var(--rule);user-select:none}
+details>summary:hover{background:var(--surf2)}
+.note{font-size:9.8px;color:var(--ink3);padding:7px 11px;border-top:1px solid var(--rule);line-height:1.5}
+.note b{color:var(--ink2)}
+canvas.ch{display:block;width:100%;height:auto}
+
+/* viewport overlays */
+.ov{position:absolute;pointer-events:none;font-family:"IBM Plex Mono",monospace}
+.ov.tl{top:12px;left:14px;max-width:46%}
+.ov.bl{bottom:12px;left:14px}
+.ov.br{bottom:12px;right:14px;text-align:right}
+.ov .big{font-size:22px;color:#EAF2F0;font-weight:500;letter-spacing:-.01em;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+.ov .sm{font-size:10px;color:#9EB1AD;letter-spacing:.04em;line-height:1.6}
+.ov .sm b{color:#D2E2DE;font-weight:500}
+.stationCap{position:absolute;top:12px;left:14px;max-width:44%;background:rgba(10,18,20,.86);
+  border:1px solid rgba(255,255,255,.13);border-left:3px solid var(--acc-line);border-radius:0 4px 4px 0;
+  padding:11px 14px;backdrop-filter:blur(4px);pointer-events:none}
+.stationCap .t{font-family:"IBM Plex Sans",sans-serif;font-size:14px;font-weight:600;color:#EAF2F0;margin-bottom:4px}
+.stationCap .d{font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;color:#A9BCB8;line-height:1.55}
+.legend{position:absolute;top:12px;right:14px;background:rgba(10,18,20,.84);border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;padding:8px 10px;pointer-events:none;backdrop-filter:blur(3px)}
+.legend .t{font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#8AA09B;margin-bottom:5px;font-family:"IBM Plex Mono",monospace}
+.ramp{width:130px;height:8px;border-radius:2px;background:linear-gradient(90deg,#2C6B93,#54A0B6,#D8C268,#D8893D,#BB4C20)}
+.rampl{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:9px;color:#9EB1AD;margin-top:3px}
+.legend .ri{display:flex;align-items:center;gap:6px;font-size:9.5px;color:#B6C8C4;margin-top:4px;font-family:"IBM Plex Sans",sans-serif}
+.legend .sw{width:9px;height:9px;border-radius:2px;flex:none}
+#tip{position:absolute;pointer-events:none;background:rgba(10,18,20,.95);border:1px solid rgba(255,255,255,.17);
+  color:#E2ECE9;border-radius:4px;padding:7px 9px;font-family:"IBM Plex Mono",monospace;font-size:10px;
+  display:none;z-index:5;line-height:1.55;white-space:nowrap}
+#tip b{color:#fff}
+#boot{position:absolute;inset:0;display:grid;place-items:center;background:var(--vp);z-index:10;color:#9EB1AD;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:center;transition:opacity .5s}
+#boot .bar{width:190px;height:2px;background:rgba(255,255,255,.12);margin:12px auto 0;overflow:hidden}
+#boot .bar i{display:block;height:100%;width:30%;background:var(--acc-line);animation:sw 1.1s ease-in-out infinite}
+@keyframes sw{0%{transform:translateX(-100%)}100%{transform:translateX(333%)}}
+
+.tour{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(10,18,20,.9);
+  border:1px solid rgba(255,255,255,.14);border-radius:5px;padding:9px 13px;display:none;gap:11px;align-items:center;
+  backdrop-filter:blur(4px);max-width:70%}
+.tour.on{display:flex}
+.tour .txt{font-size:11.5px;color:#D6E4E0;line-height:1.5}
+.tour .txt b{color:#fff}
+.tour button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#E2ECE9;
+  border-radius:3px;padding:4px 11px;font-size:11px;cursor:pointer;white-space:nowrap}
+.tour button:hover{background:rgba(255,255,255,.2)}
+.tour .step{font-family:"IBM Plex Mono",monospace;font-size:10px;color:#8AA09B;white-space:nowrap}
+
+.podgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;padding:9px 11px}
+.podgrid div{aspect-ratio:1;border-radius:1px}
+.uwrap{display:flex;flex-direction:column-reverse;gap:1px;padding:9px 11px}
+.u{height:5px;border-radius:1px;background:var(--sunk)}
+.u i{display:block;height:100%;border-radius:1px}
+.cmp{display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:5px 11px;border-bottom:1px solid var(--rule);align-items:baseline;font-size:11px}
+.cmp:last-child{border-bottom:0}
+.cmp .a{font-family:"IBM Plex Mono",monospace;color:var(--bad);text-align:right;min-width:62px}
+.cmp .b{font-family:"IBM Plex Mono",monospace;color:var(--live);text-align:right;min-width:62px;font-weight:600}
+@media (max-width:1300px){#main{grid-template-columns:258px minmax(0,1fr) 278px}}
+@media (max-width:1040px){
+  html,body{overflow:auto;height:auto}#app{height:auto}
+  #main{grid-template-columns:1fr}.col{border:0;border-top:1px solid var(--rule)}
+  #stage{height:60vh}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="rail"></div>
+
+<header>
+  <div class="badge" aria-hidden="true">
+    <svg width="18" height="20" viewBox="0 0 22 24">
+      <path d="M11 1.5C11 1.5 3.5 10.4 3.5 15.4A7.5 7.5 0 0 0 18.5 15.4C18.5 10.4 11 1.5 11 1.5Z" fill="none" stroke="#0C505E" stroke-width="1.6"/>
+      <path d="M6.6 15.6q2.2-2 4.4 0t4.4 0" fill="none" stroke="#0C505E" stroke-width="1.3"/>
+      <path d="M6.6 18.6q2.2-2 4.4 0t4.4 0" fill="none" stroke="#0C505E" stroke-width="1.3" opacity=".55"/>
+    </svg>
+  </div>
+  <div class="idb">
+    <h1>NeeruAI Digital Twin</h1>
+    <div class="sub">Live meteorology · real production workload traces · real server power data</div>
+  </div>
+  <div class="hs"><span class="k">Facility</span>
+    <select class="site" id="siteSel" aria-label="Facility"></select></div>
+  <div class="hs"><span class="k">Local time</span><span class="v mono" id="hClock">—</span></div>
+  <div class="hs"><span class="k">Weather feed</span><span class="v" id="hFeed"><span class="dot wait"></span>…</span></div>
+  <div class="hs"><span class="k">IT load</span><span class="v mono" id="hLoad">—</span></div>
+</header>
+
+<nav id="nav" aria-label="Stations">
+  <button data-s="site" aria-current="page"><span class="n">01</span><span class="t">Site &amp; climate</span></button>
+  <button data-s="hall"><span class="n">02</span><span class="t">Data hall</span></button>
+  <button data-s="cooling"><span class="n">03</span><span class="t">Heat rejection</span></button>
+  <button data-s="recovery"><span class="n">04</span><span class="t">NeeruAI island</span></button>
+  <button data-s="impact"><span class="n">05</span><span class="t">Impact</span></button>
+  <button data-s="data"><span class="n">06</span><span class="t">Datasets</span></button>
+  <div class="spacer">
+    <button class="btn" id="tourBtn">▶ Guided tour</button>
+    <button class="btn" id="refreshBtn">↻ Refresh feed</button>
+  </div>
+</nav>
+
+<div id="main">
+  <div class="col l" id="colL"></div>
+  <div id="stage">
+    <canvas id="vp"></canvas>
+    <div class="stationCap" id="cap"><div class="t">—</div><div class="d">—</div></div>
+    <div class="legend" id="legend">
+      <div class="t" id="legT">Rack exhaust temperature</div>
+      <div class="ramp"></div>
+      <div class="rampl"><span id="legLo">—</span><span id="legHi">—</span></div>
+      <div class="ri"><span class="sw" style="background:#3E82A8"></span>Cold aisle supply</div>
+      <div class="ri"><span class="sw" style="background:#C4623A"></span>Hot aisle return</div>
+      <div class="ri"><span class="sw" style="background:#2FA98A"></span>Recovered water</div>
+    </div>
+    <div class="ov bl">
+      <div class="sm" id="ovHint">drag to orbit · scroll to zoom · click a rack</div>
+    </div>
+    <div class="ov br">
+      <div class="sm" id="ovMode">—</div>
+      <div class="sm" id="ovSun">—</div>
+    </div>
+    <div class="tour" id="tour">
+      <span class="step" id="tourStep">1/8</span>
+      <span class="txt" id="tourTxt"></span>
+      <button id="tourPrev">‹ Back</button>
+      <button id="tourNext">Next ›</button>
+      <button id="tourEnd">Exit</button>
+    </div>
+    <div id="tip"></div>
+    <div id="boot">building facility geometry<div class="bar"><i></i></div></div>
+  </div>
+  <div class="col r" id="colR"></div>
+</div>
+</div>
+
+<script id="realdata" type="application/json">/*DATA*/</script>
+<!--THREEJS-->
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════════
+   NeeruAI Digital Twin
+   Real datasets → physics model → 3D twin, across six stations.
+   ══════════════════════════════════════════════════════════════ */
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const fmt=(v,d=0)=>(isFinite(v)?v:0).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const RD=JSON.parse($('realdata').textContent);
+
+/* ───────── real Indian sites ───────── */
+const SITES=[
+ {id:'DVN',name:'Devanahalli, Bengaluru Rural',lat:13.2437,lon:77.7172,tz:'Asia/Kolkata',
+  stage:169,block:'Devanahalli',note:'CGWB stage of extraction 169 %. Borewells ~300 m against ~60 m of recharge.'},
+ {id:'WFD',name:'Whitefield, Bengaluru Urban',lat:12.9698,lon:77.7500,tz:'Asia/Kolkata',
+  stage:118,block:'Bengaluru East',note:'Declared municipal supply; shallow wells run nitrate far above 45 mg/L.'},
+ {id:'GNO',name:'Greater Noida, Gautam Buddha Nagar',lat:28.4744,lon:77.5040,tz:'Asia/Kolkata',
+  stage:105,block:'Gautam Buddha Nagar',note:'Notified over-exploited zone. Continental climate — far wider wet-bulb swing.'},
+ {id:'VZG',name:'Tarluvada, Visakhapatnam',lat:17.7500,lon:83.1000,tz:'Asia/Kolkata',
+  stage:64,block:'Visakhapatnam',note:'Seawater cooling proposed, not deployed; clearance names no water source.'},
+ {id:'CHN',name:'Ambattur, Chennai',lat:13.1067,lon:80.1500,tz:'Asia/Kolkata',
+  stage:112,block:'Chennai',note:'High year-round wet-bulb — the hardest Indian climate for evaporative rejection.'}
+];
+let site=SITES[0];
+
+/* ───────── psychrometrics ───────── */
+const Psy={
+  wetBulb(T,RH){const r=clamp(RH,5,99);
+    return T*Math.atan(0.151977*Math.sqrt(r+8.313659))+Math.atan(T+r)-Math.atan(r-1.676331)
+      +0.00391838*Math.pow(r,1.5)*Math.atan(0.023101*r)-4.686035;},
+  pSat(T){return 133.322*Math.pow(10,8.07131-1730.63/(233.426+clamp(T,-20,99)));},
+  W(T,RH,P){const pv=this.pSat(T)*RH/100;return 0.62198*pv/Math.max(P-pv,1);},
+  h(T,W){return 1.006*T+W*(2501+1.86*T);},
+  rho(T,W,P){return P/(287.055*(T+273.15)*(1+1.6078*W));}
+};
+function solarPos(d,lat,lon){
+  const rad=Math.PI/180, start=Date.UTC(d.getUTCFullYear(),0,0);
+  const n=(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-start)/864e5;
+  const dec=23.45*rad*Math.sin(2*Math.PI*(284+n)/365);
+  const B=2*Math.PI*(n-81)/364, eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);
+  const utc=d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
+  const H=((utc+lon/15+eot/60)-12)*15*rad, phi=lat*rad;
+  const alt=Math.asin(clamp(Math.sin(phi)*Math.sin(dec)+Math.cos(phi)*Math.cos(dec)*Math.cos(H),-1,1));
+  let az=Math.atan2(Math.sin(H),Math.cos(H)*Math.sin(phi)-Math.tan(dec)*Math.cos(phi))+Math.PI;
+  return {altitude:alt/rad, azimuth:(az/rad)%360};
+}
+
+/* ═════════ LIVE FEED ═════════ */
+const Feed={
+  status:'idle',error:null,at:null,current:null,hourly:null,air:null,raw:null,prov:[],
+  async load(s){
+    this.status='loading';UI.chrome();
+    const q=new URLSearchParams({latitude:s.lat,longitude:s.lon,
+      current:'temperature_2m,relative_humidity_2m,dew_point_2m,surface_pressure,wind_speed_10m,cloud_cover,precipitation,is_day',
+      hourly:'temperature_2m,relative_humidity_2m,surface_pressure,shortwave_radiation,precipitation,soil_moisture_0_to_7cm,et0_fao_evapotranspiration',
+      forecast_days:'3',past_days:'1',timezone:s.tz});
+    const aqu='https://air-quality-api.open-meteo.com/v1/air-quality?'+new URLSearchParams({
+      latitude:s.lat,longitude:s.lon,current:'pm2_5,pm10',timezone:s.tz});
+    try{
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?'+q,{cache:'no-store'});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const j=await r.json();
+      if(!j||!j.current||typeof j.current.temperature_2m!=='number') throw new Error('unexpected response shape');
+      this.raw=j;this.current=j.current;this.hourly=j.hourly;this.at=new Date();this.status='live';
+      this.prov=[{src:'Open-Meteo Forecast API',cls:'live',
+        det:`T · RH · dew point · pressure · wind · cloud · radiation · soil moisture · ET₀ at ${s.lat.toFixed(4)}°N ${s.lon.toFixed(4)}°E`,at:this.at}];
+      try{const ra=await fetch(aqu,{cache:'no-store'});
+        if(ra.ok){const ja=await ra.json(); if(ja&&ja.current){this.air=ja.current;
+          this.prov.push({src:'Open-Meteo Air Quality API',cls:'live',det:'PM2.5 / PM10 — dry-cooler fouling and filter loading',at:new Date()});}}
+      }catch(e){}
+      try{localStorage.setItem('neeru2.'+s.id,JSON.stringify({t:Date.now(),j}));}catch(e){}
+    }catch(err){
+      let back=false;
+      try{const c=JSON.parse(localStorage.getItem('neeru2.'+s.id)||'null');
+        if(c&&c.j&&c.j.current){this.raw=c.j;this.current=c.j.current;this.hourly=c.j.hourly;
+          this.at=new Date(c.t);this.status='cached';
+          this.prov=[{src:'Open-Meteo Forecast API',cls:'replay',det:'CACHED — last successful live fetch for this site',at:this.at}];back=true;}
+      }catch(e){}
+      if(!back){this.status='error';this.error=err.message;this.prov=[];}
+    }
+    this.prov.push(
+      {src:'Alibaba cluster-trace-v2026-GenAI',cls:'replay',
+       det:`${RD.diurnal.n.toLocaleString()} real inference requests, ${RD.diurnal.span[0]} → ${RD.diurnal.span[1]} — drives the demand shape`,at:null},
+      {src:'Alibaba cluster-trace-gpu-v2023',cls:'replay',
+       det:`${RD.pods.total.toLocaleString()} real production pods — ${RD.pods.sample.length} placed in these racks`,at:null},
+      {src:'Boavizta environmental-footprint-data',cls:'replay',
+       det:`${RD.servers.models.length} real server models, manufacturer LCA energy reports`,at:null},
+      {src:'ASHRAE TC 9.9',cls:'ref',det:'Class A1 air envelope · W4 warm-water liquid class',at:null},
+      {src:'CGWB 2024',cls:'ref',det:`Stage of extraction ${s.stage} % — ${s.block}`,at:null},
+      {src:'BIS IS 10500',cls:'ref',det:'F⁻ 1.0 · NO₃⁻ 45 · TDS 500 mg/L',at:null});
+    UI.chrome();UI.render();
+  },
+  series(hours){
+    if(!this.hourly||!this.hourly.time) return [];
+    const now=Date.now(),o=[];
+    for(let i=0;i<this.hourly.time.length;i++){
+      const ts=new Date(this.hourly.time[i]).getTime();
+      if(ts<now-3600e3||ts>now+hours*3600e3) continue;
+      const T=this.hourly.temperature_2m?.[i],RH=this.hourly.relative_humidity_2m?.[i];
+      if(T==null||RH==null) continue;
+      o.push({ts,T,RH,wb:Psy.wetBulb(T,RH),
+        rain:this.hourly.precipitation?.[i]??0,
+        soil:this.hourly.soil_moisture_0_to_7cm?.[i]??null,
+        et0:this.hourly.et0_fao_evapotranspiration?.[i]??null});
+    }
+    return o;
+  }
+};
+
+/* ═════════ FLEET — built from real datasets ═════════ */
+const ROWS=['A','B','C','D','E','F'], PER=8;
+const Fleet={
+  racks:[],
+  build(){
+    this.racks=[];
+    const pods=RD.pods.sample.slice();
+    const srv=RD.servers.models;
+    let pi=0, si=0;
+    for(let r=0;r<ROWS.length;r++){
+      const accel = r>=3;                      // rows D–F host the GPU pods, liquid cooled
+      for(let i=0;i<PER;i++){
+        const k={id:ROWS[r]+String(i+1).padStart(2,'0'),row:r,pos:i,liquid:accel,
+                 pods:[],servers:[],gpus:0,cpuMilli:0,memMib:0};
+        if(accel){
+          // pull real GPU pods until the rack is full (8 accelerators)
+          let guard=0;
+          while(k.gpus<32 && guard++<400){
+            const p=pods[pi++ % pods.length];
+            if(p.n>0){k.pods.push(p);k.gpus+=p.n;k.cpuMilli+=p.c;k.memMib+=p.m;}
+          }
+          k.nodes=Math.max(4,Math.ceil(k.gpus/4));
+          // accelerator power is an ASSUMPTION — Boavizta has no GPU server entries
+          k.peakkW=+(k.gpus*0.7 + k.nodes*0.45).toFixed(1);
+          k.powerSrc='assumed';
+        } else {
+          // real Boavizta server models, real reported power
+          const n=36;
+          for(let s=0;s<n;s++) k.servers.push(srv[si++ % srv.length]);
+          let guard=0;
+          while(k.pods.length<14 && guard++<200){
+            const p=pods[pi++ % pods.length];
+            if(p.n===0){k.pods.push(p);k.cpuMilli+=p.c;k.memMib+=p.m;}
+          }
+          if(!k.pods.length){for(let z=0;z<6;z++){const p=pods[pi++%pods.length];k.pods.push(p);k.cpuMilli+=p.c;k.memMib+=p.m;}}
+          k.nodes=n;
+          k.typW=k.servers.reduce((a,s)=>a+s.w,0);
+          k.peakkW=+(k.typW/1000/0.62).toFixed(1);   // typ → peak via the SPECpower curve, see model
+          k.powerSrc='measured';
+        }
+        k.bias=0.84+0.30*((Math.sin(r*12.9898+i*78.233)*43758.5453)%1+1)/2;
+        k.u=0;k.powerkW=0;k.tIn=0;k.tOut=0;k.tj=0;
+        this.racks.push(k);
+      }
+    }
+  }
+};
+
+/* ═════════ PHYSICS MODEL ═════════ */
+const Model={
+  s:null, baseline:null,
+  /* real diurnal shape from the Alibaba GenAI trace, as a multiplier on the variable load */
+  demand(now){
+    const p=RD.diurnal.profile;
+    const h=now.getHours()+now.getMinutes()/60;
+    const a=p[Math.floor(h)%24], b=p[(Math.floor(h)+1)%24];
+    const shape=lerp(a,b,h%1);
+    // a hall runs many services: a floor of always-on work plus demand shaped by the trace
+    return clamp(0.28 + 0.62*shape, 0.12, 0.98);
+  },
+
+  step(now, withNeeru){
+    const F={now};
+    const c=Feed.current;
+    F.live=!!c;
+    F.Tdb=c?c.temperature_2m:26; F.RH=c?c.relative_humidity_2m:60;
+    F.Tdp=c?(c.dew_point_2m??18):18;
+    F.P=(c&&c.surface_pressure?c.surface_pressure:915)*100;
+    F.wind=c?(c.wind_speed_10m??0):0; F.cloud=c?(c.cloud_cover??0):0;
+    F.Twb=Psy.wetBulb(F.Tdb,F.RH);
+    F.Wr=Psy.W(F.Tdb,F.RH,F.P); F.h=Psy.h(F.Tdb,F.Wr); F.rho=Psy.rho(F.Tdb,F.Wr,F.P);
+    F.pm25=Feed.air?Feed.air.pm2_5:null;
+    F.sun=solarPos(now,site.lat,site.lon);
+    F.u=this.demand(now);
+
+    /* racks */
+    const TsaAir=24, TsupLiq=withNeeru?40:18;    // baseline runs a chilled loop, NeeruAI runs W4
+    let pAir=0,pLiq=0,liqToLiq=0,liqToAir=0;
+    for(const k of Fleet.racks){
+      k.u=clamp(F.u*k.bias,0.02,1);
+      const kIdle=k.liquid?0.30:0.45;
+      const shape=x=>kIdle+(1-kIdle)*Math.pow(x,1.1);
+      k.powerkW = k.liquid ? k.peakkW*shape(k.u)
+                           : (k.typW/1000)*shape(k.u)/shape(0.40);   // anchored to the real LCA figure
+      if(k.liquid){
+        const toL=0.85*k.powerkW;
+        pLiq+=k.powerkW; liqToLiq+=toL; liqToAir+=0.15*k.powerkW;
+        const dT=12*Math.pow(k.u,0.6);
+        k.tIn=TsupLiq; k.tOut=TsupLiq+dT;
+        k.tj=k.tOut+((toL*1000)/Math.max(k.gpus,1))*0.045;
+      } else {
+        pAir+=k.powerkW;
+        k.tIn=TsaAir+0.03*12; k.tOut=k.tIn+12;
+        k.tj=k.tIn+45*k.u+14;
+      }
+    }
+    F.pAir=pAir; F.pLiq=pLiq; F.pIT=pAir+pLiq;
+    F.airLoad=pAir+liqToAir; F.liqLoad=liqToLiq;
+
+    /* heat rejection — decided from live ambient */
+    const dryApp=8;
+    if(withNeeru){
+      F.liqMode = (F.Tdb+dryApp <= TsupLiq+5) ? 'DRY' : 'ADIABATIC';
+      F.dryFan  = 0.022*F.liqLoad*(1+Math.max(0,F.Tdb-25)/14);
+      F.padLph  = F.liqMode==='DRY' ? 0 : 0.55*F.liqLoad*(F.Tdb-(F.Tdb-0.7*(F.Tdb-F.Twb)))/25;
+    } else {
+      F.liqMode='CHILLED'; F.dryFan=0; F.padLph=0;
+    }
+    const chw=14, twApp=5, hxApp=2;
+    F.econ=(F.Twb+twApp+hxApp)<chw;
+    const Tcond=F.Twb+twApp+6;
+    F.cop=clamp(6.6-0.085*(Tcond-28),2.6,7.5);
+    // baseline: the whole IT load goes through chillers; NeeruAI: only the air portion
+    const chillerLoad = withNeeru ? F.airLoad : F.pIT;
+    F.pChiller=F.econ?0:chillerLoad/F.cop;
+    F.towerDuty=(F.econ?chillerLoad:chillerLoad+F.pChiller) + (withNeeru?0:0);
+    const hfg=2501-2.36*F.Twb;
+    F.latent=clamp(0.64+0.014*(F.Twb-12),0.58,0.95);
+    F.evapLph=F.towerDuty*F.latent/hfg*3600;
+    F.coc=4.2;
+    F.bdLph=F.evapLph/(F.coc-1);
+
+    /* NeeruAI recovery island */
+    if(withNeeru){
+      const Tret=TsupLiq+12;
+      F.mdFeed=clamp(Tret-3.5,20,78);
+      const Tp=clamp(F.Twb+6,20,34);
+      const tau=clamp(0.78-0.004*(F.mdFeed-Tp),0.55,0.82);
+      const Tfm=F.mdFeed-(1-tau)/2*(F.mdFeed-Tp), Tpm=Tp+(1-tau)/2*(F.mdFeed-Tp);
+      F.tau=tau; F.Tfm=Tfm; F.Tpm=Tpm;
+      F.mdOn=F.mdFeed>38 && F.bdLph>5;
+      F.flux=F.mdOn?Math.max(0,2.6e-3*(Psy.pSat(Tfm)*0.996-Psy.pSat(Tpm))):0;
+      F.roPerm=0.75*F.bdLph; F.roRej=F.bdLph-F.roPerm;
+      F.mdArea=15;
+      F.mdPerm=Math.min(F.flux*F.mdArea,0.70*F.roRej);
+      F.mdConc=F.roRej-F.mdPerm;
+      F.recovered=F.roPerm+F.mdPerm;
+      F.mdHeat=F.mdPerm/1000*165;
+      F.rejectFrac=0.994;
+      F.permF=1.8*F.coc*(1-F.rejectFrac);
+      F.permNO3=38*F.coc*(1-F.rejectFrac);
+      F.permTDS=420*F.coc*(1-F.rejectFrac);
+      F.pass=F.permF<=1.0&&F.permNO3<=45&&F.permTDS<=500;
+    } else {
+      F.mdFeed=0;F.mdOn=false;F.flux=0;F.roPerm=0;F.roRej=0;F.mdPerm=0;F.mdConc=0;
+      F.recovered=0;F.mdHeat=0;F.pass=true;F.permF=0;F.permNO3=0;F.permTDS=0;F.tau=0;
+    }
+    F.netLph=Math.max(0,F.evapLph+F.bdLph+F.padLph-F.recovered);
+
+    /* facility power */
+    F.pCrah=0.048*F.airLoad;
+    F.pCdu=withNeeru?0.016*F.liqLoad:0;
+    F.pTower=F.towerDuty>0?0.016*F.towerDuty:0;
+    F.pUps=0.045*F.pIT; F.pLight=0.006*F.pIT;
+    F.pMech=F.pChiller+F.pCrah+F.pCdu+F.dryFan+F.pTower;
+    F.pTotal=F.pIT+F.pMech+F.pUps+F.pLight;
+    F.PUE=F.pTotal/Math.max(F.pIT,1);
+    F.WUE=F.netLph/Math.max(F.pIT,1);
+    return F;
+  },
+
+  tick(now){
+    this.s=this.step(now,true);
+    this.baseline=this.step(now,false);
+    // rack state belongs to the NeeruAI run — re-run so meshes reflect it
+    this.s=this.step(now,true);
+    return this.s;
+  },
+
+  project(hours){
+    const fc=Feed.series(hours); if(!fc.length) return [];
+    return fc.map(p=>{
+      const d=new Date(p.ts);
+      const u=this.demand(d);
+      const pIT=Fleet.racks.reduce((a,k)=>{
+        const kI=k.liquid?0.30:0.45, uu=clamp(u*k.bias,0.02,1);
+        const sh=x=>kI+(1-kI)*Math.pow(x,1.1);
+        return a+(k.liquid?k.peakkW*sh(uu):(k.typW/1000)*sh(uu)/sh(0.40));
+      },0);
+      const airLoad=pIT*0.42;
+      const cop=clamp(6.6-0.085*(p.wb+11-28),2.6,7.5);
+      const duty=airLoad*(1+1/cop);
+      const hfg=2501-2.36*p.wb, lat=clamp(0.64+0.014*(p.wb-12),0.58,0.95);
+      const evap=duty*lat/hfg*3600;
+      return {ts:p.ts,T:p.T,wb:p.wb,pIT,water:evap*(1+1/(4.2-1)),rain:p.rain,soil:p.soil,et0:p.et0};
+    });
+  }
+};
+
+/* ═════════ 3D SCENE ═════════ */
+const V={
+  ready:false,scene:null,cam:null,ren:null,ray:null,
+  rackMeshes:[],labels:[],g:{},air:null,flow:[],
+  sph:{th:0.70,ph:0.46,r:64,tx:7,ty:2.4,tz:0},
+  target:null, selected:null,
+
+  init(){
+    const cvs=$('vp'), w=cvs.clientWidth||900, h=cvs.clientHeight||600;
+    this.ren=new THREE.WebGLRenderer({canvas:cvs,antialias:true});
+    this.ren.setPixelRatio(Math.min(devicePixelRatio,2));
+    this.ren.setSize(w,h,false);
+    this.ren.shadowMap.enabled=true; this.ren.shadowMap.type=THREE.PCFSoftShadowMap;
+    this.scene=new THREE.Scene();
+    this.scene.background=new THREE.Color(0x0A1214);
+    this.scene.fog=new THREE.Fog(0x0A1214,92,205);
+    this.cam=new THREE.PerspectiveCamera(42,w/h,0.5,600);
+    this.hemi=new THREE.HemisphereLight(0xAFD2D9,0x162624,0.78); this.scene.add(this.hemi);
+    this.sun=new THREE.DirectionalLight(0xFFF0DC,1.0); this.sun.castShadow=true;
+    this.sun.shadow.mapSize.set(1024,1024);
+    const d=46; Object.assign(this.sun.shadow.camera,{left:-d,right:d,top:d,bottom:-d,near:1,far:200});
+    this.scene.add(this.sun,this.sun.target);
+    this.fill=new THREE.DirectionalLight(0xBFD8DE,0.34); this.fill.position.set(-40,34,-26);
+    this.scene.add(this.fill);
+    this.ground(); this.hall(); this.racks(); this.plant(); this.island(); this.airflow(); this.pipes();
+    this.ray=new THREE.Raycaster(); this.input(); this.applyCam(); this.ready=true;
+  },
+  ground(){
+    const g=new THREE.Group();
+    const pad=new THREE.Mesh(new THREE.BoxGeometry(96,0.6,76),
+      new THREE.MeshStandardMaterial({color:0x182224,roughness:.96}));
+    pad.position.y=-0.3; pad.receiveShadow=true; g.add(pad);
+    const grid=new THREE.GridHelper(96,24,0x324447,0x1E2A2C); grid.position.y=0.02; g.add(grid);
+    this.scene.add(g); this.g.ground=g;
+  },
+  hall(){
+    const g=new THREE.Group(), HW=34,HD=30,HH=6.2;
+    const slab=new THREE.Mesh(new THREE.BoxGeometry(HW,0.5,HD),
+      new THREE.MeshStandardMaterial({color:0x223033,roughness:.9}));
+    slab.position.set(0,0.25,0); slab.receiveShadow=true; g.add(slab);
+    const shell=new THREE.Mesh(new THREE.BoxGeometry(HW,HH,HD),
+      new THREE.MeshStandardMaterial({color:0x4E6A70,transparent:true,opacity:0.045,
+        side:THREE.DoubleSide,roughness:.6,depthWrite:false}));
+    shell.position.y=HH/2+0.5;
+    const ed=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(HW,HH,HD)),
+      new THREE.LineBasicMaterial({color:0x7FA6AE,transparent:true,opacity:.42}));
+    ed.position.y=HH/2+0.5;
+    const sg=new THREE.Group(); sg.add(shell,ed); g.add(sg); this.g.shell=sg;
+    const tile=new THREE.MeshStandardMaterial({color:0x2E6C8C,emissive:0x163646,roughness:.7});
+    for(let p=0;p<3;p++) for(const a of [-1,1]){
+      const z=(p-1)*9+a*3.1;
+      for(let i=0;i<10;i++){
+        const t=new THREE.Mesh(new THREE.BoxGeometry(.55,.06,1.0),tile);
+        t.position.set(-4.9+i*1.1,.53,z); g.add(t);
+      }
+    }
+    this.scene.add(g); this.g.hall=g;
+  },
+  rackPos(k){const pod=Math.floor(k.row/2),side=k.row%2===0?-1:1;
+    return {x:-4.9+k.pos*1.4, z:(pod-1)*9+side*1.35, f:side};},
+  racks(){
+    const g=new THREE.Group(), cg=new THREE.Group();
+    const geo=new THREE.BoxGeometry(1.1,2.1,1.2), cap=new THREE.BoxGeometry(1.12,.06,1.22);
+    this.rackMeshes=[];
+    for(const k of Fleet.racks){
+      const p=this.rackPos(k);
+      const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x3D5057,roughness:.55,metalness:.22,emissive:0x000000}));
+      m.position.set(p.x,1.6,p.z); m.castShadow=true; m.receiveShadow=true; m.userData.rack=k;
+      g.add(m); this.rackMeshes.push(m);
+      const c=new THREE.Mesh(cap,new THREE.MeshStandardMaterial({color:0x1D2A2E,roughness:.9}));
+      c.position.set(p.x,2.68,p.z); g.add(c);
+      const st=new THREE.Mesh(new THREE.PlaneGeometry(.82,1.55),
+        new THREE.MeshBasicMaterial({color:0x0E2A33,transparent:true,opacity:.95}));
+      st.position.set(p.x,1.62,p.z-p.f*.61); st.rotation.y=p.f>0?Math.PI:0; g.add(st); k._st=st;
+    }
+    for(let pod=0;pod<3;pod++){
+      const z=(pod-1)*9;
+      const roof=new THREE.Mesh(new THREE.BoxGeometry(12,.05,2.6),
+        new THREE.MeshStandardMaterial({color:0x8FB6BE,transparent:true,opacity:.16,
+          roughness:.2,metalness:.4,side:THREE.DoubleSide,depthWrite:false}));
+      roof.position.set(0,2.78,z); cg.add(roof);
+      const re=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(12,.05,2.6)),
+        new THREE.LineBasicMaterial({color:0x8FB6BE,transparent:true,opacity:.34}));
+      re.position.copy(roof.position); cg.add(re);
+    }
+    for(let i=0;i<3;i++){
+      const cr=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.3,2.6),
+        new THREE.MeshStandardMaterial({color:0x2A3C42,roughness:.7,metalness:.3}));
+      cr.position.set(-13.5,1.65,(i-1)*9); cr.castShadow=true; g.add(cr);
+      const cd=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.0,2.2),
+        new THREE.MeshStandardMaterial({color:0x24474A,roughness:.6,metalness:.35,emissive:0x0A2426}));
+      cd.position.set(13.5,1.5,(i-1)*9); cd.castShadow=true; g.add(cd);
+    }
+    this.scene.add(g,cg); this.g.racks=g; this.g.contain=cg;
+  },
+  plant(){
+    const g=new THREE.Group();
+    const steel=new THREE.MeshStandardMaterial({color:0x3A4C50,roughness:.62,metalness:.42});
+    const pale=new THREE.MeshStandardMaterial({color:0x546E73,roughness:.7,metalness:.25});
+    this.g.fans=[];
+    for(let i=0;i<4;i++){
+      const dc=new THREE.Mesh(new THREE.BoxGeometry(4.2,2.0,3.0),steel);
+      dc.position.set(25,1.6,-9+i*3.2); dc.castShadow=true; g.add(dc);
+      for(let f=0;f<2;f++){
+        const fan=new THREE.Mesh(new THREE.CircleGeometry(.78,20),
+          new THREE.MeshStandardMaterial({color:0x6E8F96,side:THREE.DoubleSide,metalness:.4}));
+        fan.position.set(25-1.05+f*2.1,2.62,-9+i*3.2); fan.rotation.x=-Math.PI/2;
+        g.add(fan); this.g.fans.push(fan);
+      }
+    }
+    this.label(g,'DRY COOLER BANK',25,4.3,-9+1.5*3.2);
+    const tw=new THREE.Mesh(new THREE.BoxGeometry(6,5.2,6),pale);
+    tw.position.set(25,2.9,10); tw.castShadow=true; g.add(tw);
+    const twTop=new THREE.Mesh(new THREE.CylinderGeometry(2,2.4,1.2,20),steel);
+    twTop.position.set(25,6,10); g.add(twTop);
+    const tf=new THREE.Mesh(new THREE.CircleGeometry(1.7,24),
+      new THREE.MeshStandardMaterial({color:0x7FA3AA,side:THREE.DoubleSide,metalness:.5}));
+    tf.position.set(25,6.65,10); tf.rotation.x=-Math.PI/2; g.add(tf); this.g.towerFan=tf;
+    this.label(g,'COOLING TOWER',25,8.2,10);
+    const plume=new THREE.Mesh(new THREE.ConeGeometry(2.6,9,14,1,true),
+      new THREE.MeshBasicMaterial({color:0xC8DDE2,transparent:true,opacity:.15,depthWrite:false}));
+    plume.position.set(25,11.5,10); g.add(plume); this.g.plume=plume;
+    const ch=new THREE.Mesh(new THREE.BoxGeometry(7,2.6,3.2),steel);
+    ch.position.set(17.5,1.9,12); ch.castShadow=true; g.add(ch); this.g.chiller=ch;
+    this.label(g,'CHILLER',17.5,4,12);
+    this.scene.add(g); this.g.plant=g;
+  },
+  island(){
+    const g=new THREE.Group();
+    const skid=new THREE.MeshStandardMaterial({color:0x1F5A5F,roughness:.5,metalness:.35,emissive:0x0A2C30});
+    const pale=new THREE.MeshStandardMaterial({color:0x546E73,roughness:.7,metalness:.25});
+    const tank=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.4,2.6,18),pale);
+    tank.position.set(14.5,1.9,-12); tank.castShadow=true; g.add(tank);
+    this.label(g,'BLOWDOWN',14.5,3.9,-12,.62);
+    const ro=new THREE.Mesh(new THREE.BoxGeometry(3.2,1.8,2.2),skid);
+    ro.position.set(18.5,1.5,-12); ro.castShadow=true; g.add(ro); this.g.ro=ro;
+    this.label(g,'RO SKID',18.5,3.2,-12,.58);
+    const md=new THREE.Mesh(new THREE.BoxGeometry(3.6,2.2,2.2),skid);
+    md.position.set(23,1.7,-12); md.castShadow=true; g.add(md); this.g.md=md;
+    this.label(g,'MD MODULE',23,3.6,-12,.58);
+    const gate=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.6,1.8),
+      new THREE.MeshStandardMaterial({color:0x2A4A38,roughness:.5,emissive:0x0E2C1E}));
+    gate.position.set(27.4,1.4,-12); gate.castShadow=true; g.add(gate); this.g.gate=gate;
+    this.label(g,'QUALITY GATE',27.4,3.0,-12,.58);
+    this.label(g,'NEERUAI RECOVERY ISLAND',21,5.4,-12,.9);
+    this.scene.add(g); this.g.island=g;
+  },
+  label(p,t,x,y,z,s=.8){
+    const cv=document.createElement('canvas'); cv.width=512; cv.height=64;
+    const c=cv.getContext('2d'); c.font='600 30px "IBM Plex Mono", monospace';
+    c.fillStyle='#BCD3D8'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(t,256,34);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthTest:false}));
+    sp.position.set(x,y,z); sp.scale.set(9*s,1.12*s,1);
+    p.add(sp); this.labels.push(sp); return sp;
+  },
+  airflow(){
+    const N=900, pos=new Float32Array(N*3), col=new Float32Array(N*3);
+    this.aState=[];
+    for(let i=0;i<N;i++){const s=this.spawn(i%3,i%2===0); this.aState.push(s);
+      pos[i*3]=s.x;pos[i*3+1]=s.y;pos[i*3+2]=s.z;}
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+    this.air=new THREE.Points(geo,new THREE.PointsMaterial({size:.19,vertexColors:true,
+      transparent:true,opacity:.85,sizeAttenuation:true,depthWrite:false}));
+    this.scene.add(this.air); this.g.airflow=this.air;
+  },
+  spawn(pod,cold){const zc=(pod-1)*9;
+    return cold?{cold:true,pod,x:-5.4+Math.random()*10.8,y:.6+Math.random()*.3,z:zc+(Math.random()<.5?-3.1:3.1)}
+               :{cold:false,pod,x:-5.4+Math.random()*10.8,y:1+Math.random()*1.4,z:zc+(Math.random()-.5)*2};},
+  updAir(dt,F){
+    if(!this.air) return;
+    const p=this.air.geometry.attributes.position.array, c=this.air.geometry.attributes.color.array;
+    const sp=.7+1.9*(F?F.u:.5);
+    for(let i=0;i<this.aState.length;i++){
+      const s=this.aState[i], zc=(s.pod-1)*9;
+      if(s.cold){ s.y+=sp*dt*.9; s.z+=(zc+Math.sign(s.z-zc)*1.95-s.z)*dt*.7;
+        if(s.y>2.5) Object.assign(s,this.spawn(s.pod,true));
+        c[i*3]=.24;c[i*3+1]=.51;c[i*3+2]=.66;
+      } else { s.y+=sp*dt*1.25; s.z+=(zc-s.z)*dt*.9;
+        if(s.y>4.6) Object.assign(s,this.spawn(s.pod,false));
+        const t=clamp((s.y-1)/3.4,0,1);
+        c[i*3]=.76-.1*t;c[i*3+1]=.36+.05*t;c[i*3+2]=.20+.06*t; }
+      p[i*3]=s.x;p[i*3+1]=s.y;p[i*3+2]=s.z;
+    }
+    this.air.geometry.attributes.position.needsUpdate=true;
+    this.air.geometry.attributes.color.needsUpdate=true;
+  },
+  pipes(){
+    const g=new THREE.Group();
+    const runs=[
+      {p:[[14.5,1.2,-5],[21,1.2,-5],[21,1.2,-9]],c:0xC4623A,n:14},
+      {p:[[21,.7,-2.5],[14.5,.7,-2.5]],c:0x2FA98A,n:11},
+      {p:[[14.5,1.2,7],[17.5,1.2,12],[22,1.2,10]],c:0xC4623A,n:12},
+      {p:[[22,.7,8.4],[17.5,.7,10.2],[14.5,.7,5]],c:0x3E82A8,n:11},
+      {p:[[23,.8,10],[14.5,.8,-10.6]],c:0x8A6A2E,n:10},
+      {p:[[16,.8,-12],[18.5,.8,-12]],c:0x8A6A2E,n:5},
+      {p:[[20.1,.8,-12],[23,.8,-12]],c:0x8A6A2E,n:5},
+      {p:[[24.8,.8,-12],[27.4,.8,-12]],c:0x2FA98A,n:5},
+      {p:[[28.4,1.0,-12],[29,1.0,9]],c:0x2FA98A,n:13}
+    ];
+    this.flow=[];
+    for(const r of runs){
+      const cu=new THREE.CatmullRomCurve3(r.p.map(q=>new THREE.Vector3(...q)));
+      g.add(new THREE.Mesh(new THREE.TubeGeometry(cu,40,.11,7,false),
+        new THREE.MeshStandardMaterial({color:r.c,roughness:.45,metalness:.5,
+          emissive:new THREE.Color(r.c).multiplyScalar(.18)})));
+      const sm=cu.getPoints(140);
+      const mm=new THREE.MeshBasicMaterial({color:new THREE.Color(r.c).lerp(new THREE.Color(0xffffff),.45)});
+      for(let i=0;i<r.n;i++){
+        const m=new THREE.Mesh(new THREE.SphereGeometry(.15,8,6),mm);
+        m.position.copy(sm[0]); g.add(m);
+        this.flow.push({mesh:m,sm,t:i/r.n});
+      }
+    }
+    this.scene.add(g); this.g.pipes=g;
+  },
+  ramp(t){t=clamp(t,0,1);
+    const s=[[.17,.42,.58],[.33,.63,.71],[.85,.76,.41],[.85,.54,.24],[.73,.30,.13]];
+    const f=t*(s.length-1), i=Math.min(Math.floor(f),s.length-2), k=f-i;
+    return new THREE.Color(lerp(s[i][0],s[i+1][0],k),lerp(s[i][1],s[i+1][1],k),lerp(s[i][2],s[i+1][2],k));},
+
+  update(dt,F){
+    if(!this.ready||!F) return;
+    const alt=F.sun.altitude*Math.PI/180, az=F.sun.azimuth*Math.PI/180, R=90;
+    this.sun.position.set(R*Math.cos(alt)*Math.sin(az),Math.max(R*Math.sin(alt),-12),R*Math.cos(alt)*Math.cos(az));
+    const day=clamp((F.sun.altitude+6)/22,0,1);
+    this.sun.intensity=.14+.95*day*(1-.55*F.cloud/100);
+    this.sun.color.setHSL(.10,.18,clamp(.62+.22*day,.55,.9));
+    this.hemi.intensity=.52+.40*day;
+    this.scene.background.setHSL(.52,.25,.03+.055*day);
+
+    let lo,hi,un;
+    if(UI.colour==='temp'){lo=26;hi=62;un='°C';}
+    else if(UI.colour==='power'){lo=0;hi=60;un='kW';}
+    else {lo=0;hi=100;un='%';}
+    $('legLo').textContent=lo+' '+un; $('legHi').textContent=hi+' '+un;
+    $('legT').textContent=UI.colour==='temp'?'Rack exhaust temperature':UI.colour==='power'?'Rack electrical power':'Rack utilisation';
+    for(const m of this.rackMeshes){
+      const k=m.userData.rack;
+      const v=UI.colour==='temp'?k.tOut:UI.colour==='power'?k.powerkW:k.u*100;
+      const c=this.ramp((v-lo)/(hi-lo));
+      m.material.color.copy(c).multiplyScalar(.80);
+      m.material.emissive.copy(c).multiplyScalar(k===this.selected?.85:.42);
+      if(k._st){k._st.material.color.copy(c).multiplyScalar(1.15);k._st.material.opacity=.45+.5*k.u;}
+    }
+    const spin=dt*(.6+2.4*(F.pIT/1400));
+    for(const f of this.g.fans) f.rotation.z+=spin;
+    if(this.g.towerFan) this.g.towerFan.rotation.z+=spin*(F.towerDuty>10?1:.05);
+    if(this.g.plume){const on=F.evapLph>50; this.g.plume.visible=on;
+      this.g.plume.material.opacity=on?clamp(F.evapLph/9000,.04,.30):0;}
+    if(this.g.md) this.g.md.material.emissive.setHex(F.mdOn?0x1C6A52:0x0A2C30);
+    if(this.g.gate) this.g.gate.material.emissive.setHex(F.pass?0x0E5C34:0x5C1E12);
+    if(this.g.chiller) this.g.chiller.material.emissive.setHex(F.pChiller>1?0x3A1A10:0x000000);
+    if(this.flow.length){
+      const v=dt*(.05+.12*(F.pIT/1400));
+      for(const fm of this.flow){
+        fm.t=isFinite(fm.t)?(fm.t+v)%1:0;
+        const last=fm.sm.length-1, q=fm.sm[clamp(Math.round(fm.t*last),0,last)];
+        if(q) fm.mesh.position.copy(q);
+      }
+    }
+    if(this.g.airflow.visible) this.updAir(dt,F);
+    if(this.target){
+      const s=this.sph,t=this.target,k=clamp(dt*2.6,0,1);
+      s.th=lerp(s.th,t.th,k); s.ph=lerp(s.ph,t.ph,k); s.r=lerp(s.r,t.r,k);
+      s.tx=lerp(s.tx,t.tx,k); s.ty=lerp(s.ty,t.ty,k); s.tz=lerp(s.tz,t.tz,k);
+      if(Math.abs(s.r-t.r)<.3&&Math.abs(s.th-t.th)<.01) this.target=null;
+    }
+    this.applyCam();
+    this.ren.render(this.scene,this.cam);
+  },
+  applyCam(){const s=this.sph;
+    this.cam.position.set(s.tx+s.r*Math.cos(s.ph)*Math.sin(s.th),s.ty+s.r*Math.sin(s.ph),s.tz+s.r*Math.cos(s.ph)*Math.cos(s.th));
+    this.cam.lookAt(s.tx,s.ty,s.tz);
+    this.sun.target.position.set(0,0,0); this.sun.target.updateMatrixWorld();},
+  fly(p){this.target={...this.sph,...p};},
+  input(){
+    const cvs=$('vp'); let drag=false,lx=0,ly=0,mv=0;
+    cvs.addEventListener('pointerdown',e=>{drag=true;mv=0;lx=e.clientX;ly=e.clientY;cvs.setPointerCapture(e.pointerId);});
+    cvs.addEventListener('pointerup',e=>{drag=false;try{cvs.releasePointerCapture(e.pointerId);}catch(_){}
+      if(mv<5) this.pick(e);});
+    cvs.addEventListener('pointermove',e=>{
+      if(drag){const dx=e.clientX-lx,dy=e.clientY-ly; mv+=Math.abs(dx)+Math.abs(dy);
+        this.target=null;
+        this.sph.th-=dx*.005; this.sph.ph=clamp(this.sph.ph-dy*.005,.06,1.50);
+        lx=e.clientX;ly=e.clientY;}
+      else this.hover(e);});
+    cvs.addEventListener('pointerleave',()=>{$('tip').style.display='none';});
+    cvs.addEventListener('wheel',e=>{e.preventDefault(); this.target=null;
+      this.sph.r=clamp(this.sph.r*(1+Math.sign(e.deltaY)*.09),9,130);},{passive:false});
+  },
+  ndc(e){const r=$('vp').getBoundingClientRect();
+    return new THREE.Vector2(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);},
+  hover(e){
+    if(!this.ready) return;
+    this.ray.setFromCamera(this.ndc(e),this.cam);
+    const hit=this.ray.intersectObjects(this.rackMeshes,false)[0], tip=$('tip');
+    if(hit){const k=hit.object.userData.rack, r=$('vp').getBoundingClientRect();
+      tip.style.display='block';
+      tip.style.left=Math.min(e.clientX-r.left+14,r.width-230)+'px';
+      tip.style.top=(e.clientY-r.top+14)+'px';
+      tip.innerHTML=`<b>Rack ${k.id}</b> · ${k.liquid?'liquid, GPU':'air, general'}<br>`+
+        `${fmt(k.powerkW,1)} kW · ${(k.u*100).toFixed(0)} %<br>`+
+        `${k.pods.length} real pods${k.gpus?' · '+k.gpus+' GPU':''}<br>`+
+        `inlet ${k.tIn.toFixed(1)} → exhaust ${k.tOut.toFixed(1)} °C`;
+      $('vp').style.cursor='pointer';
+    } else {tip.style.display='none'; $('vp').style.cursor='grab';}},
+  pick(e){
+    this.ray.setFromCamera(this.ndc(e),this.cam);
+    const hit=this.ray.intersectObjects(this.rackMeshes,false)[0];
+    this.selected=hit?hit.object.userData.rack:null;
+    if(this.selected&&UI.station!=='hall') UI.go('hall');
+    UI.render();},
+  resize(){if(!this.ready)return;const c=$('vp'),w=c.clientWidth,h=c.clientHeight;
+    if(!w||!h)return; this.cam.aspect=w/h; this.cam.updateProjectionMatrix(); this.ren.setSize(w,h,false);},
+  layers(o){
+    const set=(k,v)=>{ if(this.g[k]) this.g[k].visible=!!v; };
+    set('shell',o.shell); set('contain',o.contain); set('airflow',o.air);
+    set('pipes',o.pipes); set('plant',o.plant); set('island',o.island); set('racks',o.racks);
+    for(const s of this.labels) s.visible=!!o.labels;
+  }
+};
+
+/* ═════════ STATIONS ═════════ */
+const STATIONS={
+  site:{t:'Site & climate',
+    d:'Where this facility sits, and the live atmospheric state that will decide how much water it consumes today. Weather is not background — wet-bulb temperature fixes the lowest temperature any evaporative device can reach.',
+    cam:{th:0.70,ph:0.46,r:70,tx:6,ty:2.4,tz:0},
+    layers:{shell:1,contain:0,air:0,pipes:1,plant:1,island:1,racks:1,labels:1}},
+  hall:{t:'Data hall',
+    d:'48 racks. Rows A–C are air-cooled general compute built from real Dell and HP server models. Rows D–F are liquid-cooled accelerators hosting real GPU pods from Alibaba production traces. Click any rack to open it.',
+    cam:{th:0.66,ph:0.34,r:40,tx:0,ty:2.2,tz:0},
+    layers:{shell:1,contain:1,air:1,pipes:0,plant:0,island:0,racks:1,labels:0}},
+  cooling:{t:'Heat rejection',
+    d:'Where the 2 MW goes. The liquid loop dry-cools on fans alone when ambient permits — zero water. The air loop needs a chiller, and the chiller needs a cooling tower, and the tower is what drinks.',
+    cam:{th:-0.80,ph:0.34,r:36,tx:20,ty:2.4,tz:6},
+    layers:{shell:0,contain:0,air:0,pipes:1,plant:1,island:0,racks:1,labels:1}},
+  recovery:{t:'NeeruAI island',
+    d:'Our intervention. Tower blowdown, which would go to drain, is concentrated by RO; the RO reject is then distilled by waste heat from the cooling loop; every batch is gated against drinking-water limits before release.',
+    cam:{th:3.02,ph:0.30,r:23,tx:21,ty:1.7,tz:-12},
+    layers:{shell:0,contain:0,air:0,pipes:1,plant:1,island:1,racks:0,labels:1}},
+  impact:{t:'Impact',
+    d:'The same facility, same weather, same workload, modelled twice: once as a conventional chilled-water data centre, once with the NeeruAI architecture. Both columns are computed live.',
+    cam:{th:0.70,ph:0.55,r:78,tx:6,ty:2.4,tz:0},
+    layers:{shell:1,contain:0,air:0,pipes:1,plant:1,island:1,racks:1,labels:1}},
+  data:{t:'Datasets & provenance',
+    d:'Every input this twin consumes, named, classified and inspectable. Nothing on screen is invented — it is live, replayed from a published dataset, or a cited reference constant.',
+    cam:{th:0.30,ph:0.90,r:60,tx:6,ty:1,tz:0},
+    layers:{shell:1,contain:0,air:0,pipes:1,plant:1,island:1,racks:1,labels:1}}
+};
+
+/* ═════════ TOUR ═════════ */
+const TOUR=[
+ {s:'site',t:'This is a real location — Devanahalli, where a lot of India\'s new capacity is going. The block is at <b>169 % of sustainable groundwater extraction</b>. The weather you see is live, fetched now.'},
+ {s:'site',t:'Wet-bulb temperature is the number that matters. It is the coldest an evaporative device can get, so it sets how much water the facility must evaporate to reject its heat.'},
+ {s:'hall',t:'48 racks. Rows A–C run <b>real Dell and HP servers</b> with manufacturer-reported power. Rows D–F host <b>real GPU pods</b> from Alibaba production traces. Click a rack to see inside.'},
+ {s:'hall',t:'Load is not invented either — the demand curve comes from <b>26,823 real inference requests</b> in Alibaba\'s GenAI trace. Blue particles are cold supply air, orange is hot return.'},
+ {s:'cooling',t:'All that electricity becomes heat. The liquid loop rejects through dry coolers on fans alone — <b>no water</b>. The air loop needs a chiller, and the chiller drives the cooling tower.'},
+ {s:'cooling',t:'The tower rejects heat by <b>evaporating water</b>. That water is gone from the catchment. Salts left behind concentrate, so a bleed — blowdown — must be discarded continuously.'},
+ {s:'recovery',t:'Here is our contribution. That blowdown, headed for the drain, is concentrated by RO. The RO reject is then distilled using <b>waste heat from the cooling loop</b> — energy the site was throwing away.'},
+ {s:'recovery',t:'Every batch passes a quality gate against <b>BIS IS 10500 drinking-water limits</b>, stricter than effluent standards. Fail, and it is quarantined rather than released.'},
+ {s:'impact',t:'Same facility, same weather, same workload — modelled with and without NeeruAI. Both columns computed live from the same physics.'},
+ {s:'data',t:'And every input is named and classified: live meteorology, replayed production traces, cited reference constants. Nothing here is dummy data.'}
+];
+
+/* ═════════ UI ═════════ */
+const UI={
+  station:'site', colour:'temp', tourIx:-1,
+  go(s){
+    this.station=s;
+    [...$('nav').querySelectorAll('button[data-s]')].forEach(b=>b.setAttribute('aria-current',b.dataset.s===s?'page':'false'));
+    const st=STATIONS[s];
+    $('cap').querySelector('.t').textContent=st.t;
+    $('cap').querySelector('.d').innerHTML=st.d;
+    if(V.ready){ V.fly(st.cam); V.layers(st.layers); }
+    $('legend').style.display=(s==='hall'||s==='site'||s==='impact')?'block':'none';
+    $('ovHint').textContent = s==='hall' ? 'drag to orbit · scroll to zoom · click a rack to inspect'
+      : 'drag to orbit · scroll to zoom';
+    this.render();
+  },
+  chrome(){
+    const F=Feed, el=$('hFeed');
+    if(F.status==='live') el.innerHTML='<span class="dot ok"></span>live';
+    else if(F.status==='cached') el.innerHTML='<span class="dot wait"></span>cached';
+    else if(F.status==='loading') el.innerHTML='<span class="dot wait"></span>…';
+    else el.innerHTML='<span class="dot err"></span>offline';
+  },
+  rows(rows){
+    return rows.filter(Boolean).map(([n,v,u,f,bad])=>`<div class="row">
+      <span class="n">${n}</span><span class="v" style="${bad?'color:var(--bad)':''}">${v}${u?`<small>${u}</small>`:''}</span>
+      ${f!=null?`<span class="bar"><i style="width:${clamp(f*100,0,100)}%;background:${bad?'var(--bad)':'var(--acc)'}"></i></span>`:''}
+    </div>`).join('');
+  },
+  card(title,tag,body,note){
+    return `<div class="card"><h3>${title}${tag?`<span class="tag">${tag}</span>`:''}</h3>
+      ${body}${note?`<p class="note">${note}</p>`:''}</div>`;
+  },
+
+  render(){
+    const F=Model.s, B=Model.baseline;
+    if(!F) return;
+    $('hClock').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false,timeZone:site.tz});
+    $('hLoad').textContent=fmt(F.pIT,0)+' kW';
+    $('ovMode').innerHTML=`liquid: <b>${F.liqMode}</b> · air: <b>${F.econ?'ECONOMISER':'CHILLER'}</b>`;
+    $('ovSun').innerHTML=`sun ${F.sun.altitude>0?'▲':'▼'} <b>${F.sun.altitude.toFixed(1)}°</b>`;
+    const S=this.station;
+    if(S==='site') this.site(F);
+    else if(S==='hall') this.hall(F);
+    else if(S==='cooling') this.cooling(F);
+    else if(S==='recovery') this.recovery(F);
+    else if(S==='impact') this.impact(F,B);
+    else this.data(F);
+  },
+
+  /* ── 01 site ── */
+  site(F){
+    $('colL').innerHTML=
+      this.card('Ambient — measured','<span class="chip live">live</span>',
+        `<div class="bd flush kv">${this.rows([
+          ['Dry-bulb temperature',F.Tdb.toFixed(1),'°C',clamp(F.Tdb/45,0,1)],
+          ['Relative humidity',F.RH.toFixed(0),'%',F.RH/100],
+          ['Wet-bulb (Stull)',F.Twb.toFixed(1),'°C',clamp(F.Twb/32,0,1)],
+          ['Dew point',F.Tdp.toFixed(1),'°C',clamp(F.Tdp/30,0,1)],
+          ['Humidity ratio',(F.Wr*1000).toFixed(1),'g/kg',clamp(F.Wr*1000/28,0,1)],
+          ['Enthalpy',F.h.toFixed(1),'kJ/kg',clamp(F.h/110,0,1)],
+          ['Air density',F.rho.toFixed(3),'kg/m³',clamp((F.rho-.9)/.35,0,1)],
+          ['Pressure',(F.P/100).toFixed(0),'hPa',clamp((F.P/100-880)/140,0,1)],
+          ['Wind',F.wind.toFixed(1),'km/h',clamp(F.wind/40,0,1)],
+          F.pm25!=null?['PM2.5',F.pm25.toFixed(0),'µg/m³',clamp(F.pm25/150,0,1),F.pm25>90]:null
+        ])}</div>`,
+        'Wet-bulb is computed from the measured dry-bulb and humidity by Stull\'s relation. It is the lowest temperature evaporation can reach, and therefore the hard floor on cooling performance.')
+      + this.card('Psychrometric state','',`<div class="bd tight"><canvas class="ch" id="psy" width="820" height="620"></canvas></div>`,
+        'Live outdoor state against the ASHRAE A1 recommended envelope for the air-cooled rows.');
+    $('colR').innerHTML=
+      this.card('Groundwater context','<span class="chip ref">CGWB 2024</span>',
+        `<div class="bd flush kv">${this.rows([
+          ['Block',site.block,'',null],
+          ['Stage of extraction',site.stage,'%',clamp(site.stage/200,0,1),site.stage>100],
+          ['Status',site.stage>100?'OVER-EXPLOITED':site.stage>90?'CRITICAL':'SAFE','',null,site.stage>100]
+        ])}</div>`, site.note)
+      + this.card('Recharge signals','<span class="chip live">live</span>',
+        `<div class="bd tight"><canvas class="ch" id="rain" width="820" height="440"></canvas></div>`,
+        'Precipitation and shallow soil moisture from the same live feed. Recharge is what the extraction figure is measured against — when this stays flat through a dry season, the 169 % is not being repaid.')
+      + this.card('Facility','',
+        `<div class="bd flush kv">${this.rows([
+          ['IT load now',fmt(F.pIT,0),'kW',clamp(F.pIT/1600,0,1)],
+          ['Racks','48','',null],
+          ['Fleet utilisation',(F.u*100).toFixed(0),'%',F.u],
+          ['Net water draw',fmt(F.netLph*24/1000,1),'KL/day',clamp(F.netLph/4000,0,1)]
+        ])}</div>`,'');
+    this.drawPsy(F); this.drawRain(F);
+  },
+
+  /* ── 02 hall ── */
+  hall(F){
+    const k=V.selected;
+    $('colL').innerHTML=
+      this.card('Hall composition','<span class="chip replay">real pods</span>',
+        `<div class="bd flush kv">${this.rows([
+          ['Racks','48','',null],
+          ['Rows A–C',`air · ${Fleet.racks.filter(r=>!r.liquid).length} racks`,'',null],
+          ['Rows D–F',`liquid · ${Fleet.racks.filter(r=>r.liquid).length} racks`,'',null],
+          ['Real pods placed',Fleet.racks.reduce((a,r)=>a+r.pods.length,0),'',null],
+          ['Accelerators',Fleet.racks.reduce((a,r)=>a+r.gpus,0),'GPU',null],
+          ['Real server models',RD.servers.models.length,'',null],
+          ['IT load now',fmt(F.pIT,0),'kW',clamp(F.pIT/1600,0,1)],
+          ['Fleet utilisation',(F.u*100).toFixed(0),'%',F.u]
+        ])}</div>`,
+        `Pods are drawn from <b>${RD.pods.total.toLocaleString()} real production pods</b> in Alibaba's GPU cluster trace, with their actual CPU, memory and GPU requests. Server power in rows A–C comes from manufacturer LCA reports via Boavizta.`)
+      + this.card('Demand curve','<span class="chip replay">Alibaba GenAI</span>',
+        `<div class="bd tight"><canvas class="ch" id="diu" width="820" height="380"></canvas></div>`,
+        `Hour-of-day demand shape derived from <b>${RD.diurnal.n.toLocaleString()} real inference requests</b> over ${RD.diurnal.days} days (${RD.diurnal.span[0]} → ${RD.diurnal.span[1]}). Median request took ${RD.diurnal.median_exec_s} s. A hall runs many services, so this shapes the variable part on a fixed floor.`);
+
+    $('colR').innerHTML = k ? this.rackPanel(k,F) :
+      this.card('Rack inspector','',
+        `<p class="note" style="border-top:0">Click any rack in the 3D view to open it — you will see the real pods scheduled on it, their CPU, memory and GPU requests, and its thermal state.</p>`,'')
+      + this.card('Thermal map','',`<div class="podgrid" id="plan"></div>`,
+        'All 48 racks by row. Rows A–C air-cooled, D–F liquid.');
+    if(!k) this.drawPlan();
+    this.drawDiurnal();
+  },
+  rackPanel(k,F){
+    const pods=k.pods.slice(0,18);
+    const over=k.liquid?k.tj>90:k.tIn>27;
+    return this.card(`Rack ${k.id} <span class="chip ${k.liquid?'acc':'ref'}">${k.liquid?'liquid · GPU':'air · general'}</span>`,
+      `<span class="chip ${k.powerSrc==='measured'?'replay':'warn'}">${k.powerSrc}</span>`,
+      `<div class="bd flush kv">${this.rows([
+        ['Utilisation',(k.u*100).toFixed(1),'%',k.u],
+        ['Electrical power',k.powerkW.toFixed(1),'kW',k.powerkW/k.peakkW],
+        [k.liquid?'Coolant inlet':'Air inlet',k.tIn.toFixed(1),'°C',clamp(k.tIn/50,0,1),!k.liquid&&k.tIn>27],
+        [k.liquid?'Coolant return':'Exhaust',k.tOut.toFixed(1),'°C',clamp(k.tOut/70,0,1)],
+        ['Junction temperature',k.tj.toFixed(1),'°C · limit 90',clamp(k.tj/90,0,1),k.tj>90],
+        ['Real pods scheduled',k.pods.length,'',null],
+        k.gpus?['Accelerators',k.gpus,'GPU',clamp(k.gpus/32,0,1)]:null,
+        ['CPU requested',(k.cpuMilli/1000).toFixed(1),'cores',clamp(k.cpuMilli/1000/160,0,1)],
+        ['Memory requested',(k.memMib/1024).toFixed(0),'GiB',clamp(k.memMib/1024/1200,0,1)],
+        ['Share of hall load',(100*k.powerkW/Math.max(F.pIT,1)).toFixed(2),'%',k.powerkW/Math.max(F.pIT,1)*10]
+      ])}</div>`,
+      k.powerSrc==='measured'
+        ? `Power is anchored to <b>real manufacturer LCA data</b> for the ${k.servers.length} servers in this rack (${[...new Set(k.servers.map(s=>s.mf))].join(', ')}), scaled by a SPECpower-shaped utilisation curve.`
+        : `<b>Accelerator power is an assumption</b>, not measured data — Boavizta carries no GPU server entries, so this rack uses 700 W per accelerator. Flagged rather than hidden.`)
+    + this.card('Pods on this rack','<span class="chip replay">Alibaba trace</span>',
+      `<div class="bd flush"><table><thead><tr><th>#</th><th class="n">CPU</th><th class="n">Mem</th><th class="n">GPU</th><th>QoS</th></tr></thead><tbody>`+
+      pods.map((p,i)=>`<tr><td>${i+1}</td><td class="n">${(p.c/1000).toFixed(1)}</td>
+        <td class="n">${(p.m/1024).toFixed(0)}G</td><td class="n">${p.n||'—'}</td><td>${p.q||'—'}</td></tr>`).join('')+
+      `</tbody></table></div>`,
+      'Actual scheduled pods from Alibaba\'s production cluster, with their real resource requests.')
+    + this.card('Servers','',
+      k.servers.length
+        ? `<div class="bd flush"><table><thead><tr><th>Model</th><th class="n">W</th></tr></thead><tbody>`+
+          [...new Set(k.servers.map(s=>s.nm))].slice(0,8).map(nm=>{
+            const s=k.servers.find(x=>x.nm===nm);
+            return `<tr><td>${s.mf} ${s.nm}</td><td class="n">${s.w}</td></tr>`;}).join('')+
+          `</tbody></table></div>`
+        : `<p class="note" style="border-top:0">Accelerated rack — populated from the GPU pod trace rather than a server catalogue.</p>`,
+      k.servers.length?'Average power from manufacturer-reported annual consumption (Boavizta).':'');
+  },
+
+  /* ── 03 cooling ── */
+  cooling(F){
+    $('colL').innerHTML=
+      this.card('Heat flows','',
+        `<div class="bd flush kv">${this.rows([
+          ['IT load',fmt(F.pIT,0),'kW',clamp(F.pIT/1600,0,1)],
+          ['→ liquid loop',fmt(F.liqLoad,0),'kW',clamp(F.liqLoad/1200,0,1)],
+          ['→ hall air',fmt(F.airLoad,0),'kW',clamp(F.airLoad/900,0,1)],
+          ['Chiller power',fmt(F.pChiller,0),'kW',clamp(F.pChiller/300,0,1)],
+          ['Chiller COP',F.cop.toFixed(2),'',clamp(F.cop/8,0,1)],
+          ['Tower duty',fmt(F.towerDuty,0),'kW',clamp(F.towerDuty/1200,0,1)],
+          ['Dry-cooler fans',fmt(F.dryFan,0),'kW',clamp(F.dryFan/60,0,1)]
+        ])}</div>`,
+        `The chiller's efficiency is not a constant — it is derated from the live condensing temperature, which tracks the measured wet-bulb of ${F.Twb.toFixed(1)} °C.`)
+      + this.card('48-hour outlook','<span class="chip live">forecast</span>',
+        `<div class="bd tight"><canvas class="ch" id="fc" width="820" height="440"></canvas></div>`,
+        '<span id="fcNote"></span>');
+    $('colR').innerHTML=
+      this.card('Rejection mode','',
+        `<div class="bd flush kv">${this.rows([
+          ['Liquid loop',F.liqMode,'',null],
+          ['Air loop',F.econ?'ECONOMISER':'MECHANICAL CHILLER','',null],
+          ['Ambient dry-bulb',F.Tdb.toFixed(1),'°C',clamp(F.Tdb/45,0,1)],
+          ['Ambient wet-bulb',F.Twb.toFixed(1),'°C',clamp(F.Twb/32,0,1)],
+          ['Latent fraction',(F.latent*100).toFixed(0),'%',F.latent]
+        ])}</div>`,
+        F.liqMode==='DRY'
+          ? `Dry-bulb is <b>${F.Tdb.toFixed(1)} °C</b>, low enough that the 40 °C liquid loop rejects through the dry cooler on fans alone — <b>zero water</b>. This decision is re-made every model step from the live feed.`
+          : `Dry-bulb <b>${F.Tdb.toFixed(1)} °C</b> is too high for dry rejection, so adiabatic pads pre-cool toward the ${F.Twb.toFixed(1)} °C wet-bulb, at a cost of ${fmt(F.padLph,0)} L/h.`)
+      + this.card('Water consumed here','',
+        `<div class="bd flush kv">${this.rows([
+          ['Tower evaporation',fmt(F.evapLph,0),'L/h',clamp(F.evapLph/4000,0,1)],
+          ['Tower blowdown',fmt(F.bdLph,0),'L/h',clamp(F.bdLph/1200,0,1)],
+          ['Adiabatic pads',fmt(F.padLph,0),'L/h',clamp(F.padLph/400,0,1)],
+          ['Cycles of concentration',F.coc.toFixed(1),'×',F.coc/8]
+        ])}</div>`,
+        'Evaporation is computed from the latent fraction of tower duty at the measured wet-bulb — so this number moves with real weather, not a fixed coefficient. Blowdown follows from the salt balance and is the feed to station 04.');
+    this.drawFc(F);
+  },
+
+  /* ── 04 recovery ── */
+  recovery(F){
+    const bd=F.bdLph||1;
+    $('colL').innerHTML=
+      this.card('Recovery train','<span class="chip acc">our solution</span>',
+        `<div class="bd flush kv">${this.rows([
+          ['Blowdown in',fmt(F.bdLph,0),'L/h',clamp(F.bdLph/1200,0,1)],
+          ['RO permeate',fmt(F.roPerm,0),'L/h',clamp(F.roPerm/900,0,1)],
+          ['RO reject → MD',fmt(F.roRej,0),'L/h',clamp(F.roRej/300,0,1)],
+          ['MD feed temperature',F.mdFeed.toFixed(1),'°C',clamp((F.mdFeed-30)/30,0,1)],
+          ['Polarisation τ',F.tau.toFixed(3),'',F.tau],
+          ['MD flux',F.flux.toFixed(1),'L/m²·h',clamp(F.flux/30,0,1)],
+          ['MD permeate',fmt(F.mdPerm,0),'L/h',clamp(F.mdPerm/200,0,1)],
+          ['Concentrate → ZLD',fmt(F.mdConc,0),'L/h',clamp(F.mdConc/120,0,1)],
+          ['Waste heat consumed',fmt(F.mdHeat,0),'kW',clamp(F.mdHeat/60,0,1)]
+        ])}</div>`,
+        `RO does the bulk cheaply; MD takes the tail that RO cannot reach economically, because osmotic pressure rises steeply with concentration while MD's driving force barely moves. MD runs on heat the site was rejecting anyway — <b>${(100*F.mdHeat/Math.max(F.pIT*0.96,1)).toFixed(2)} %</b> of it.`)
+      + this.card('Water balance','',`<div class="bd tight"><canvas class="ch" id="san" width="820" height="360"></canvas></div>`,
+        'Where every litre goes, at the current live conditions.');
+    $('colR').innerHTML=
+      this.card('Quality gate',F.pass?'<span class="chip live">PASS</span>':'<span class="chip bad">FAIL</span>',
+        `<div class="bd flush kv">${this.rows([
+          ['Fluoride',F.permF.toFixed(3),'/ 1.0 mg/L',clamp(F.permF/1,0,1),F.permF>1],
+          ['Nitrate',F.permNO3.toFixed(1),'/ 45 mg/L',clamp(F.permNO3/45,0,1),F.permNO3>45],
+          ['TDS',fmt(F.permTDS,0),'/ 500 mg/L',clamp(F.permTDS/500,0,1),F.permTDS>500],
+          ['Rejection',(F.rejectFrac*100).toFixed(2),'%',F.rejectFrac]
+        ])}</div>`,
+        'Gated against <b>BIS IS 10500 drinking-water</b> limits — deliberately stricter than the industrial-effluent limits a facility would otherwise be judged against. A failing batch is quarantined, never released.')
+      + this.card('Recovery performance','',
+        `<div class="bd flush kv">${this.rows([
+          ['Recovered',fmt(F.recovered,0),'L/h',clamp(F.recovered/1200,0,1)],
+          ['Blowdown recovery',(100*F.recovered/bd).toFixed(1),'%',F.recovered/bd],
+          ['Net freshwater draw',fmt(F.netLph,0),'L/h',clamp(F.netLph/4000,0,1)],
+          ['Per day',fmt(F.netLph*24/1000,1),'KL/day',clamp(F.netLph/4000,0,1)]
+        ])}</div>`,
+        'Recovery addresses the blowdown. Evaporation is addressed by the architecture change in station 03 — the two measures are multiplicative, not alternatives.');
+    this.drawSankey(F);
+  },
+
+  /* ── 05 impact ── */
+  impact(F,B){
+    const r=(a,b,u,d=0,inv)=>{
+      const better=inv?(b>a):(b<a);
+      return `<div class="cmp"><span>${u}</span><span class="a">${fmt(a,d)}</span><span class="b">${fmt(b,d)}</span></div>`;
+    };
+    $('colL').innerHTML=
+      this.card('Baseline vs NeeruAI','<span class="chip acc">live comparison</span>',
+        `<div class="cmp" style="background:var(--surf2);font-weight:600">
+           <span>Metric</span><span class="a" style="color:var(--ink3)">Conventional</span><span class="b" style="color:var(--ink3)">NeeruAI</span></div>`+
+        r(B.pIT,F.pIT,'IT load, kW')+
+        r(B.pTotal,F.pTotal,'Facility power, kW')+
+        r(B.PUE,F.PUE,'PUE',3)+
+        r(B.pChiller,F.pChiller,'Chiller power, kW')+
+        r(B.evapLph,F.evapLph,'Evaporation, L/h')+
+        r(B.bdLph,F.bdLph,'Blowdown, L/h')+
+        r(0,F.recovered,'Water recovered, L/h')+
+        r(B.netLph,F.netLph,'Net water draw, L/h')+
+        r(B.netLph*24/1000,F.netLph*24/1000,'Net draw, KL/day',1)+
+        r(B.WUE,F.WUE,'WUE, L/kWh',2),
+        'Both columns are the same physics model run twice on the same live weather and the same workload — the only difference is the cooling architecture and whether the recovery island exists.')
+      + this.card('Annualised','',
+        `<div class="bd flush kv">${this.rows([
+          ['Water saved per year',fmt((B.netLph-F.netLph)*8.76/1000,0),'ML',clamp((B.netLph-F.netLph)/B.netLph,0,1)],
+          ['Electricity saved',fmt((B.pTotal-F.pTotal)*8.76,0),'MWh',clamp((B.pTotal-F.pTotal)/Math.max(B.pTotal,1),0,1)],
+          ['PUE improvement',(B.PUE-F.PUE).toFixed(3),'',clamp((B.PUE-F.PUE),0,1)],
+          ['Households equivalent',fmt((B.netLph-F.netLph)*24/135,0),'at 135 L/person/day',null]
+        ])}</div>`,
+        'Extrapolated from the current instantaneous rates at the live ambient condition — indicative, not an annual simulation. A real figure needs a full weather year, which is on the roadmap.');
+    $('colR').innerHTML=
+      this.card('Where the saving comes from','',
+        `<div class="bd tight"><canvas class="ch" id="wf" width="820" height="460"></canvas></div>`,
+        'Two independent mechanisms. The architecture change removes the chiller and most of the evaporation; the recovery island returns most of what blowdown would have taken. Architecture dominates — recovery closes the remainder.')
+      + this.card('Caveat','<span class="chip warn">read this</span>',
+        `<p class="note" style="border-top:0">The baseline is a <b>modelled</b> conventional facility, not a measured one — same code, chilled-water loop and no recovery. It is a fair internal comparison because everything else is held identical, but it is not a validated benchmark against a specific real data centre. Say so before anyone asks.</p>`,'');
+    this.drawWaterfall(F,B);
+  },
+
+  /* ── 06 data ── */
+  data(F){
+    $('colL').innerHTML=
+      this.card('Input provenance','<span class="chip acc">'+Feed.prov.length+' sources</span>',
+        `<div class="bd flush"><table><thead><tr><th>Source</th><th>Class</th><th>At</th></tr></thead><tbody>`+
+        Feed.prov.map(p=>`<tr><td>${p.src}<div style="color:var(--ink3);font-size:9px;line-height:1.4">${p.det}</div></td>
+          <td><span class="chip ${p.cls}">${p.cls}</span></td>
+          <td class="n" style="font-size:9px">${p.at?p.at.toLocaleTimeString('en-IN',{hour12:false}):'—'}</td></tr>`).join('')+
+        `</tbody></table></div>`
+        + `<details><summary>Raw live API response ▾</summary><pre class="json">${
+            Feed.raw?JSON.stringify({latitude:Feed.raw.latitude,longitude:Feed.raw.longitude,
+              elevation:Feed.raw.elevation,timezone:Feed.raw.timezone,
+              current_units:Feed.raw.current_units,current:Feed.raw.current},null,1)
+              .replace(/</g,'&lt;'):'no live feed'}</pre></details>`,
+        `<b>live</b> — fetched from a public API now. <b>replay</b> — a published real dataset played back. <b>ref</b> — a cited standard or survey constant. Nothing is generated to look plausible.`);
+    $('colR').innerHTML=
+      this.card('Dataset detail','',
+        `<div class="bd flush kv">${this.rows([
+          ['GenAI trace requests',RD.diurnal.n.toLocaleString(),'',null],
+          ['Trace span',RD.diurnal.days+' days','',null],
+          ['Median request',RD.diurnal.median_exec_s,'s',null],
+          ['Cluster pods available',RD.pods.total.toLocaleString(),'',null],
+          ['Pods placed in twin',RD.pods.sample.length,'',null],
+          ['GPU pod fraction',(RD.pods.gpu_frac*100).toFixed(1),'%',RD.pods.gpu_frac],
+          ['Median pod CPU',(RD.pods.median_cpu_milli/1000).toFixed(1),'cores',null],
+          ['Median pod memory',(RD.pods.median_mem_mib/1024).toFixed(0),'GiB',null],
+          ['Server models',RD.servers.models.length,'',null]
+        ])}</div>`,'')
+      + this.card('Real server models','<span class="chip replay">Boavizta</span>',
+        `<div class="bd flush"><table><thead><tr><th>Model</th><th class="n">Avg W</th></tr></thead><tbody>`+
+        RD.servers.models.slice(0,14).map(s=>`<tr><td>${s.mf} ${s.nm}</td><td class="n">${s.w}</td></tr>`).join('')+
+        `</tbody></table></div>`,
+        'Average power derived from manufacturer-reported annual energy consumption in published LCA reports. This is <b>typical operating</b> power, not a full power-vs-load curve — we scale around it with a SPECpower-shaped curve, which is an assumption we state.')
+      + this.card('Model equations','',
+        `<div class="bd" style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.85;color:var(--ink2)">
+          Q = 0.96 · P<sub>IT</sub><br>
+          ΔT = Q·60/(ṁ·c<sub>p</sub>)<br>
+          T<sub>wb</sub> = Stull(T<sub>db</sub>, RH)<br>
+          ṁ<sub>evap</sub> = f<sub>lat</sub>·Q<sub>tower</sub>/h<sub>fg</sub><br>
+          ṁ<sub>bd</sub> = ṁ<sub>evap</sub>/(CoC−1)<br>
+          p<sub>w</sub>(T) = Antoine<br>
+          J = B·(p<sub>w</sub>(T<sub>fm</sub>)·a<sub>w</sub> − p<sub>w</sub>(T<sub>pm</sub>))<br>
+          τ = 0.78 − 0.004·(T<sub>f</sub>−T<sub>p</sub>)<br>
+          PUE = P<sub>total</sub>/P<sub>IT</sub> · WUE = L<sub>net</sub>/P<sub>IT</sub>
+        </div>`,
+        'Every number on every station comes from these. Change a control and the whole chain moves consistently — that is what makes it a twin rather than a dashboard.');
+  },
+
+  /* ── charts ── */
+  css(k){return getComputedStyle(document.documentElement).getPropertyValue(k).trim();},
+  drawPsy(F){
+    const c=$('psy'); if(!c) return; const g=c.getContext('2d');
+    const W=820,H=620,pl=74,pr=58,pt=22,pb=52, css=k=>this.css(k);
+    g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const T0=5,T1=50,W1=0.030;
+    const X=t=>pl+(t-T0)/(T1-T0)*(W-pl-pr), Y=w=>H-pb-w/W1*(H-pt-pb);
+    g.strokeStyle=css('--sunk'); g.lineWidth=2; g.font='500 32px "IBM Plex Mono", monospace';
+    g.fillStyle=css('--ink3'); g.textAlign='center'; g.textBaseline='top';
+    for(let t=10;t<=50;t+=10){g.beginPath();g.moveTo(X(t),pt);g.lineTo(X(t),H-pb);g.stroke();g.fillText(t+'°',X(t),H-pb+8);}
+    g.textAlign='right'; g.textBaseline='middle';
+    for(let w=0;w<=.030;w+=.005){g.beginPath();g.moveTo(pl,Y(w));g.lineTo(W-pr,Y(w));g.stroke();g.fillText((w*1000).toFixed(0),pl-9,Y(w));}
+    for(const rh of [20,40,60,80,100]){
+      g.beginPath();
+      for(let t=T0;t<=T1;t+=.5){const w=Psy.W(t,rh,F.P); const y=Y(Math.min(w,W1)); t===T0?g.moveTo(X(t),y):g.lineTo(X(t),y);}
+      g.strokeStyle=rh===100?css('--ink2'):css('--rule2'); g.lineWidth=rh===100?2:1; g.stroke();
+    }
+    g.beginPath();
+    g.moveTo(X(18),Y(Psy.W(18,20,F.P))); g.lineTo(X(27),Y(Psy.W(27,17,F.P)));
+    g.lineTo(X(27),Y(Psy.W(27,60,F.P))); g.lineTo(X(18),Y(Psy.W(18,60,F.P))); g.closePath();
+    g.fillStyle=css('--acc-soft'); g.fill(); g.strokeStyle=css('--acc-line'); g.lineWidth=3; g.stroke();
+    g.fillStyle=css('--acc'); g.textAlign='center'; g.font='600 28px "IBM Plex Sans", sans-serif';
+    g.fillText('ASHRAE A1',X(22.5),Y(Psy.W(22.5,38,F.P)));
+    const px=X(F.Tdb), py=Y(Math.min(F.Wr,W1));
+    g.setLineDash([4,4]); g.strokeStyle=css('--bad'); g.lineWidth=2;
+    g.beginPath(); g.moveTo(px,py); g.lineTo(px,H-pb); g.moveTo(px,py); g.lineTo(pl,py); g.stroke(); g.setLineDash([]);
+    g.beginPath(); g.arc(px,py,13,0,7); g.fillStyle=css('--bad'); g.fill();
+    g.strokeStyle=css('--surf'); g.lineWidth=4.5; g.stroke();
+    g.fillStyle=css('--ink'); g.textAlign='left'; g.font='600 30px "IBM Plex Mono", monospace';
+    g.fillText('outdoor now',Math.min(px+14,W-pr-120),py-16);
+    g.font='500 28px "IBM Plex Mono", monospace'; g.fillStyle=css('--ink2');
+    g.fillText(`${F.Tdb.toFixed(1)}°C ${F.RH.toFixed(0)}%`,Math.min(px+14,W-pr-120),py+2);
+    const wwb=Psy.W(F.Twb,100,F.P);
+    g.beginPath(); g.arc(X(F.Twb),Y(Math.min(wwb,W1)),9,0,7); g.fillStyle=css('--cold'); g.fill();
+    g.font='600 26px "IBM Plex Mono", monospace'; g.textAlign='right';
+    g.fillText('WB '+F.Twb.toFixed(1)+'°',X(F.Twb)-8,Y(Math.min(wwb,W1))-8);
+  },
+  drawRain(F){
+    const c=$('rain'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=440,pl=60,pr=54,pt=24,pb=40;
+    g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const s=Feed.series(48);
+    if(s.length<3){g.fillStyle=css('--ink3');g.font='500 32px "IBM Plex Sans"';g.textAlign='center';
+      g.fillText('needs the live feed',W/2,H/2);return;}
+    const t0=s[0].ts,t1=s[s.length-1].ts, X=t=>pl+(t-t0)/(t1-t0)*(W-pl-pr);
+    const rmax=Math.max(1,...s.map(p=>p.rain));
+    const smAll=s.filter(p=>p.soil!=null).map(p=>p.soil);
+    g.fillStyle=css('--cold');
+    for(const p of s){ if(!p.rain) continue;
+      const h=(p.rain/rmax)*(H-pt-pb)*0.55;
+      g.fillRect(X(p.ts)-3,H-pb-h,6,h); }
+    if(smAll.length){
+      const lo=Math.min(...smAll)*0.98, hi=Math.max(...smAll)*1.02;
+      g.beginPath();
+      s.filter(p=>p.soil!=null).forEach((p,i)=>{
+        const y=H-pb-((p.soil-lo)/Math.max(hi-lo,1e-6))*(H-pt-pb);
+        i?g.lineTo(X(p.ts),y):g.moveTo(X(p.ts),y);});
+      g.strokeStyle=css('--live'); g.lineWidth=5; g.stroke();
+    }
+    g.fillStyle=css('--ink3'); g.font='500 30px "IBM Plex Sans"'; g.textAlign='left';
+    g.fillStyle=css('--cold'); g.fillRect(pl+4,pt+2,15,4);
+    g.fillStyle=css('--ink2'); g.fillText('precipitation',pl+26,pt+10);
+    g.fillStyle=css('--live'); g.fillRect(pl+160,pt+2,15,4);
+    g.fillStyle=css('--ink2'); g.fillText('soil moisture 0–7 cm',pl+182,pt+10);
+    g.textAlign='center'; g.fillStyle=css('--ink3'); g.font='500 28px "IBM Plex Mono"';
+    for(let i=0;i<s.length;i+=Math.max(1,Math.floor(s.length/5))){
+      const d=new Date(s[i].ts); g.fillText(String(d.getHours()).padStart(2,'0')+':00',X(s[i].ts),H-pb+8);}
+  },
+  drawDiurnal(){
+    const c=$('diu'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=380,pl=54,pr=30,pt=26,pb=42;
+    g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const p=RD.diurnal.profile, bw=(W-pl-pr)/24;
+    const hNow=new Date().getHours();
+    for(let i=0;i<24;i++){
+      const h=p[i]*(H-pt-pb);
+      g.fillStyle=(i===hNow)?css('--acc'):css('--acc-line');
+      g.globalAlpha=(i===hNow)?1:.55;
+      g.fillRect(pl+i*bw+1,H-pb-h,bw-2,h);
+    }
+    g.globalAlpha=1;
+    g.fillStyle=css('--ink3'); g.font='500 26px "IBM Plex Mono"'; g.textAlign='center';
+    for(let i=0;i<24;i+=4) g.fillText(String(i).padStart(2,'0'),pl+i*bw+bw/2,H-pb+8);
+    g.textAlign='left'; g.font='500 28px "IBM Plex Sans"'; g.fillStyle=css('--ink2');
+    g.fillText('request intensity by hour (UTC) — real trace',pl,pt-8);
+    g.fillStyle=css('--acc'); g.font='600 28px "IBM Plex Mono"'; g.textAlign='right';
+    g.fillText('now '+String(hNow).padStart(2,'0')+':00',W-pr,pt-8);
+  },
+  drawFc(F){
+    const c=$('fc'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=440,pl=62,pr=58,pt=26,pb=44;
+    g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const pr2=Model.project(48);
+    const note=$('fcNote');
+    if(pr2.length<3){g.fillStyle=css('--ink3');g.font='500 32px "IBM Plex Sans"';g.textAlign='center';
+      g.fillText('needs the live feed',W/2,H/2); if(note)note.textContent='The 48-hour projection needs the hourly forecast.'; return;}
+    const t0=pr2[0].ts,t1=pr2[pr2.length-1].ts, X=t=>pl+(t-t0)/(t1-t0)*(W-pl-pr);
+    const lo=Math.min(12,...pr2.map(p=>p.wb))-2, hi=Math.max(28,...pr2.map(p=>p.wb))+2;
+    const Y=v=>H-pb-(v-lo)/(hi-lo)*(H-pt-pb);
+    const wmax=Math.max(...pr2.map(p=>p.water))*1.25||1, Yw=v=>H-pb-v/wmax*(H-pt-pb);
+    g.strokeStyle=css('--sunk'); g.lineWidth=2; g.fillStyle=css('--ink3');
+    g.font='500 30px "IBM Plex Mono"'; g.textAlign='right'; g.textBaseline='middle';
+    for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;
+      g.beginPath();g.moveTo(pl,Y(v));g.lineTo(W-pr,Y(v));g.stroke(); g.fillText(v.toFixed(0)+'°',pl-8,Y(v));}
+    g.beginPath(); g.moveTo(X(pr2[0].ts),H-pb);
+    pr2.forEach(p=>g.lineTo(X(p.ts),Yw(p.water)));
+    g.lineTo(X(pr2[pr2.length-1].ts),H-pb); g.closePath(); g.fillStyle=css('--acc-soft'); g.fill();
+    g.beginPath(); pr2.forEach((p,i)=>i?g.lineTo(X(p.ts),Yw(p.water)):g.moveTo(X(p.ts),Yw(p.water)));
+    g.strokeStyle=css('--acc'); g.lineWidth=4.5; g.stroke();
+    g.beginPath(); pr2.forEach((p,i)=>i?g.lineTo(X(p.ts),Y(p.wb)):g.moveTo(X(p.ts),Y(p.wb)));
+    g.strokeStyle=css('--hot'); g.lineWidth=3; g.stroke();
+    const nx=X(Date.now());
+    g.setLineDash([5,5]); g.strokeStyle=css('--rule2'); g.lineWidth=3;
+    g.beginPath(); g.moveTo(nx,pt); g.lineTo(nx,H-pb); g.stroke(); g.setLineDash([]);
+    g.fillStyle=css('--ink3'); g.font='500 28px "IBM Plex Sans"'; g.textAlign='left'; g.textBaseline='top';
+    g.fillText('now',nx+5,pt+4);
+    g.fillStyle=css('--hot'); g.fillRect(pl+4,pt+2,15,4);
+    g.fillStyle=css('--ink2'); g.fillText('wet-bulb °C',pl+26,pt+2);
+    g.fillStyle=css('--acc'); g.fillRect(pl+150,pt+2,15,4);
+    g.fillStyle=css('--ink2'); g.fillText('projected water draw',pl+172,pt+2);
+    const fut=pr2.filter(p=>p.ts>Date.now());
+    if(fut.length&&note){
+      const pk=fut.reduce((a,b)=>b.wb>a.wb?b:a), tr=fut.reduce((a,b)=>b.wb<a.wb?b:a);
+      const nw=pr2.find(p=>p.ts>=Date.now())?.water||1;
+      note.innerHTML=`Wet-bulb peaks at <b>${pk.wb.toFixed(1)} °C</b> around `+
+        `<b>${new Date(pk.ts).toLocaleString('en-IN',{weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false})}</b>, `+
+        `pushing projected water draw about <b>${((pk.water/nw-1)*100).toFixed(0)} %</b> against now. `+
+        `The cheapest window is ${tr.wb.toFixed(1)} °C at ${new Date(tr.ts).toLocaleString('en-IN',{weekday:'short',hour:'2-digit',hour12:false})}.`;
+    }
+  },
+  drawSankey(F){
+    const c=$('san'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=360; g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const tot=F.evapLph+F.bdLph+F.padLph||1;
+    const bars=[
+      ['Evaporated (consumed)',F.evapLph,'--hot'],
+      ['Blowdown → RO',F.bdLph,'--warn'],
+      ['  RO permeate (recovered)',F.roPerm,'--live'],
+      ['  MD permeate (recovered)',F.mdPerm,'--live'],
+      ['  Concentrate → ZLD',F.mdConc,'--bad'],
+      ['Adiabatic pads',F.padLph,'--cold']
+    ];
+    const x0=250,x1=W-110, mx=Math.max(...bars.map(b=>b[1]),1);
+    g.font='500 32px "IBM Plex Sans"';
+    bars.forEach((b,i)=>{
+      const y=34+i*52;
+      g.fillStyle=css('--ink2'); g.textAlign='right'; g.fillText(b[0],x0-14,y+18);
+      const w=(b[1]/mx)*(x1-x0);
+      g.fillStyle=css(b[2]); g.globalAlpha=.85; g.fillRect(x0,y,Math.max(w,2),24); g.globalAlpha=1;
+      g.fillStyle=css('--ink'); g.textAlign='left'; g.font='500 32px "IBM Plex Mono"';
+      g.fillText(fmt(b[1],0)+' L/h',x0+Math.max(w,2)+10,y+18);
+      g.font='500 32px "IBM Plex Sans"';
+    });
+    g.fillStyle=css('--live'); g.font='600 34px "IBM Plex Sans"'; g.textAlign='left';
+    g.fillText(`${(100*F.recovered/Math.max(F.bdLph,1)).toFixed(0)} % of blowdown recovered · net draw ${fmt(F.netLph,0)} L/h`,30,H-16);
+  },
+  drawWaterfall(F,B){
+    const c=$('wf'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=460,pl=40,pb=70; g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const base=B.netLph, arch=B.netLph-(B.evapLph-F.evapLph)-(B.bdLph-F.bdLph), fin=F.netLph;
+    const mx=Math.max(base,1), sc=(H-90-pb)/mx;
+    const bars=[['Conventional',base,'--bad'],['+ architecture',Math.max(arch,0),'--warn'],['+ recovery',fin,'--live']];
+    const bw=150, gap=60;
+    bars.forEach((b,i)=>{
+      const x=pl+40+i*(bw+gap), h=Math.max(b[1]*sc,2), y=H-pb-h;
+      g.fillStyle=css(b[2]); g.globalAlpha=.88; g.fillRect(x,y,bw,h); g.globalAlpha=1;
+      g.fillStyle=css('--ink'); g.font='600 41px "IBM Plex Mono"'; g.textAlign='center';
+      g.fillText(fmt(b[1],0),x+bw/2,y-12);
+      g.fillStyle=css('--ink2'); g.font='500 32px "IBM Plex Sans"';
+      g.fillText(b[0],x+bw/2,H-pb+24);
+      if(i>0){
+        const px=pl+40+(i-1)*(bw+gap)+bw, py=H-pb-Math.max(bars[i-1][1]*sc,2);
+        g.strokeStyle=css('--rule2'); g.setLineDash([4,4]); g.lineWidth=1.5;
+        g.beginPath(); g.moveTo(px,py); g.lineTo(x,py); g.stroke(); g.setLineDash([]);
+        const drop=bars[i-1][1]-b[1];
+        g.fillStyle=css('--live'); g.font='600 30px "IBM Plex Mono"';
+        g.fillText('−'+fmt(drop,0),(px+x)/2,py-8);
+      }
+    });
+    g.fillStyle=css('--ink3'); g.font='500 30px "IBM Plex Sans"'; g.textAlign='left';
+    g.fillText('net freshwater draw, L/h — at the current live ambient condition',pl,30);
+  },
+  drawPlan(){
+    const pg=$('plan'); if(!pg) return;
+    if(pg.children.length!==Fleet.racks.length)
+      pg.innerHTML=Fleet.racks.map(k=>`<div title="${k.id}"></div>`).join('');
+    Fleet.racks.forEach((k,i)=>{
+      const c=V.ramp((k.tOut-26)/36);
+      pg.children[i].style.background=`rgb(${(c.r*255)|0},${(c.g*255)|0},${(c.b*255)|0})`;
+    });
+  }
+};
+
+/* ═════════ WIRING ═════════ */
+$('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-s]'); if(b) UI.go(b.dataset.s);});
+$('siteSel').innerHTML=SITES.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
+$('siteSel').addEventListener('change',async e=>{site=SITES[+e.target.value]; await Feed.load(site);});
+$('refreshBtn').addEventListener('click',()=>Feed.load(site));
+addEventListener('resize',()=>V.resize());
+
+function tourShow(){
+  const t=TOUR[UI.tourIx];
+  $('tour').classList.add('on');
+  $('tourStep').textContent=(UI.tourIx+1)+'/'+TOUR.length;
+  $('tourTxt').innerHTML=t.t;
+  if(UI.station!==t.s) UI.go(t.s);
+}
+$('tourBtn').addEventListener('click',()=>{
+  if(UI.tourIx>=0){UI.tourIx=-1;$('tour').classList.remove('on');$('tourBtn').classList.remove('on');return;}
+  UI.tourIx=0; $('tourBtn').classList.add('on'); tourShow();});
+$('tourNext').addEventListener('click',()=>{UI.tourIx=Math.min(UI.tourIx+1,TOUR.length-1);tourShow();});
+$('tourPrev').addEventListener('click',()=>{UI.tourIx=Math.max(UI.tourIx-1,0);tourShow();});
+$('tourEnd').addEventListener('click',()=>{UI.tourIx=-1;$('tour').classList.remove('on');$('tourBtn').classList.remove('on');});
+
+/* ═════════ BOOT ═════════ */
+(async function(){
+  Fleet.build();
+  Model.tick(new Date());
+  try{ V.init(); $('boot').style.opacity='0'; setTimeout(()=>$('boot').remove(),520); }
+  catch(err){ console.error('scene init failed',err);
+    $('boot').innerHTML='3D scene unavailable — the data panels still work.<br><span style="font-size:10px">'+err.message+'</span>'; }
+  UI.go('site');
+  await Feed.load(site);
+  let last=performance.now();
+  (function loop(now){
+    const dt=Math.min((now-last)/1000,.1); last=now;
+    const F=Model.tick(new Date());
+    V.update(dt,F);
+    requestAnimationFrame(loop);
+  })(last);
+  setInterval(()=>UI.render(),700);
+  setInterval(()=>Feed.load(site),10*60*1000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<title>Inside the NeeruAI Digital Twin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --paper:#F0F3F1;--surf:#FFF;--surf2:#F6F9F7;--sunk:#E8ECE9;
+  --ink:#141F1B;--ink2:#495951;--ink3:#77867E;
+  --rule:#D4DBD6;--rule2:#B7C2BA;
+  --acc:#0C505E;--acc-soft:#E0EDEF;--acc-line:#96BEC4;
+  --live:#19754A;--live-bg:#DCEEE3;
+  --replay:#1C5B82;--replay-bg:#DDE9F2;
+  --ref:#77867E;--ref-bg:#E8ECE9;
+  --warn:#96690A;--warn-bg:#F7EAD0;
+  --bad:#93301D;--bad-bg:#F7DFDA;
+  --sh:0 1px 0 rgba(20,31,27,.04),0 2px 14px rgba(20,31,27,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.68 "IBM Plex Sans",system-ui,-apple-system,sans-serif}
+h1,h2,h3,h4{margin:0;font-family:"Source Serif 4",Georgia,serif;text-wrap:balance}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.rail{height:4px;background:linear-gradient(90deg,#A8681C 0 16%,var(--acc) 16% 100%)}
+header.top{background:var(--surf);border-bottom:1px solid var(--rule);padding:30px 34px 26px}
+header.top .eb{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--warn);margin-bottom:12px}
+header.top h1{font-size:33px;font-weight:600;letter-spacing:-.02em;line-height:1.14;max-width:23ch}
+header.top p{margin:12px 0 0;color:var(--ink2);max-width:72ch;font-size:15.5px}
+header.top .box{margin-top:16px;padding:12px 15px;background:var(--acc-soft);border-left:3px solid var(--acc);
+  font-size:14px;max-width:76ch;border-radius:0 3px 3px 0}
+
+.shell{display:grid;grid-template-columns:240px minmax(0,1fr);align-items:start}
+aside{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:22px 14px 50px;
+  border-right:1px solid var(--rule);background:var(--surf)}
+aside .g{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:16px 0 5px;font-weight:600}
+aside .g:first-child{margin-top:0}
+aside a{display:block;padding:3px 9px;border-radius:3px;font-size:12.5px;text-decoration:none;
+  color:var(--ink2);border-left:2px solid transparent;line-height:1.45}
+aside a:hover{color:var(--acc);background:var(--surf2);border-left-color:var(--acc-line)}
+
+main{padding:30px 40px 80px;max-width:1000px}
+section{margin-bottom:42px;scroll-margin-top:14px}
+section>h2{font-size:25px;font-weight:600;letter-spacing:-.015em;padding-bottom:9px;
+  border-bottom:2px solid var(--ink);margin-bottom:18px;display:flex;align-items:baseline;gap:12px}
+section>h2 .n{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--acc);flex:none}
+h3{font-size:18px;font-weight:700;margin:26px 0 8px}
+h4{font-family:"IBM Plex Sans",sans-serif;font-size:14.5px;font-weight:700;margin:18px 0 6px}
+p{margin:0 0 13px;max-width:76ch}
+ul,ol{margin:0 0 13px;padding-left:22px;max-width:76ch}
+li{margin-bottom:7px}
+code{background:var(--sunk);padding:1px 5px;border-radius:2px;font-size:13.5px}
+.lede{font-family:"Source Serif 4",serif;font-size:17px;line-height:1.6;color:var(--ink2);max-width:70ch;margin-bottom:20px}
+
+.say{background:var(--acc-soft);border-left:3px solid var(--acc);border-radius:0 4px 4px 0;padding:14px 18px;margin:16px 0}
+.say .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--acc);display:block;margin-bottom:6px}
+.say p{margin:0;font-family:"Source Serif 4",serif;font-size:16.5px;line-height:1.55}
+.say p+p{margin-top:9px}
+.warn{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 4px 4px 0;padding:13px 17px;margin:16px 0}
+.warn .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--warn);display:block;margin-bottom:5px}
+.warn p{margin:0;font-size:14.5px}
+.warn p+p{margin-top:8px}
+
+figure{margin:20px 0 26px}
+figure img{width:100%;display:block;border:1px solid var(--rule);border-radius:4px;box-shadow:var(--sh)}
+figcaption{font-size:13px;color:var(--ink2);margin-top:9px;line-height:1.55;max-width:78ch}
+figcaption b{color:var(--ink)}
+
+.tw{overflow-x:auto;margin:16px 0 22px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--surf);
+  border:1px solid var(--rule);border-radius:4px;overflow:hidden;box-shadow:var(--sh)}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);font-weight:600;background:var(--surf2)}
+tr:last-child td{border-bottom:0}
+td.n{font-family:"IBM Plex Mono",monospace;text-align:right;font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--acc-soft);font-weight:600}
+
+.chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 7px;border-radius:2px}
+.chip.live{background:var(--live-bg);color:var(--live)}
+.chip.replay{background:var(--replay-bg);color:var(--replay)}
+.chip.ref{background:var(--ref-bg);color:var(--ref)}
+.chip.acc{background:var(--acc-soft);color:var(--acc)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
+
+.eq{background:var(--sunk);border-left:3px solid var(--acc-line);padding:11px 16px;margin:14px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:14px;border-radius:0 3px 3px 0}
+.eq .w{display:block;font-family:"IBM Plex Sans",sans-serif;font-size:13px;color:var(--ink2);margin-top:7px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--surf);border:1px solid var(--rule);border-radius:4px;padding:15px 17px;box-shadow:var(--sh)}
+.card h4{margin-top:0}
+.card p:last-child{margin-bottom:0}
+ol.script{counter-reset:s;list-style:none;padding-left:0}
+ol.script>li{counter-increment:s;position:relative;padding-left:42px;margin-bottom:15px}
+ol.script>li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--acc);font-weight:600;
+  border:1px solid var(--acc-line);border-radius:3px;padding:1px 6px;background:var(--acc-soft)}
+ol.script>li b{display:block;font-size:14.5px}
+footer{border-top:1px solid var(--rule);background:var(--surf);padding:22px 40px 40px;color:var(--ink3);font-size:12.5px}
+@media (max-width:920px){
+  .shell{grid-template-columns:1fr}
+  aside{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule)}
+  main{padding:24px 20px 60px}.two{grid-template-columns:1fr}
+  header.top{padding:22px 20px}header.top h1{font-size:26px}
+}
+</style>
+
+<div class="rail"></div>
+<header class="top">
+  <div class="eb">NeeruAI · digital twin documentation</div>
+  <h1>Inside the Digital Twin</h1>
+  <p>What it is, what every station shows, which datasets feed it, what the physics does, and exactly what is real versus modelled — written so you can present it and answer the hard questions.</p>
+  <div class="box">
+    <b>The single most important thing to be able to say:</b> there is no public live telemetry feed from any real data centre — nobody publishes their rack temperatures. So the twin is driven by three <em>real</em> things instead: <b>live meteorology</b> at the site's true coordinates, <b>real production workload traces</b> from Alibaba's published cluster data, and <b>real server power</b> from manufacturer LCA reports. Every input carries a provenance label on screen.
+  </div>
+</header>
+
+<div class="shell">
+<aside>
+  <div class="g">Foundations</div>
+  <a href="#s1">1 · What a digital twin is</a>
+  <a href="#s2">2 · The data problem, honestly</a>
+  <a href="#s3">3 · The three real datasets</a>
+  <div class="g">The six stations</div>
+  <a href="#st1">01 · Site &amp; climate</a>
+  <a href="#st2">02 · Data hall</a>
+  <a href="#st3">03 · Heat rejection</a>
+  <a href="#st4">04 · NeeruAI island</a>
+  <a href="#st5">05 · Impact</a>
+  <a href="#st6">06 · Datasets</a>
+  <div class="g">Under it</div>
+  <a href="#s4">4 · The physics chain</a>
+  <a href="#s5">5 · What is real vs modelled</a>
+  <div class="g">Delivery</div>
+  <a href="#s6">6 · Demo script</a>
+  <a href="#s7">7 · Questions he will ask</a>
+</aside>
+
+<main>
+
+<!-- ═══ 1 ═══ -->
+<section id="s1">
+  <h2><span class="n">01</span>What a digital twin actually is</h2>
+  <p class="lede">A dashboard shows you numbers. A digital twin is a <em>running model of a specific physical thing</em>, fed by real inputs, that stays in step with it and can be asked "what if".</p>
+  <p>Four properties separate the two, and this build has all four. If your sir asks "how is this not just a dashboard?", these are the four answers:</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:30%">Property</th><th>How this twin has it</th></tr></thead>
+    <tbody>
+      <tr><td><b>A specific physical referent</b></td><td>Five real Indian sites with real coordinates. Devanahalli is a real block at a real 169 % stage of groundwater extraction.</td></tr>
+      <tr><td><b>Live coupling to reality</b></td><td>Weather is fetched now, from the site's actual latitude and longitude, and refreshed every ten minutes.</td></tr>
+      <tr><td><b>A physical model, not a lookup</b></td><td>One chain of equations runs everything. Change any input and every downstream number moves consistently, because they are computed, not stored.</td></tr>
+      <tr><td><b>Counterfactual capability</b></td><td>Station 05 runs the <em>same</em> model twice — conventional facility and NeeruAI facility — on identical weather and workload. That is a "what if", which a dashboard cannot do.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="say"><span class="l">Say it like this</span>
+    <p>"It's a twin rather than a dashboard because there is one physics model underneath all six screens. Nothing is stored and displayed — every number is computed from live weather and real workload data, so if I change the cooling architecture on one screen, the water consumption on another screen moves for a physical reason."</p></div>
+</section>
+
+<!-- ═══ 2 ═══ -->
+<section id="s2">
+  <h2><span class="n">02</span>The data problem, honestly</h2>
+  <p>You asked for no dummy data. Here is the honest position, and it is a stronger one than pretending.</p>
+  <div class="warn"><span class="l">State this before anyone asks</span>
+    <p><b>No data centre publishes live telemetry.</b> Rack temperatures, coolant flows and water meters are commercially sensitive and, in India, not even reported to regulators. If anyone claims a twin with live data-centre telemetry, ask them for the endpoint.</p>
+    <p>So the question becomes: <em>what is the most real thing you can actually get?</em></p></div>
+
+  <p>The answer is that a data centre's cooling behaviour is dominated by <strong>one external variable you can get live and free: the weather at the site.</strong> Ambient wet-bulb temperature fixes the lowest temperature any evaporative device can reach, which fixes evaporation, which fixes water consumption and PUE. That is not a decoration around the model — it is the boundary condition the model is most sensitive to.</p>
+
+  <p>Everything else is then sourced from published real data rather than invented, and labelled by class:</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:120px">Class</th><th>Meaning</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip live">live</span></td><td>Fetched from a public API right now, timestamped</td><td>Weather, air quality, soil moisture, forecast</td></tr>
+      <tr><td><span class="chip replay">replay</span></td><td>A published real dataset played back against the clock</td><td>Workload demand, pod composition, server power</td></tr>
+      <tr><td><span class="chip ref">ref</span></td><td>A cited standard or survey constant</td><td>ASHRAE envelopes, BIS limits, CGWB extraction</td></tr>
+    </tbody>
+  </table></div>
+  <p>Station 06 lists every source with its class and fetch time, and lets you open the raw API response. <strong>That provenance labelling is itself a feature</strong> — it is exactly what the NeeruAI project argues Indian data centres are missing.</p>
+</section>
+
+<!-- ═══ 3 ═══ -->
+<section id="s3">
+  <h2><span class="n">03</span>The three real datasets</h2>
+
+  <h3>A · Live meteorology — Open-Meteo <span class="chip live">live</span></h3>
+  <p>A free, keyless, CORS-enabled meteorological API. The twin calls it with the selected site's real latitude and longitude and pulls dry-bulb temperature, relative humidity, dew point, surface pressure, wind, cloud cover, shortwave radiation, precipitation, shallow soil moisture and reference evapotranspiration — plus a 72-hour hourly forecast and 24 hours of past data. A second call pulls PM2.5 and PM10.</p>
+  <p>If the fetch fails, the twin falls back to the <em>last successful real fetch</em> stored in the browser and labels itself <span class="chip replay">cached</span>. It never silently substitutes invented numbers.</p>
+
+  <h3>B · Real production workload — Alibaba cluster traces <span class="chip replay">replay</span></h3>
+  <p>Two distinct traces from Alibaba's published cluster data, doing two different jobs:</p>
+  <div class="two">
+    <div class="card">
+      <h4>Demand shape</h4>
+      <p><code>cluster-trace-v2026-GenAI</code> — <b>26,823 real inference requests</b> over 23 days (Nov–Dec 2024), with real timestamps and execution times. Aggregated by hour of day, this gives the real diurnal demand curve you see in station 02.</p>
+      <p style="margin-top:9px;color:var(--ink2);font-size:13.5px">Median request took 23 s. This is a generative-AI inference service — exactly the workload category driving Indian data centre growth.</p>
+    </div>
+    <div class="card">
+      <h4>Workload composition</h4>
+      <p><code>cluster-trace-gpu-v2023</code> — <b>8,152 real production pods</b> with their actual CPU, memory and GPU requests. 1,037 of them are placed into the twin's racks, so when you click a rack you see genuine scheduled workloads.</p>
+      <p style="margin-top:9px;color:var(--ink2);font-size:13.5px">86.7 % carry accelerators; median pod asks for 11.3 cores and 40 GiB.</p>
+    </div>
+  </div>
+  <div class="warn"><span class="l">The honest caveat on the demand curve</span>
+    <p>The GenAI trace is <b>one service</b>, so its hourly profile drops to near zero in the middle of the day. A real hall runs many tenants and never idles completely. So the twin uses the trace shape for the <em>variable</em> part of demand on top of an always-on floor: <code>u = 0.28 + 0.62 · shape(hour)</code>. The shape is real; the floor is a modelling choice, and you should say so.</p></div>
+
+  <h3>C · Real server power — Boavizta <span class="chip replay">replay</span></h3>
+  <p>An open dataset compiled from <strong>manufacturer life-cycle assessment reports</strong>. The twin uses 26 real server models — Dell PowerEdge R840, R940, R740XD, HP ProLiant DL580 and others — with their reported annual energy consumption converted to average power (168–380 W).</p>
+  <p>Rows A–C of the hall are populated with these real machines, and rack power is anchored to their real figures rather than assumed.</p>
+  <div class="warn"><span class="l">Two caveats to volunteer</span>
+    <p><b>1.</b> The reported figure is <em>typical annual</em> power, not a full power-versus-load curve. The twin anchors to it at 40 % utilisation and scales around it with a SPECpower-shaped curve — that curve shape is an assumption.</p>
+    <p><b>2.</b> Boavizta carries <em>no GPU server entries</em>. So the accelerated racks in rows D–F use an assumed 700 W per accelerator. The twin labels those racks <span class="chip warn">assumed</span> and the general racks <span class="chip replay">measured</span>, in the rack inspector. Point at that label yourself — it shows you know where your data stops.</p></div>
+</section>
+
+<!-- ═══ STATIONS ═══ -->
+<section id="st1">
+  <h2><span class="n">Station 01</span>Site &amp; climate</h2>
+  <figure><img src="../docs/images/twin2-site.png" alt="Station 01 — site and climate"></figure>
+  <p class="lede">Establishes <em>where</em> and <em>under what atmospheric conditions</em>. This is the station that makes the point that weather is the physics, not the backdrop.</p>
+  <h4>Left — Ambient, measured</h4>
+  <p>Ten live quantities. Dry-bulb, humidity and dew point come straight from the API. Wet-bulb is computed from dry-bulb and humidity by <strong>Stull's empirical relation</strong>. Humidity ratio, enthalpy and moist-air density follow from psychrometric identities at the measured barometric pressure — which at Devanahalli is around 915 hPa, not 1013, because the site is roughly 900 m above sea level. That altitude correction matters and is in the model.</p>
+  <h4>Left — Psychrometric chart</h4>
+  <p>The live outdoor state plotted as a point, with the saturation curve, relative-humidity curves, and the <strong>ASHRAE A1 recommended envelope</strong> shaded. The blue marker on the saturation line is the wet-bulb. A mechanical examiner will recognise this chart immediately, and seeing a live point on it is persuasive.</p>
+  <h4>Right — Groundwater context and recharge signals</h4>
+  <p>The CGWB stage of extraction for the selected block, and a live chart of precipitation and shallow soil moisture from the same feed. The argument: extraction is measured against recharge, and recharge is what rainfall and soil moisture drive. When that chart stays flat through a dry season, the 169 % is not being repaid.</p>
+  <div class="say"><span class="l">Say it like this</span>
+    <p>"Wet-bulb is the number that matters. It's the coldest any evaporative device can get, so it sets how much water this facility has to evaporate to reject its heat. It's live, and it's why the water number on the other screens moves during the day."</p></div>
+</section>
+
+<section id="st2">
+  <h2><span class="n">Station 02</span>Data hall</h2>
+  <figure><img src="../docs/images/twin2-hall.png" alt="Station 02 — data hall"></figure>
+  <p class="lede">The inside of the building. 48 racks in three pods, deliberately a <strong>mixed fleet</strong>, because that is the Indian reality and because the two halves reject heat through completely different paths.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Rows</th><th>Type</th><th>Populated from</th><th>Power source</th></tr></thead>
+    <tbody>
+      <tr><td><b>A – C</b></td><td>Air-cooled general compute</td><td>36 real Dell / HP servers per rack, plus real non-GPU pods</td><td><span class="chip replay">measured</span> manufacturer LCA</td></tr>
+      <tr><td><b>D – F</b></td><td>Liquid-cooled accelerators</td><td>Real GPU pods until 32 accelerators are placed</td><td><span class="chip warn">assumed</span> 700 W per accelerator</td></tr>
+    </tbody>
+  </table></div>
+  <h4>What is animated, and why</h4>
+  <ul>
+    <li><strong>Rack colour</strong> — real computed exhaust temperature, on the ramp in the legend. Air rows and liquid rows sit in visibly different bands because they genuinely run at different temperatures.</li>
+    <li><strong>Blue particles rising from the floor</strong> — cold supply air through perforated tiles in the cold aisles.</li>
+    <li><strong>Orange particles above the racks</strong> — hot exhaust rising in the contained hot aisles. Particle speed scales with fleet utilisation.</li>
+    <li><strong>Translucent panels over each pod</strong> — hot-aisle containment. The model uses 3 % recirculation with containment and 20 % without.</li>
+  </ul>
+  <h4>Click a rack</h4>
+  <figure><img src="../docs/images/twin2-rack.png" alt="Rack inspector"></figure>
+  <p>The inspector opens with that rack's utilisation, power, inlet and exhaust temperature, junction temperature against the 90 °C device limit, and <strong>a table of the real Alibaba pods scheduled on it</strong> with their actual CPU, memory and GPU requests. For a general rack it also lists the real server models inside.</p>
+  <div class="say"><span class="l">The line that lands</span>
+    <p>"These aren't invented workloads. Each of these rows is a real pod from Alibaba's production GPU cluster, with the CPU and memory it actually requested. There are 1,037 of them placed across this hall."</p></div>
+</section>
+
+<section id="st3">
+  <h2><span class="n">Station 03</span>Heat rejection</h2>
+  <figure><img src="../docs/images/twin2-cooling.png" alt="Station 03 — heat rejection"></figure>
+  <p class="lede">Where the electricity goes after it becomes heat — and where the water is consumed.</p>
+  <p>The plant has three elements: a <strong>dry cooler bank</strong> serving the liquid loop, a <strong>chiller</strong> serving the air loop, and a <strong>cooling tower</strong> rejecting the chiller's heat. Fans spin at a rate scaled to load; a vapour plume appears above the tower only when evaporation is actually happening.</p>
+  <h4>The decision the twin makes every step</h4>
+  <p>This is the part to dwell on, because it is genuinely live control logic rather than animation:</p>
+  <div class="eq">if (T<sub>db</sub> + 8 K ≤ T<sub>supply</sub> + 5)  →  DRY COOLING, zero water
+    <span class="w">The 40 °C liquid loop can reject to ambient air through a dry cooler on fans alone whenever ambient allows. Otherwise adiabatic pads pre-cool the entering air toward the wet-bulb, which costs some water but far less than a tower.</span></div>
+  <div class="eq">if (T<sub>wb</sub> + 5 + 2 &lt; 14 °C)  →  WATER-SIDE ECONOMISER, chiller off
+    <span class="w">The air loop needs chilled water at 14 °C. A free-cooling economiser only works if the wet-bulb is low enough — which in Bengaluru it never is. So the chiller runs, and its COP is derated from the live condensing temperature.</span></div>
+  <h4>Why water is consumed</h4>
+  <p>A tower rejects heat mainly by <strong>evaporating</strong> water. Pure water leaves as vapour and every dissolved salt stays behind, so the circulating water concentrates and a portion must be bled off continuously — <strong>blowdown</strong>. The twin computes both from the live wet-bulb:</p>
+  <div class="eq">ṁ<sub>evap</sub> = f<sub>latent</sub> · Q̇<sub>tower</sub> / h<sub>fg</sub> &nbsp;&nbsp;·&nbsp;&nbsp; ṁ<sub>bd</sub> = ṁ<sub>evap</sub> / (CoC − 1)
+    <span class="w">f<sub>latent</sub> itself rises with wet-bulb — at higher humidity a larger share of rejection must be latent. That is why the water number tracks weather rather than sitting at a fixed coefficient.</span></div>
+  <h4>Right panel — 48-hour outlook</h4>
+  <p>Because the feed carries a real hourly forecast, the twin projects wet-bulb and water draw two days ahead and writes a sentence naming when the peak lands and which window is cheapest for deferrable compute. <strong>That is genuine predictive work on real forecast data</strong>, and it is the clearest demonstration that this is a twin and not a picture.</p>
+</section>
+
+<section id="st4">
+  <h2><span class="n">Station 04</span>NeeruAI island — our solution</h2>
+  <figure><img src="../docs/images/twin2-recovery.png" alt="Station 04 — NeeruAI recovery island"></figure>
+  <p class="lede">The intervention. Everything before this station is a description of the problem; this is the part that is ours.</p>
+  <h4>The train, left to right in the 3D view</h4>
+  <ol>
+    <li><strong>Blowdown tank</strong> — catches the tower bleed that would otherwise go to drain. This is free feedstock: already concentrated, already waste, needs no new abstraction permit.</li>
+    <li><strong>RO skid</strong> — recovers 75 % of it cheaply as clean permeate, returned to the tower basin.</li>
+    <li><strong>MD module</strong> — takes the RO reject, which RO cannot economically push further because osmotic pressure has risen, and distils it using <strong>waste heat tapped from the cooling loop</strong>. Glows green when running.</li>
+    <li><strong>Quality gate</strong> — every batch checked against BIS IS 10500 drinking-water limits. Green when passing, red when not.</li>
+  </ol>
+  <h4>Why RO and MD together</h4>
+  <p>They fail in opposite regimes, which is the whole argument:</p>
+  <div class="tw"><table>
+    <thead><tr><th>Stream</th><th class="n">Osmotic pressure</th><th class="n">MD driving force</th><th>Consequence</th></tr></thead>
+    <tbody>
+      <tr><td>Tower blowdown</td><td class="n">1.3 bar</td><td class="n">—</td><td>Easy for RO</td></tr>
+      <tr><td>RO reject</td><td class="n">5.2 bar</td><td class="n">−0.4 %</td><td>RO limited by scaling</td></tr>
+      <tr class="hl"><td>MD concentrate</td><td class="n">17.5 bar</td><td class="n">−0.8 %</td><td>RO would need &gt; 30 bar; MD barely notices</td></tr>
+    </tbody>
+  </table></div>
+  <p>Osmotic pressure rises thirteenfold along the train. The MD driving force falls by under one percent, because MD is driven by <em>vapour pressure</em>, which depends on temperature, not concentration.</p>
+  <h4>The live panel</h4>
+  <p>MD feed temperature, polarisation coefficient τ, flux, permeate rate, concentrate to ZLD, and the waste heat consumed — with the percentage of rejected heat that represents. It is a small percentage, and that is the point: <strong>the constraint is heat grade, not heat quantity.</strong></p>
+  <div class="warn"><span class="l">Expect this question</span>
+    <p>"If you only use 0.6 % of the waste heat, why does the heat matter?"</p>
+    <p>Because there is vastly more heat than the MD unit needs — what is scarce is heat <em>hot enough to be useful</em>. That is why the architecture choice, which sets temperature, dominates the design.</p></div>
+</section>
+
+<section id="st5">
+  <h2><span class="n">Station 05</span>Impact</h2>
+  <figure><img src="../docs/images/twin2-impact.png" alt="Station 05 — impact comparison"></figure>
+  <p class="lede">The same model run twice, on the same live weather and the same workload. The only differences are the cooling architecture and whether the recovery island exists.</p>
+  <p>This is the strongest screen in the twin, because it is a controlled comparison rather than a claim. Typical figures at a mid-afternoon Bengaluru condition:</p>
+  <div class="tw"><table>
+    <thead><tr><th>Metric</th><th class="n">Conventional</th><th class="n">NeeruAI</th><th>Why it moves</th></tr></thead>
+    <tbody>
+      <tr><td>PUE</td><td class="n">1.257</td><td class="n">1.184</td><td>Chiller load falls — most heat leaves via dry coolers</td></tr>
+      <tr><td>Chiller power, kW</td><td class="n">80</td><td class="n">38</td><td>Only the air portion still needs mechanical cooling</td></tr>
+      <tr><td>Evaporation, L/h</td><td class="n">666</td><td class="n">318</td><td>Less tower duty means less water evaporated</td></tr>
+      <tr><td>Water recovered, L/h</td><td class="n">0</td><td class="n">92</td><td>The recovery island</td></tr>
+      <tr class="hl"><td>Net water draw, L/h</td><td class="n">874</td><td class="n">326</td><td><b>−63 %</b></td></tr>
+      <tr><td>WUE, L/kWh</td><td class="n">1.79</td><td class="n">0.67</td><td>US industry average is about 1.80</td></tr>
+    </tbody>
+  </table></div>
+  <h4>The waterfall — and the point it makes</h4>
+  <p>The right-hand chart decomposes the saving into two independent mechanisms, and the ordering is the honest lesson of the whole project:</p>
+  <ul>
+    <li><strong>Architecture change</strong> does most of the work — it removes the chiller and most of the evaporation.</li>
+    <li><strong>The recovery island</strong> closes the remainder — it can only ever address the blowdown, which is a quarter of the make-up.</li>
+  </ul>
+  <p>They are multiplicative, not alternatives. Recovery alone would be a much weaker project, and saying so makes the argument credible rather than salesy.</p>
+  <div class="warn"><span class="l">The caveat is on screen — read it aloud</span>
+    <p>The baseline is a <b>modelled</b> conventional facility, not a measured one. Same code, chilled-water loop, no recovery. It is a fair internal comparison because everything else is held identical, but it is <em>not</em> a validated benchmark against a specific real data centre. The annualised figures extrapolate an instantaneous rate and are indicative only; a real number needs a full weather year.</p></div>
+</section>
+
+<section id="st6">
+  <h2><span class="n">Station 06</span>Datasets &amp; provenance</h2>
+  <figure><img src="../docs/images/twin2-data.png" alt="Station 06 — datasets and provenance"></figure>
+  <p class="lede">The station that answers "where did this number come from" for every number in the twin.</p>
+  <ul>
+    <li><strong>Provenance table</strong> — every source with its class chip and the exact time it was fetched.</li>
+    <li><strong>Raw API response</strong> — expandable, showing the actual JSON the browser received, including coordinates and elevation. Open this if anyone doubts the feed is live.</li>
+    <li><strong>Dataset detail</strong> — trace sizes, pod counts, median pod shape, model counts.</li>
+    <li><strong>Real server models</strong> — the actual Dell and HP machines with their reported power.</li>
+    <li><strong>Model equations</strong> — the full chain on one card, so a mechanical examiner can check the physics without reading code.</li>
+  </ul>
+  <div class="say"><span class="l">Close the demo here</span>
+    <p>"And this is the provenance screen. Every input is labelled live, replay or reference. You can open the raw API response and see the coordinates and the timestamp. Nothing on any of these screens is dummy data — and that traceability is exactly what our project argues Indian data centres are missing."</p></div>
+</section>
+
+<!-- ═══ 4 ═══ -->
+<section id="s4">
+  <h2><span class="n">04</span>The physics chain</h2>
+  <p class="lede">One chain runs all six stations. This is what makes it a twin. Learn to narrate it in order.</p>
+  <div class="eq">real trace → utilisation → rack power → heat → coolant ΔT → rejection mode → evaporation → blowdown → RO → MD → quality gate → PUE &amp; WUE</div>
+  <div class="tw"><table>
+    <thead><tr><th style="width:190px">Step</th><th>Model</th><th>Fed by</th></tr></thead>
+    <tbody>
+      <tr><td>Fleet utilisation</td><td class="mono">u = 0.28 + 0.62 · shape(hour)</td><td><span class="chip replay">Alibaba GenAI trace</span></td></tr>
+      <tr><td>Rack power</td><td class="mono">P = P_typ · s(u)/s(0.40), s(u)=k+(1−k)u^1.1</td><td><span class="chip replay">Boavizta LCA</span></td></tr>
+      <tr><td>Heat to remove</td><td class="mono">Q = 0.96 · P_IT</td><td>—</td></tr>
+      <tr><td>Coolant rise</td><td class="mono">ΔT = Q·60/(ṁ·c_p)</td><td>—</td></tr>
+      <tr><td>Junction temperature</td><td class="mono">T_j = T_coolant + Q_die · R_th</td><td>R_th = 0.045 K/W</td></tr>
+      <tr><td>Wet-bulb</td><td class="mono">T_wb = Stull(T_db, RH)</td><td><span class="chip live">Open-Meteo</span></td></tr>
+      <tr><td>Rejection mode</td><td class="mono">dry / adiabatic / chiller, from T_db and T_wb</td><td><span class="chip live">Open-Meteo</span></td></tr>
+      <tr><td>Chiller efficiency</td><td class="mono">COP = 6.6 − 0.085·(T_cond − 28)</td><td><span class="chip live">derated live</span></td></tr>
+      <tr><td>Evaporation</td><td class="mono">ṁ_evap = f_lat · Q_tower / h_fg</td><td><span class="chip live">f_lat from T_wb</span></td></tr>
+      <tr><td>Blowdown</td><td class="mono">ṁ_bd = ṁ_evap/(CoC − 1)</td><td>CoC = 4.2</td></tr>
+      <tr><td>Vapour pressure</td><td class="mono">Antoine equation</td><td>—</td></tr>
+      <tr><td>MD flux</td><td class="mono">J = B·(p_w(T_fm)·a_w − p_w(T_pm))</td><td>B = 2.6×10⁻³</td></tr>
+      <tr><td>Polarisation</td><td class="mono">τ = 0.78 − 0.004·(T_f − T_p)</td><td>—</td></tr>
+      <tr><td>Metrics</td><td class="mono">PUE = P_total/P_IT · WUE = L_net/P_IT</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p>The sun position in the 3D scene is also computed — real solar altitude and azimuth for the site's coordinates and the current minute, so the lighting matches the real sky outside.</p>
+</section>
+
+<!-- ═══ 5 ═══ -->
+<section id="s5">
+  <h2><span class="n">05</span>What is real and what is modelled</h2>
+  <p class="lede">Volunteer this. It costs nothing and it makes every other claim credible.</p>
+  <div class="two">
+    <div class="card">
+      <h4><span class="chip live">Real</span></h4>
+      <ul style="margin-bottom:0">
+        <li>Weather, air quality, soil moisture, forecast — live, at real coordinates</li>
+        <li>26,823 inference requests shaping demand</li>
+        <li>8,152 production pods; 1,037 placed in racks</li>
+        <li>26 server models with manufacturer-reported power</li>
+        <li>CGWB extraction figures, BIS limits, ASHRAE classes</li>
+        <li>All physics — psychrometrics, Antoine, heat balance</li>
+        <li>Solar position for the scene lighting</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4><span class="chip warn">Modelled or assumed</span></h4>
+      <ul style="margin-bottom:0">
+        <li>The facility itself — a representative 48-rack hall, not a specific building</li>
+        <li>Accelerator power at 700 W — Boavizta has no GPU entries</li>
+        <li>The always-on demand floor of 0.28</li>
+        <li>SPECpower curve <em>shape</em> around the real power anchor</li>
+        <li>Membrane coefficient B and τ from literature, not measured</li>
+        <li>The conventional baseline in station 05</li>
+        <li>Annualised figures — extrapolated, not simulated over a year</li>
+      </ul>
+    </div>
+  </div>
+  <div class="say"><span class="l">How to phrase it</span>
+    <p>"The facility is representative rather than a specific building — but it isn't invented. The workload, the server power, the weather and the physics are all real, and the twin labels on screen which is which. What a real deployment needs from here is calibration against one site's meters, not a redesign."</p></div>
+</section>
+
+<!-- ═══ 6 ═══ -->
+<section id="s6">
+  <h2><span class="n">06</span>Demo script</h2>
+  <p class="lede">There is a <strong>Guided tour</strong> button in the toolbar that walks these ten beats automatically with captions. Use it if you are nervous; drive manually if you are not.</p>
+  <ol class="script">
+    <li><b>Open on station 01.</b> "This is a real location — Devanahalli, where a lot of India's new capacity is going. The block is at 169 % of sustainable extraction." Point at the live weather and the fetch timestamp.</li>
+    <li><b>Point at wet-bulb.</b> "This is the number that decides everything downstream. It's the coldest any evaporative device can reach." Show it on the psychrometric chart.</li>
+    <li><b>Station 02.</b> "48 racks. Rows A–C are real Dell and HP servers. Rows D–F host real GPU pods from Alibaba's production cluster." Orbit once.</li>
+    <li><b>Click a rack.</b> Show the pod table. "These are real scheduled workloads with the CPU and memory they actually requested."</li>
+    <li><b>Station 03.</b> "All that electricity becomes heat. The liquid loop is dry-cooling right now — zero water. The air loop needs a chiller, and the chiller drives the tower, and the tower is what drinks."</li>
+    <li><b>Point at the 48-hour outlook.</b> "This is real forecast data, so the twin can say when water draw will peak and when the cheapest window is."</li>
+    <li><b>Station 04.</b> Walk the train: blowdown → RO → MD → quality gate. "The heat driving the MD unit is heat the site was throwing away."</li>
+    <li><b>Point at the osmotic pressure table.</b> "RO and MD fail in opposite regimes — that's why the hybrid, not a preference."</li>
+    <li><b>Station 05.</b> "Same weather, same workload, modelled twice. Net water draw 874 down to 326 litres an hour." Then read the caveat aloud.</li>
+    <li><b>Station 06.</b> Open the raw API response. "Every input is labelled and traceable. Nothing here is dummy data."</li>
+  </ol>
+  <div class="warn"><span class="l">Practical</span>
+    <p>Open the file once <b>before</b> the meeting on the network you will present on, and confirm the feed chip says <span class="chip live">live</span>. If the venue blocks the API the twin will fall back to cached or offline — still works, but the "it's live" beat is your strongest one. Three.js is bundled inside the file, so the 3D never depends on the network.</p></div>
+</section>
+
+<!-- ═══ 7 ═══ -->
+<section id="s7">
+  <h2><span class="n">07</span>Questions he will ask</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:32%">Question</th><th>Answer</th></tr></thead>
+    <tbody>
+      <tr><td><b>Is this real data or simulated?</b></td><td>Both, labelled. Live weather, real Alibaba workload traces, real manufacturer server power. The facility is representative and the physics is computed. Station 06 shows the provenance of every input.</td></tr>
+      <tr><td><b>Why not real data centre telemetry?</b></td><td>It does not exist publicly — nobody publishes it, and in India it isn't even reported to regulators. That absence is literally what our project is about.</td></tr>
+      <tr><td><b>How is this a twin and not a dashboard?</b></td><td>One physics model drives all six screens, it is coupled to live weather, and it can run counterfactuals — station 05 runs the same model twice.</td></tr>
+      <tr><td><b>Where does the heat come from if you're cooling?</b></td><td>Cooling transports heat, it doesn't destroy it. The facility already carries its heat to a tower and throws it away. We intercept a fraction on the way.</td></tr>
+      <tr><td><b>Is your GPU power real?</b></td><td>No — and the twin says so. Boavizta has no GPU server entries, so accelerated racks use 700 W per accelerator and are labelled <span class="chip warn">assumed</span>.</td></tr>
+      <tr><td><b>Your baseline looks flattering.</b></td><td>It is modelled, not measured, and the caveat card says so. It is a fair internal comparison because weather, workload and code are identical; it is not a benchmark against a named facility.</td></tr>
+      <tr><td><b>Why does water change with weather?</b></td><td>Because evaporation is computed from the latent fraction of tower duty at the measured wet-bulb, and that latent fraction rises with humidity. Switch the site to Chennai and watch WUE worsen at the same IT load.</td></tr>
+      <tr><td><b>What's the MD flux model?</b></td><td>Antoine vapour pressure across the membrane, corrected for temperature polarisation. B and τ are literature values — measuring them is the bench work in the proposal.</td></tr>
+      <tr><td><b>Can it take a different trace?</b></td><td>Yes. The pod and demand data are embedded as JSON; swapping in another published trace is a data change, not a code change.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="say"><span class="l">If you only remember one sentence</span>
+    <p>"No data centre publishes live telemetry, so instead of faking it we drove the twin with the things that <em>are</em> real and public: live weather at the site's actual coordinates, real production workload traces, and real manufacturer server power — and we labelled every single input on screen so you can check it."</p></div>
+</section>
+
+</main>
+</div>
+<footer>
+  NeeruAI digital twin documentation · companion to <code>digital-twin/neeruai-twin-v2.html</code><br>
+  Datasets: Open-Meteo (live) · Alibaba cluster-trace-v2026-GenAI and cluster-trace-gpu-v2023 · Boavizta environmental-footprint-data · ASHRAE TC 9.9 · CGWB 2024 · BIS IS 10500.
+</footer>
