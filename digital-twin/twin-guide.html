@@ -138,6 +138,7 @@ footer{border-top:1px solid var(--rule);background:var(--surf);padding:22px 40px
   <a href="#s4">4 · The physics chain</a>
   <a href="#s5">5 · What is real vs modelled</a>
   <div class="g">Delivery</div>
+  <a href="#sctl">8 · The control strip</a>
   <a href="#s6">6 · Demo script</a>
   <a href="#s7">7 · Questions he will ask</a>
 </aside>
@@ -426,6 +427,49 @@ footer{border-top:1px solid var(--rule);background:var(--surf);padding:22px 40px
   </ol>
   <div class="warn"><span class="l">Practical</span>
     <p>Open the file once <b>before</b> the meeting on the network you will present on, and confirm the feed chip says <span class="chip live">live</span>. If the venue blocks the API the twin will fall back to cached or offline — still works, but the "it's live" beat is your strongest one. Three.js is bundled inside the file, so the 3D never depends on the network.</p></div>
+</section>
+
+
+<!-- ═══ controls ═══ -->
+<section id="sctl">
+  <h2><span class="n">08</span>The control strip — driving it live</h2>
+  <figure><img src="../docs/images/twin2-controls.png" alt="The control strip, with the clock running at 1 h/s"></figure>
+  <p class="lede">A twin you cannot poke is just a picture. Everything below changes the model in real time, and every downstream number on every station follows.</p>
+
+  <h3>Clock — the one that matters most</h3>
+  <p>By default the twin runs on the real wall clock, which is correct but undramatic: the demand curve moves by a fraction of one hourly step during a demo. So the clock can be decoupled and run fast.</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:130px">Mode</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><b>Live</b></td><td>Real time, real current observation. The honest default.</td></tr>
+      <tr><td><b>1 min/s</b></td><td>60×. Good for watching the trend chart move while you talk.</td></tr>
+      <tr><td><b>10 min/s</b></td><td>600×. A full day in four minutes.</td></tr>
+      <tr class="hl"><td><b>1 h/s</b></td><td>3600×. <b>A full day in 24 seconds.</b> Use this one — the diurnal swing in the real trace becomes obvious, the sun sets in the 3D scene, and the water draw visibly tracks the wet-bulb.</td></tr>
+      <tr><td><b>Scrub</b></td><td>A slider over the forecast window, −24 h to +48 h. Drag it and the facility re-solves at that instant.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warn"><span class="l">Why this is still real data</span>
+    <p>When the clock is not live, weather is <b>interpolated from the real hourly series</b> the API returned — 24 h of past observation plus 72 h of forecast. So time travel stays on real measurements and real forecasts; it does not switch to a synthetic weather generator. Say this if asked.</p></div>
+
+  <h3>The other controls</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:150px">Control</th><th>Effect</th><th>What to show with it</th></tr></thead>
+    <tbody>
+      <tr><td><b>Workload</b><br>Real trace / Manual</td><td>Switches demand between the Alibaba trace and a slider</td><td>Drag to 100 % and watch IT load nearly double, rack colours shift, and water climb</td></tr>
+      <tr><td><b>Architecture</b><br>Conventional / NeeruAI</td><td>Re-runs the whole model on the other cooling design</td><td>Chiller power roughly doubles on Conventional. The 3D chiller glows when it is working hard</td></tr>
+      <tr><td><b>Ambient</b><br>−8 to +14 K</td><td>Offsets the live dry-bulb; humidity follows</td><td><b>The best single demo.</b> Push it up and the liquid loop flips <span class="chip live">DRY</span> → <span class="chip warn">ADIABATIC</span>. Water appears where there was none</td></tr>
+      <tr><td><b>Training burst</b></td><td>+30 points of utilisation for 45 simulated minutes</td><td>A sudden AI job arriving — heat, then water, follow it</td></tr>
+      <tr><td><b>Membrane wetting</b></td><td>Rejection drops 99.4 % → 84.8 % for 30 simulated minutes</td><td>Permeate fluoride crosses 1.0 mg/L and the quality gate flips to <span class="chip bad">FAIL</span> — the batch is quarantined, not released</td></tr>
+      <tr><td><b>Reset</b></td><td>Everything back to live defaults</td><td>Use between demo runs</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The three-move demonstration</h3>
+  <ol class="script">
+    <li><b>Set the clock to 1 h/s and stay on station 03.</b> Watch the trend chart: IT load rises and falls on the real trace, wet-bulb follows the real forecast, and net water draw tracks both. The sun sets in the 3D view. This is the "it's alive" moment.</li>
+    <li><b>Back to Live, then push Ambient to +14 K.</b> The liquid loop flips from dry cooling to adiabatic and water consumption appears. Say: "that decision is re-made every model step from the ambient temperature — it isn't scripted."</li>
+    <li><b>Go to station 04 and hit Membrane wetting.</b> Fluoride goes from 0.045 to 1.15 mg/L, the gate turns red, and the destination changes to quarantine. Say: "this is the failure mode that matters, and the gate catches it because it checks against drinking-water limits, not effluent limits."</li>
+  </ol>
 </section>
 
 <!-- ═══ 7 ═══ -->

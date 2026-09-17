@@ -31,7 +31,7 @@ button,select,input{font:inherit;color:inherit}
 ::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:5px}
 ::-webkit-scrollbar-track{background:transparent}
 
-#app{display:grid;grid-template-rows:auto auto auto minmax(0,1fr);height:100%;overflow:hidden}
+#app{display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr);height:100%;overflow:hidden}
 .rail{height:3px;background:linear-gradient(90deg,#A8681C 0 16%,var(--acc) 16% 100%)}
 
 /* ── masthead ── */
@@ -68,6 +68,20 @@ nav .spacer{margin-left:auto;display:flex;align-items:center;gap:7px;padding:5px
 .btn{background:var(--surf);border:1px solid var(--rule2);border-radius:3px;padding:3px 10px;font-size:11.5px;cursor:pointer}
 .btn:hover{border-color:var(--acc);color:var(--acc)}
 .btn.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
+.btn.fire{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);font-weight:600}
+.ctrls{background:var(--surf2);border-bottom:1px solid var(--rule);padding:6px 16px;
+  display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.cg{display:flex;align-items:center;gap:7px}
+.cg>.l{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.seg{display:flex;border:1px solid var(--rule2);border-radius:3px;overflow:hidden;background:var(--surf)}
+.seg button{background:none;border:0;padding:3px 9px;font-size:11px;cursor:pointer;color:var(--ink2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--acc);color:#fff;font-weight:600}
+input[type=range]{accent-color:var(--acc);height:16px}
+.rd{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink2);min-width:40px;text-align:right}
+.simbadge{font-family:"IBM Plex Mono",monospace;font-size:11px;padding:2px 7px;border-radius:2px;
+  background:var(--warn-bg);color:var(--warn);font-weight:600}
+.simbadge.live{background:var(--live-bg);color:var(--live)}
 
 /* ── body ── */
 #main{display:grid;grid-template-columns:300px minmax(0,1fr) 320px;min-height:0;overflow:hidden}
@@ -217,6 +231,46 @@ canvas.ch{display:block;width:100%;height:auto}
   </div>
 </nav>
 
+<div class="ctrls">
+  <div class="cg"><span class="l">Clock</span>
+    <div class="seg" id="clkSeg" role="group" aria-label="Clock mode">
+      <button data-m="live" aria-pressed="true">Live</button>
+      <button data-m="x60">▶ 1 min/s</button>
+      <button data-m="x600">▶ 10 min/s</button>
+      <button data-m="x3600">▶ 1 h/s</button>
+      <button data-m="scrub">Scrub</button>
+    </div>
+    <span class="simbadge live" id="simBadge">now</span>
+  </div>
+  <div class="cg" id="scrubWrap" style="display:none"><span class="l">Forecast</span>
+    <input type="range" id="scrub" min="-24" max="48" step="0.25" value="0" style="width:200px" aria-label="Scrub through the forecast">
+    <span class="rd" id="scrubRd">now</span>
+  </div>
+  <div class="cg"><span class="l">Workload</span>
+    <div class="seg" id="wlSeg" role="group" aria-label="Workload source">
+      <button data-w="trace" aria-pressed="true">Real trace</button>
+      <button data-w="manual">Manual</button>
+    </div>
+    <input type="range" id="wlSlider" min="5" max="100" value="55" style="width:100px" disabled aria-label="Manual utilisation">
+    <span class="rd" id="wlRd">—</span>
+  </div>
+  <div class="cg"><span class="l">Architecture</span>
+    <div class="seg" id="archSeg" role="group" aria-label="Cooling architecture">
+      <button data-a="conv">Conventional</button>
+      <button data-a="neeru" aria-pressed="true">NeeruAI</button>
+    </div>
+  </div>
+  <div class="cg"><span class="l">Ambient</span>
+    <input type="range" id="tOff" min="-8" max="14" step="0.5" value="0" style="width:96px" aria-label="Ambient temperature offset">
+    <span class="rd" id="tOffRd">+0.0 K</span>
+  </div>
+  <div class="cg" style="margin-left:auto">
+    <button class="btn" id="burstBtn">Training burst</button>
+    <button class="btn" id="wetBtn">Membrane wetting</button>
+    <button class="btn" id="resetBtn">Reset</button>
+  </div>
+</div>
+
 <div id="main">
   <div class="col l" id="colL"></div>
   <div id="stage">
@@ -302,6 +356,30 @@ function solarPos(d,lat,lon){
   return {altitude:alt/rad, azimuth:(az/rad)%360};
 }
 
+/* ═════════ CLOCK — sim time, decoupled from the wall clock ═════════ */
+const Clock={
+  mode:'live', speed:0, simMs:Date.now(), scrubH:0, anchor:Date.now(),
+  set(mode){
+    this.simMs=this.now().getTime();          // continue from wherever we are
+    this.mode=mode;
+    this.speed = mode==='x60'?60 : mode==='x600'?600 : mode==='x3600'?3600 : 0;
+    if(mode==='live') this.simMs=Date.now();
+  },
+  advance(dtSec){ if(this.speed>0) this.simMs += dtSec*1000*this.speed; },
+  now(){
+    if(this.mode==='live') return new Date();
+    if(this.mode==='scrub') return new Date(this.anchor + this.scrubH*3600e3);
+    return new Date(this.simMs);
+  },
+  label(){
+    const d=this.now();
+    const t=d.toLocaleTimeString('en-IN',{hour12:false,timeZone:site.tz});
+    if(this.mode==='live') return 'now';
+    const dh=Math.round((d.getTime()-Date.now())/3600e3);
+    return (dh===0?'':(dh>0?'+':'')+dh+' h · ')+t;
+  }
+};
+
 /* ═════════ LIVE FEED ═════════ */
 const Feed={
   status:'idle',error:null,at:null,current:null,hourly:null,air:null,raw:null,prov:[],
@@ -346,6 +424,33 @@ const Feed={
       {src:'CGWB 2024',cls:'ref',det:`Stage of extraction ${s.stage} % — ${s.block}`,at:null},
       {src:'BIS IS 10500',cls:'ref',det:'F⁻ 1.0 · NO₃⁻ 45 · TDS 500 mg/L',at:null});
     UI.chrome();UI.render();
+  },
+  hourlyAt(field,when){
+    if(!this.hourly||!this.hourly.time) return null;
+    const t=this.hourly.time, v=this.hourly[field];
+    if(!v) return null;
+    const tgt=when.getTime();
+    for(let i=0;i<t.length-1;i++){
+      const a=new Date(t[i]).getTime(), b=new Date(t[i+1]).getTime();
+      if(tgt>=a&&tgt<=b){
+        if(v[i]==null||v[i+1]==null) return v[i]??v[i+1];
+        return lerp(v[i],v[i+1],(tgt-a)/(b-a));
+      }
+    }
+    return tgt<new Date(t[0]).getTime() ? v[0] : v[v.length-1];
+  },
+  /* the weather the model should see at a given instant.
+     Live mode uses the measured current observation; any other clock mode
+     interpolates the REAL hourly series, so time travel stays on real data. */
+  weatherAt(when){
+    const c=this.current;
+    if(Clock.mode==='live'||!this.hourly)
+      return {T:c?c.temperature_2m:26, RH:c?c.relative_humidity_2m:60,
+              P:(c&&c.surface_pressure?c.surface_pressure:915),
+              wind:c?(c.wind_speed_10m??0):0, cloud:c?(c.cloud_cover??0):0, dp:c?(c.dew_point_2m??null):null};
+    const T=this.hourlyAt('temperature_2m',when), RH=this.hourlyAt('relative_humidity_2m',when);
+    return {T:T??26, RH:RH??60, P:this.hourlyAt('surface_pressure',when)??915,
+            wind:0, cloud:0, dp:null};
   },
   series(hours){
     if(!this.hourly||!this.hourly.time) return [];
@@ -417,6 +522,7 @@ const Model={
   s:null, baseline:null,
   /* real diurnal shape from the Alibaba GenAI trace, as a multiplier on the variable load */
   demand(now){
+    if(UI.wl==='manual') return UI.manualU;
     const p=RD.diurnal.profile;
     const h=now.getHours()+now.getMinutes()/60;
     const a=p[Math.floor(h)%24], b=p[(Math.floor(h)+1)%24];
@@ -427,17 +533,21 @@ const Model={
 
   step(now, withNeeru){
     const F={now};
-    const c=Feed.current;
-    F.live=!!c;
-    F.Tdb=c?c.temperature_2m:26; F.RH=c?c.relative_humidity_2m:60;
-    F.Tdp=c?(c.dew_point_2m??18):18;
-    F.P=(c&&c.surface_pressure?c.surface_pressure:915)*100;
-    F.wind=c?(c.wind_speed_10m??0):0; F.cloud=c?(c.cloud_cover??0):0;
+    const w=Feed.weatherAt(now);
+    F.live=!!Feed.current;
+    F.Tdb=w.T+UI.tOff;                       // ambient offset is an operator control
+    F.RH=clamp(w.RH-UI.tOff*2.2,5,99);       // warming dry air lowers RH at fixed moisture
+    F.P=w.P*100; F.wind=w.wind; F.cloud=w.cloud;
+    // Magnus dew point when the series doesn't carry one
+    const g=Math.log(F.RH/100)+17.62*F.Tdb/(243.12+F.Tdb);
+    F.Tdp = w.dp!=null && UI.tOff===0 ? w.dp : 243.12*g/(17.62-g);
     F.Twb=Psy.wetBulb(F.Tdb,F.RH);
     F.Wr=Psy.W(F.Tdb,F.RH,F.P); F.h=Psy.h(F.Tdb,F.Wr); F.rho=Psy.rho(F.Tdb,F.Wr,F.P);
     F.pm25=Feed.air?Feed.air.pm2_5:null;
     F.sun=solarPos(now,site.lat,site.lon);
     F.u=this.demand(now);
+    if(UI.burstUntil>now.getTime()) F.u=clamp(F.u+0.30,0,1);
+    F.burst=UI.burstUntil>now.getTime();
 
     /* racks */
     const TsaAir=24, TsupLiq=withNeeru?40:18;    // baseline runs a chilled loop, NeeruAI runs W4
@@ -500,9 +610,10 @@ const Model={
       F.mdArea=15;
       F.mdPerm=Math.min(F.flux*F.mdArea,0.70*F.roRej);
       F.mdConc=F.roRej-F.mdPerm;
+      F.wet=UI.wetUntil>now.getTime();
       F.recovered=F.roPerm+F.mdPerm;
       F.mdHeat=F.mdPerm/1000*165;
-      F.rejectFrac=0.994;
+      F.rejectFrac = UI.wetUntil>now.getTime() ? 0.848 : 0.994;
       F.permF=1.8*F.coc*(1-F.rejectFrac);
       F.permNO3=38*F.coc*(1-F.rejectFrac);
       F.permTDS=420*F.coc*(1-F.rejectFrac);
@@ -525,12 +636,22 @@ const Model={
     return F;
   },
 
+  hist:[],
   tick(now){
-    this.s=this.step(now,true);
-    this.baseline=this.step(now,false);
-    // rack state belongs to the NeeruAI run — re-run so meshes reflect it
-    this.s=this.step(now,true);
-    return this.s;
+    const sel = UI.arch==='neeru';
+    // run the unselected case first so rack state ends up reflecting the selected one
+    const other=this.step(now,!sel);
+    const main =this.step(now,sel);
+    this.s=main;
+    this.neeru = sel?main:other;
+    this.baseline = sel?other:main;
+    const t=now.getTime();
+    if(!this.hist.length || t-this.hist[this.hist.length-1].t>20000 || t<this.hist[0].t){
+      if(t<this.hist[0]?.t) this.hist.length=0;
+      this.hist.push({t,pIT:main.pIT,wb:main.Twb,net:main.netLph,pue:main.PUE});
+      if(this.hist.length>240) this.hist.shift();
+    }
+    return main;
   },
 
   project(hours){
@@ -922,6 +1043,7 @@ const TOUR=[
 /* ═════════ UI ═════════ */
 const UI={
   station:'site', colour:'temp', tourIx:-1,
+  arch:'neeru', wl:'trace', manualU:0.55, tOff:0, burstUntil:0, wetUntil:0,
   go(s){
     this.station=s;
     [...$('nav').querySelectorAll('button[data-s]')].forEach(b=>b.setAttribute('aria-current',b.dataset.s===s?'page':'false'));
@@ -955,7 +1077,14 @@ const UI={
   render(){
     const F=Model.s, B=Model.baseline;
     if(!F) return;
-    $('hClock').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false,timeZone:site.tz});
+    const simNow=Clock.now();
+    $('hClock').textContent=simNow.toLocaleTimeString('en-IN',{hour12:false,timeZone:site.tz});
+    const sb=$('simBadge'); sb.textContent=Clock.label();
+    sb.className='simbadge'+(Clock.mode==='live'?' live':'');
+    $('wlRd').textContent=Math.round(F.u*100)+'%';
+    $('tOffRd').textContent=(UI.tOff>=0?'+':'')+UI.tOff.toFixed(1)+' K';
+    $('wetBtn').classList.toggle('fire',!!F.wet);
+    $('burstBtn').classList.toggle('fire',!!F.burst);
     $('hLoad').textContent=fmt(F.pIT,0)+' kW';
     $('ovMode').innerHTML=`liquid: <b>${F.liqMode}</b> · air: <b>${F.econ?'ECONOMISER':'CHILLER'}</b>`;
     $('ovSun').innerHTML=`sun ${F.sun.altitude>0?'▲':'▼'} <b>${F.sun.altitude.toFixed(1)}°</b>`;
@@ -1086,6 +1215,9 @@ const UI={
           ['Dry-cooler fans',fmt(F.dryFan,0),'kW',clamp(F.dryFan/60,0,1)]
         ])}</div>`,
         `The chiller's efficiency is not a constant — it is derated from the live condensing temperature, which tracks the measured wet-bulb of ${F.Twb.toFixed(1)} °C.`)
+      + this.card('Live trend','<span class="chip acc">last 80 min sim</span>',
+        `<div class="bd tight"><canvas class="ch" id="trend" width="820" height="380"></canvas></div>`,
+        'IT load, wet-bulb and net water draw as the model runs. Set the clock to <b>1 h/s</b> and a full day passes in 24 seconds — the diurnal swing in the real Alibaba trace becomes obvious.')
       + this.card('48-hour outlook','<span class="chip live">forecast</span>',
         `<div class="bd tight"><canvas class="ch" id="fc" width="820" height="440"></canvas></div>`,
         '<span id="fcNote"></span>');
@@ -1109,7 +1241,7 @@ const UI={
           ['Cycles of concentration',F.coc.toFixed(1),'×',F.coc/8]
         ])}</div>`,
         'Evaporation is computed from the latent fraction of tower duty at the measured wet-bulb — so this number moves with real weather, not a fixed coefficient. Blowdown follows from the salt balance and is the feed to station 04.');
-    this.drawFc(F);
+    this.drawFc(F); this.drawTrend();
   },
 
   /* ── 04 recovery ── */
@@ -1420,6 +1552,29 @@ const UI={
     g.fillStyle=css('--ink3'); g.font='500 30px "IBM Plex Sans"'; g.textAlign='left';
     g.fillText('net freshwater draw, L/h — at the current live ambient condition',pl,30);
   },
+  drawTrend(){
+    const c=$('trend'); if(!c) return; const g=c.getContext('2d'), css=k=>this.css(k);
+    const W=820,H=380,pl=56,pr=54,pt=30,pb=40;
+    g.clearRect(0,0,W,H); g.fillStyle=css('--surf'); g.fillRect(0,0,W,H);
+    const h=Model.hist;
+    if(h.length<3){g.fillStyle=css('--ink3');g.font='500 28px "IBM Plex Sans"';g.textAlign='center';
+      g.fillText('collecting…',W/2,H/2);return;}
+    const t0=h[0].t,t1=h[h.length-1].t||t0+1;
+    const X=t=>pl+(t-t0)/Math.max(t1-t0,1)*(W-pl-pr);
+    const line=(key,col,lw)=>{
+      const vs=h.map(d=>d[key]); const lo=Math.min(...vs)*0.92, hi=Math.max(...vs)*1.08||1;
+      g.beginPath();
+      h.forEach((d,i)=>{const y=H-pb-((d[key]-lo)/Math.max(hi-lo,1e-9))*(H-pt-pb);
+        i?g.lineTo(X(d.t),y):g.moveTo(X(d.t),y);});
+      g.strokeStyle=css(col); g.lineWidth=lw; g.stroke();
+      return h[h.length-1][key];
+    };
+    const a=line('pIT','--acc',4.5), b=line('wb','--hot',4), c3=line('net','--live',4);
+    g.font='500 26px "IBM Plex Sans"'; g.textAlign='left';
+    g.fillStyle=css('--acc');  g.fillText('IT '+fmt(a,0)+' kW',pl,pt-8);
+    g.fillStyle=css('--hot');  g.fillText('WB '+b.toFixed(1)+'°',pl+250,pt-8);
+    g.fillStyle=css('--live'); g.fillText('water '+fmt(c3,0)+' L/h',pl+440,pt-8);
+  },
   drawPlan(){
     const pg=$('plan'); if(!pg) return;
     if(pg.children.length!==Fleet.racks.length)
@@ -1433,6 +1588,40 @@ const UI={
 
 /* ═════════ WIRING ═════════ */
 $('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-s]'); if(b) UI.go(b.dataset.s);});
+
+function seg(id,fn){ $(id).addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  [...$(id).children].forEach(x=>x.setAttribute('aria-pressed',String(x===b))); fn(b); }); }
+
+seg('clkSeg',b=>{
+  Clock.anchor=Date.now(); Clock.set(b.dataset.m);
+  $('scrubWrap').style.display = b.dataset.m==='scrub' ? 'flex' : 'none';
+  if(b.dataset.m==='scrub'){ $('scrub').value=0; Clock.scrubH=0; $('scrubRd').textContent='now'; }
+  UI.render();
+});
+$('scrub').addEventListener('input',e=>{
+  Clock.scrubH=+e.target.value;
+  const d=new Date(Clock.anchor+Clock.scrubH*3600e3);
+  $('scrubRd').textContent=(Clock.scrubH>=0?'+':'')+Clock.scrubH.toFixed(1)+' h · '+
+    d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:site.tz});
+  UI.render();
+});
+seg('wlSeg',b=>{ UI.wl=b.dataset.w; $('wlSlider').disabled = UI.wl!=='manual'; });
+$('wlSlider').addEventListener('input',e=>{ UI.manualU=+e.target.value/100; });
+seg('archSeg',b=>{ UI.arch=b.dataset.a; UI.render(); });
+$('tOff').addEventListener('input',e=>{ UI.tOff=+e.target.value; });
+$('burstBtn').addEventListener('click',()=>{ UI.burstUntil=Clock.now().getTime()+45*60000; });
+$('wetBtn').addEventListener('click',()=>{ UI.wetUntil=Clock.now().getTime()+30*60000; });
+$('resetBtn').addEventListener('click',()=>{
+  UI.tOff=0; $('tOff').value=0; UI.burstUntil=0; UI.wetUntil=0;
+  UI.wl='trace'; $('wlSlider').disabled=true;
+  [...$('wlSeg').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.w==='trace')));
+  UI.arch='neeru';
+  [...$('archSeg').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.a==='neeru')));
+  Clock.set('live');
+  [...$('clkSeg').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.m==='live')));
+  $('scrubWrap').style.display='none'; Model.hist.length=0; UI.render();
+});
 $('siteSel').innerHTML=SITES.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
 $('siteSel').addEventListener('change',async e=>{site=SITES[+e.target.value]; await Feed.load(site);});
 $('refreshBtn').addEventListener('click',()=>Feed.load(site));
@@ -1455,7 +1644,7 @@ $('tourEnd').addEventListener('click',()=>{UI.tourIx=-1;$('tour').classList.remo
 /* ═════════ BOOT ═════════ */
 (async function(){
   Fleet.build();
-  Model.tick(new Date());
+  Model.tick(Clock.now());
   try{ V.init(); $('boot').style.opacity='0'; setTimeout(()=>$('boot').remove(),520); }
   catch(err){ console.error('scene init failed',err);
     $('boot').innerHTML='3D scene unavailable — the data panels still work.<br><span style="font-size:10px">'+err.message+'</span>'; }
@@ -1464,7 +1653,8 @@ $('tourEnd').addEventListener('click',()=>{UI.tourIx=-1;$('tour').classList.remo
   let last=performance.now();
   (function loop(now){
     const dt=Math.min((now-last)/1000,.1); last=now;
-    const F=Model.tick(new Date());
+    Clock.advance(dt);
+    const F=Model.tick(Clock.now());
     V.update(dt,F);
     requestAnimationFrame(loop);
   })(last);
